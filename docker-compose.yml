@@ -1,0 +1,53 @@
+version: '3.8'
+
+# ==============================================================================
+# RetailSync: Centralized Super Shop Warehouse Management System
+# Local Development & Testing Multi-Container Infrastructure
+# Author: Raisul Islam Likhon (Section: SWE-44D)
+# Daffodil International University (DIU) - Fall 2026
+# ==============================================================================
+
+services:
+  # Core Relational Database (PostgreSQL 16)
+  retailsync-db:
+    image: postgres:16-alpine
+    container_name: retailsync-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: retailsync_db
+      POSTGRES_USER: retailsync_user
+      POSTGRES_PASSWORD: retailsync_secure_password_2026
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Automatically initialize database schema and seed data on first container spin-up:
+      - ./docs/DATABASE_SCHEMA.sql:/docker-entrypoint-initdb.d/01_init_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retailsync_user -d retailsync_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # In-Memory Cache, Idempotency Store & Distributed Locks (Redis 7)
+  retailsync-redis:
+    image: redis:7.2-alpine
+    container_name: retailsync-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:
+    name: retailsync_pgdata
+  redisdata:
+    name: retailsync_redisdata

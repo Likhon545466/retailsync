@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/slides", "dest": "/slides.html" },
+    { "src": "/presentation", "dest": "/presentation_deck.html" },
+    { "src": "/deck", "dest": "/RetailSync_Capstone_Proposal_Defense_Deck.pptx" },
+    { "src": "/proposal", "dest": "/RetailSync_WMS_Project_Proposal.pdf" }
+  ]
+}

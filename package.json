@@ -1,0 +1,21 @@
+{
+  "name": "retailsync-wms-showcase",
+  "version": "1.0.0",
+  "description": "RetailSync - Centralized Super Shop Warehouse Management System | Capstone Proposal Showcase & Live Defense Portal",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "serve": "npx -y serve . -l 3000",
+    "sync": "python3 scripts/sync_site.py"
+  },
+  "keywords": [
+    "warehouse-management",
+    "capstone-project",
+    "retailsync",
+    "pos-system",
+    "glassmorphism",
+    "daffodil-international-university"
+  ],
+  "author": "Raisul Islam Likhon, Shottobroto Dey, Golam Husnain Papon",
+  "license": "MIT"
+}
