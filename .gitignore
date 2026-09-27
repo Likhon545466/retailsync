@@ -19,6 +19,12 @@ __pycache__/
 *.swp
 *.swo
 
-# OS Generated
+# OS & Editor Generated
 .DS_Store
 Thumbs.db
+.~lock.*
+
+# Database
+*.db
+*.sqlite3
+

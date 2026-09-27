@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Ledger & Audits - RetailSync WMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Immutable Stock Ledger &amp; Inventory Audits</h1>
+  <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Tamper-proof chronological transaction ledger tracking physical inventory deltas across all retail channels.</p>
+</div>
+
+<div class="glass-panel">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Recent Stock Ledger Movements</h3>
+    <button class="btn-sm btn-secondary" onclick="loadLedger()">↻ Refresh Ledger</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="retailsync-table">
+      <thead>
+        <tr>
+          <th>Timestamp (UTC)</th>
+          <th>Reference #</th>
+          <th>Product / SKU</th>
+          <th>Batch Lot #</th>
+          <th>Transaction Type</th>
+          <th>Quantity Delta</th>
+          <th>Balance (Prev → New)</th>
+          <th>Responsible User</th>
+        </tr>
+      </thead>
+      <tbody id="ledgerTableBody">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading transaction ledger...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadLedger() {
+  try {
+    const res = await fetch('/api/v1/warehouse/ledger?limit=40');
+    const entries = await res.json();
+    renderLedger(entries);
+  } catch (e) {
+    console.error("Error loading ledger:", e);
+  }
+}
+
+function renderLedger(entries) {
+  const tbody = document.getElementById('ledgerTableBody');
+  if (entries.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">No transaction records logged yet.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = entries.map(e => {
+    const isDeduction = e.quantity_change < 0;
+    const deltaColor = isDeduction ? 'var(--rose-400)' : 'var(--emerald-400)';
+    const deltaSign = e.quantity_change > 0 ? `+${e.quantity_change}` : `${e.quantity_change}`;
+
+    return `
+      <tr>
+        <td style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">${e.timestamp}</td>
+        <td style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-400);">${e.reference_number || 'N/A'}</td>
+        <td>
+          <div style="font-weight: 700; color: #fff;">${e.product_name}</div>
+          <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">${e.sku_code}</div>
+        </td>
+        <td style="font-family: var(--font-mono);">${e.lot_number}</td>
+        <td><span class="badge badge-info">${e.transaction_type}</span></td>
+        <td style="font-family: var(--font-mono); font-weight: 800; font-size: 13px; color: ${deltaColor};">
+          ${deltaSign}
+        </td>
+        <td style="font-family: var(--font-mono); font-size: 12px;">
+          ${e.previous_balance} → <b>${e.new_balance}</b>
+        </td>
+        <td>${e.user_name}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadLedger);
+</script>
+{% endblock %}

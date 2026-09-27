@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Replenishment DSS - RetailSync WMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Algorithmic Replenishment & Decision Support System (DSS)</h1>
+  <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Dynamic Safety Stock factoring demand &amp; lead-time variance (Greasley's Formula), Wilson EOQ, and 1-click PO issuance.</p>
+</div>
+
+<!-- Interactive DSS Parameter Controls -->
+<div class="glass-panel" style="margin-bottom: 24px;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; align-items: center;">
+    <div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+        <span style="color: var(--text-muted); text-transform: uppercase;">Service Level (Z-Score):</span>
+        <span id="zScoreVal" style="color: var(--cyan-400); font-family: var(--font-mono);">97.5% (Z = 1.96)</span>
+      </div>
+      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%; accent-color: var(--cyan-500);" oninput="updateCalculations()">
+    </div>
+
+    <div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+        <span style="color: var(--text-muted); text-transform: uppercase;">Festival Demand Multiplier:</span>
+        <span id="multVal" style="color: var(--amber-400); font-family: var(--font-mono);">1.0x (Normal Operations)</span>
+      </div>
+      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%; accent-color: var(--amber-500);" oninput="updateCalculations()">
+    </div>
+
+    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; text-align: center;">
+      <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Reorder Point Breaches</div>
+      <div style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--rose-400);" id="breachCount">0 SKUs</div>
+    </div>
+  </div>
+</div>
+
+<!-- Replenishment Recommendations Table -->
+<div class="glass-panel">
+  <div class="table-responsive">
+    <table class="retailsync-table">
+      <thead>
+        <tr>
+          <th>SKU / Product</th>
+          <th>Current Stock</th>
+          <th>Greasley Safety Stock (SS)</th>
+          <th>Dynamic ROP</th>
+          <th>Suggested EOQ</th>
+          <th>Est. PO Cost</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="replenishTableBody">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Computing statistical replenishment curves...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let dssData = null;
+
+async function updateCalculations() {
+  const zScore = parseFloat(document.getElementById('zScoreSlider').value);
+  const mult = parseFloat(document.getElementById('multiplierSlider').value);
+
+  // Update labels
+  const zText = zScore >= 2.33 ? "99.0% (Z = 2.33)" : zScore >= 1.96 ? "97.5% (Z = 1.96)" : "90.0% (Z = 1.28)";
+  document.getElementById('zScoreVal').innerText = `${zText}`;
+  document.getElementById('multVal').innerText = mult > 1.0 ? `${mult.toFixed(1)}x (Festival / Rush Demand)` : "1.0x (Normal Operations)";
+
+  try {
+    const res = await fetch(`/api/v1/procurement/replenishment?z_score=${zScore}&multiplier=${mult}`);
+    dssData = await res.json();
+    renderTable();
+  } catch (e) {
+    console.error("Error fetching replenishment:", e);
+  }
+}
+
+function renderTable() {
+  if (!dssData) return;
+
+  document.getElementById('breachCount').innerText = `${dssData.breached_skus_count} SKUs`;
+  const tbody = document.getElementById('replenishTableBody');
+
+  tbody.innerHTML = dssData.items.map(item => `
+    <tr style="${item.is_breached ? 'background: rgba(244, 63, 94, 0.05);' : ''}">
+      <td>
+        <div style="font-weight: 700; color: #fff;">${item.product_name}</div>
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan-400);">${item.sku_code} • ${item.category}</div>
+      </td>
+      <td style="font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: ${item.is_breached ? 'var(--rose-400)' : 'var(--emerald-400)'};">
+        ${item.current_stock} PCS
+      </td>
+      <td style="font-family: var(--font-mono);">${item.greasley_safety_stock} PCS</td>
+      <td style="font-family: var(--font-mono); font-weight: 700;">${item.reorder_point} PCS</td>
+      <td style="font-family: var(--font-mono); color: var(--cyan-400); font-weight: 700;">${item.eoq_suggested_order_qty} PCS</td>
+      <td style="font-family: var(--font-mono);">৳${item.estimated_po_cost_bdt.toFixed(2)}</td>
+      <td>
+        ${item.is_breached 
+          ? '<span class="badge badge-danger">CRITICAL REORDER</span>' 
+          : '<span class="badge badge-success">HEALTHY BUFFER</span>'}
+      </td>
+      <td>
+        <button class="btn-sm btn-primary" onclick="createPoForSku(${item.product_id}, ${item.supplier_id}, ${item.eoq_suggested_order_qty}, ${item.unit_cost_bdt})">
+          Issue PO (${item.eoq_suggested_order_qty})
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function createPoForSku(prodId, supId, qty, cost) {
+  try {
+    const res = await fetch('/api/v1/procurement/po/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        supplier_id: supId,
+        items: [{ product_id: prodId, quantity: qty, unit_cost_bdt: cost }]
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(`🎉 Purchase Order ${data.po_number} successfully issued to ${data.supplier_name}!\nExpected Delivery: ${data.expected_delivery_date}\nTotal Amount: ৳${data.total_amount_bdt.toFixed(2)}`);
+      updateCalculations();
+    }
+  } catch (e) {
+    alert("Error creating PO: " + e.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', updateCalculations);
+</script>
+{% endblock %}

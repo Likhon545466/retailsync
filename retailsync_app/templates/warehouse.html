@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Digital Twin Warehouse Map - RetailSync WMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
+  <div>
+    <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Digital Twin 2D Spatial Warehouse Map</h1>
+    <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Live telemetry of warehouse bays, racks, tiers, and FEFO perishable batch aging.</p>
+  </div>
+  <!-- Legend -->
+  <div style="display: flex; gap: 14px; font-size: 12px; background: var(--bg-surface-glass); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: var(--radius-sm);">
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--emerald-400); border-radius: 2px;"></span> Occupied &amp; Healthy</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--rose-400); border-radius: 2px;"></span> Near Expiry (&lt; 7 Days)</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--border-medium); border-radius: 2px;"></span> Available / Empty</span>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px;">
+  <!-- Left: 2D Spatial Rack Grid -->
+  <div class="glass-panel">
+    <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+      <button class="btn-sm btn-primary" onclick="filterAisle('ALL')">All Aisles</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('A01')">Aisle A01 (Ambient)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('A02')">Aisle A02 (Ambient)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('B01')">Aisle B01 (Ambient)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('C01')">Aisle C01 (Chilled Dairy)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('D01')">Aisle D01 (Deep Frozen)</button>
+    </div>
+
+    <div class="warehouse-rack-grid" id="spatialGrid">
+      <div style="text-align: center; color: var(--text-muted); padding: 40px; grid-column: 1/-1;">Rendering spatial warehouse coordinates...</div>
+    </div>
+  </div>
+
+  <!-- Right: Bin Inspector Panel -->
+  <div class="glass-panel" style="display: flex; flex-direction: column;">
+    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Bin Telemetry Inspector</h3>
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Click any bin on the 2D map to inspect stored batches and capacity.</div>
+
+    <div id="inspectorEmpty" style="text-align: center; color: var(--text-muted); padding: 60px 20px;">
+      No bin selected.<br>Click any bin coordinate to view live payload.
+    </div>
+
+    <div id="inspectorActive" style="display: none; flex-direction: column; gap: 14px;">
+      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #fff;" id="inspBinCode">A01-R01-S1-B1</span>
+          <span class="badge badge-info" id="inspZone">Ambient</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-secondary); margin-top: 10px;">
+          <div>Aisle: <b id="inspAisle">A01</b></div>
+          <div>Rack: <b id="inspRack">R01</b></div>
+          <div>Shelf: <b id="inspShelf">Tier 1</b></div>
+          <div>Position: <b id="inspPos">B1</b></div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Stored Inventory Payload:</div>
+        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="inspSummary">Empty</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 6px;" id="inspExpiry">Nearest Expiry: N/A</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let gridData = [];
+let currentFilter = 'ALL';
+
+async function loadGrid() {
+  try {
+    const res = await fetch('/api/v1/warehouse/spatial-grid');
+    const data = await res.json();
+    gridData = data.grid;
+    renderGrid();
+  } catch (e) {
+    console.error("Error loading warehouse grid:", e);
+  }
+}
+
+function filterAisle(aisle) {
+  currentFilter = aisle;
+  renderGrid();
+}
+
+function renderGrid() {
+  const container = document.getElementById('spatialGrid');
+  const filtered = currentFilter === 'ALL' ? gridData : gridData.filter(b => b.aisle_number === currentFilter);
+
+  container.innerHTML = filtered.map(b => {
+    let statusClass = 'empty';
+    let statusDot = '<span style="color:var(--text-muted);">● Empty</span>';
+
+    if (b.is_occupied) {
+      if (b.nearest_expiry_days !== null && b.nearest_expiry_days <= 7) {
+        statusClass = 'near-expiry';
+        statusDot = `<span style="color:var(--rose-400); font-weight:700;">● Exp: ${b.nearest_expiry_days}d</span>`;
+      } else {
+        statusClass = 'occupied';
+        statusDot = `<span style="color:var(--emerald-400); font-weight:700;">● Occupied</span>`;
+      }
+    }
+
+    return `
+      <div class="bin-cell ${statusClass}" onclick="inspectBin(${b.bin_id})">
+        <div class="bin-code">${b.bin_code}</div>
+        <div class="bin-meta">${b.temp_category}</div>
+        <div style="font-size: 11px; margin-top: 6px;">${statusDot}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function inspectBin(binId) {
+  const bin = gridData.find(b => b.bin_id === binId);
+  if (!bin) return;
+
+  document.getElementById('inspectorEmpty').style.display = 'none';
+  document.getElementById('inspectorActive').style.display = 'flex';
+
+  document.getElementById('inspBinCode').innerText = bin.bin_code;
+  document.getElementById('inspZone').innerText = bin.temp_category;
+  document.getElementById('inspAisle').innerText = bin.aisle_number;
+  document.getElementById('inspRack').innerText = bin.rack_number;
+  document.getElementById('inspShelf').innerText = `Tier ${bin.shelf_tier}`;
+  document.getElementById('inspPos').innerText = `Slot ${bin.bin_position}`;
+  document.getElementById('inspSummary').innerText = bin.items_summary;
+  
+  if (bin.nearest_expiry_days !== null) {
+    document.getElementById('inspExpiry').innerHTML = `Nearest FEFO Expiry: <b style="color:${bin.nearest_expiry_days <= 7 ? 'var(--rose-400)' : 'var(--emerald-400)'}">${bin.nearest_expiry_days} days remaining</b>`;
+  } else {
+    document.getElementById('inspExpiry').innerText = 'Nearest FEFO Expiry: N/A';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadGrid);
+</script>
+{% endblock %}

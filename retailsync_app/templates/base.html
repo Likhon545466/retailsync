@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}RetailSync - Enterprise Super Shop WMS{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="navbar-app">
+    <a href="/dashboard" class="brand-wrapper">
+      <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img">
+      <div class="brand-title">RETAIL<span>SYNC</span> <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: 6px;">WMS v1.0</span></div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">📊 Overview</a>
+      <a href="/pos" class="nav-item {% if active_page == 'pos' %}active{% endif %}">🛒 POS Register</a>
+      <a href="/inbound" class="nav-item {% if active_page == 'inbound' %}active{% endif %}">📥 Inbound Dock</a>
+      <a href="/putaway" class="nav-item {% if active_page == 'putaway' %}active{% endif %}">📦 Putaway</a>
+      <a href="/warehouse" class="nav-item {% if active_page == 'warehouse' %}active{% endif %}">🗺️ Digital Twin</a>
+      <a href="/procurement" class="nav-item {% if active_page == 'procurement' %}active{% endif %}">📈 Replenishment DSS</a>
+      <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">📜 Stock Ledger</a>
+    </nav>
+
+    <div class="user-controls">
+      <!-- Quick Role Switcher for Defense Demonstration -->
+      <select id="roleSwitcher" class="btn-sm btn-secondary" onchange="switchDemoRole(this.value)" title="Quickly switch operational role for demonstration">
+        <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Role: Cashier (Nusrat)</option>
+        <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Role: Dock Clerk (Kabir)</option>
+        <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Role: Floor Operator (Tariq)</option>
+        <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Role: Supervisor (Farhan)</option>
+        <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>Role: SCM Officer (Tanvir)</option>
+        <option value="admin" {% if current_user and current_user.username == 'admin' %}selected{% endif %}>Role: Admin (Rafiq)</option>
+      </select>
+
+      <span class="user-badge">
+        <span>●</span> {{ current_user.full_name if current_user else 'Demo User' }}
+      </span>
+
+      <a href="/" target="_blank" class="btn-sm btn-secondary" title="Open Public Presentation Portal">Showcase Portal ↗</a>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="app-container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer style="text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border-subtle); margin-top: auto;">
+    <b>RetailSync: Centralized Super Shop Warehouse Management System</b> • Department of Software Engineering, Daffodil International University (DIU)<br>
+    Project Team: <b>Raisul Islam Likhon</b> (Lead: 251-35-508), <b>Shottobroto Dey</b> (251-35-017), <b>Golam Husnain Papon</b> (251-35-529) • Section: <b>SWE-44D</b>
+  </footer>
+
+  <script>
+    async function switchDemoRole(username) {
+      try {
+        const res = await fetch('/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username_or_email: username, password: 'Password123!' })
+        });
+        if (res.ok) {
+          window.location.reload();
+        }
+      } catch (e) {
+        console.error("Role switch error:", e);
+      }
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

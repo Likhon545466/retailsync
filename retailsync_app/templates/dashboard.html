@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Operational Dashboard - RetailSync WMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+  <h1 style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: #fff;">Operational Command Center</h1>
+  <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Real-time enterprise warehouse telemetry, inventory valuation, and multi-channel synchronization.</p>
+</div>
+
+<!-- Metrics Bento Grid -->
+<div class="metric-grid">
+  <div class="metric-card">
+    <div class="metric-label">Total Inventory Valuation</div>
+    <div class="metric-val emerald">৳{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}</div>
+    <div style="font-size: 11px; color: var(--emerald-400); margin-top: 6px;">● Asset Ledger Synced</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Active FMCG SKUs</div>
+    <div class="metric-val cyan">{{ stats.total_active_skus }}</div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Catalog Integrity: 100% 3NF</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Active Warehouse Batches</div>
+    <div class="metric-val cyan">{{ stats.active_inventory_batches }}</div>
+    <div style="font-size: 11px; color: var(--cyan-400); margin-top: 6px;">FEFO Priority Queue Active</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Open Purchase Orders</div>
+    <div class="metric-val amber">{{ stats.open_purchase_orders }}</div>
+    <div style="font-size: 11px; color: var(--amber-400); margin-top: 6px;">Awaiting Dock Reception</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Avg POS Latency (SLA &lt; 2.0s)</div>
+    <div class="metric-val emerald">{{ stats.avg_pos_latency_ms }} ms</div>
+    <div style="font-size: 11px; color: var(--emerald-400); margin-top: 6px;">⚡ Atomic Row Locking</div>
+  </div>
+</div>
+
+<!-- Operational Modules Quick Launcher Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 28px;">
+  
+  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff;">🛒 Frontline Cashier POS</h3>
+        <span class="badge badge-success">Sub-2.0s SLA</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Barcode checkout terminal with live transactional row-level locking (`SELECT ... FOR UPDATE`), automated FEFO batch allocation, and concurrent rush-hour protection.
+      </p>
+    </div>
+    <a href="/pos" class="btn-sm btn-primary" style="text-align: center; padding: 10px;">Launch POS Terminal →</a>
+  </div>
+
+  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff;">📥 Inbound Receiving Dock</h3>
+        <span class="badge badge-info">Quality Verification</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Receiving manifest verification against digital POs, remaining shelf-life threshold validation (&gt; 65%), damaged carton quarantine, and GRN creation.
+      </p>
+    </div>
+    <a href="/inbound" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Open Dock Receiving →</a>
+  </div>
+
+  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff;">📦 Directed Putaway & Picking</h3>
+        <span class="badge badge-warning">Spatial Routing</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Algorithmic bin suggestions matching product temperature requirements (Ambient, Chilled, Deep Frozen) with shortest travel path across Aisles A01-D01.
+      </p>
+    </div>
+    <a href="/putaway" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Operator Putaway →</a>
+  </div>
+
+  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff;">🗺️ Digital Twin Warehouse Grid</h3>
+        <span class="badge badge-success">2D Heatmap</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Live interactive visual map of warehouse bays, racks, and tiers. Visual inspection of bin capacity, FEFO batch aging, and temperature zones.
+      </p>
+    </div>
+    <a href="/warehouse" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Inspect Spatial Twin →</a>
+  </div>
+
+  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff;">📈 Replenishment DSS (SCM)</h3>
+        <span class="badge badge-info">Greasley Math</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Algorithmic Decision Support System utilizing Greasley's dual-variance safety stock formula, Wilson Economic Order Quantity (EOQ), and 1-click PO issuance.
+      </p>
+    </div>
+    <a href="/procurement" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Open DSS Replenishment →</a>
+  </div>
+
+  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff;">📜 Stock Ledger Audit Trail</h3>
+        <span class="badge badge-danger">Tamper-Proof</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Complete historical transaction ledger tracking every single stock delta, POS sale, putaway, and dock receipt with timestamped reference receipts.
+      </p>
+    </div>
+    <a href="/audits" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">View Audit Ledger →</a>
+  </div>
+
+</div>
+{% endblock %}

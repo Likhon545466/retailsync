@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Inbound Receiving Dock - RetailSync WMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Inbound Receiving Dock & Quality Gate</h1>
+  <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Digital PO receipt verification, automated shelf-life threshold validation (&gt; 65%), and Goods Receipt Note (GRN) generation.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
+  <!-- Left: Open Purchase Orders List -->
+  <div class="glass-panel">
+    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">Open Purchase Orders Awaiting Delivery</h3>
+    
+    <div id="poListContainer">
+      <!-- Populated via JS -->
+      <div style="text-align: center; color: var(--text-muted); padding: 30px;">Loading purchase orders...</div>
+    </div>
+  </div>
+
+  <!-- Right: Inbound Receiving Inspector Form -->
+  <div class="glass-panel" id="receivingFormPanel" style="display: flex; flex-direction: column;">
+    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Dock Quality Inspection</h3>
+    <div style="font-size: 12px; color: var(--cyan-400); font-family: var(--font-mono); margin-bottom: 16px;" id="selectedPoHeader">
+      Select a PO from the left to start inspection
+    </div>
+
+    <div id="receivingFormBody" style="display: none; flex-direction: column; gap: 14px;">
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Product / SKU:</label>
+        <select id="recvProductSelect" class="form-input" style="margin-top: 4px;" onchange="updateProductContext()">
+          <!-- Populated from selected PO -->
+        </select>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Manufacturer Lot #:</label>
+          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 4px;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Quantity Delivered:</label>
+          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 4px;">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Mfg Date:</label>
+          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 4px;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Expiry Date:</label>
+          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 4px;" onchange="validateShelfLife()">
+        </div>
+      </div>
+
+      <!-- Shelf-Life Quality Check Indicator -->
+      <div id="shelfLifeIndicator" style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="font-weight: 700;">Remaining Shelf Life:</span>
+          <span id="shelfLifePct" style="font-weight: 700; color: var(--emerald-400);">Select expiry date</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted);" id="shelfLifeNote">
+          Batches with &lt; 65% remaining shelf-life will automatically be quarantined.
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Damaged / Crushed Cartons:</label>
+        <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 4px;">
+      </div>
+
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Receiving Manifest Notes:</label>
+        <textarea id="recvNotes" class="form-input" style="margin-top: 4px; height: 60px;" placeholder="Dock delivery notes, seal number..."></textarea>
+      </div>
+
+      <button class="btn-sm btn-primary" onclick="submitGoodsReceipt()" style="padding: 12px; font-size: 14px; font-weight: 700; margin-top: 8px;">
+        Accept Shipment & Issue GRN 📄
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let openPOs = [];
+let selectedPO = null;
+
+async function loadOpenPOs() {
+  try {
+    const res = await fetch('/api/v1/inbound/open-pos');
+    openPOs = await res.json();
+    renderPOList();
+  } catch (e) {
+    console.error("Error loading POs:", e);
+  }
+}
+
+function renderPOList() {
+  const container = document.getElementById('poListContainer');
+  if (openPOs.length === 0) {
+    container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px;">All purchase orders received. No pending deliveries.</div>`;
+    return;
+  }
+
+  container.innerHTML = openPOs.map(po => `
+    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease;"
+         onclick="selectPO(${po.po_id})" onmouseover="this.style.borderColor='var(--cyan-400)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-400); font-size: 13px;">${po.po_number}</span>
+        <span class="badge ${po.status === 'ISSUED' ? 'badge-info' : 'badge-warning'}">${po.status}</span>
+      </div>
+      <div style="font-size: 14px; font-weight: 700; color: #fff;">${po.supplier_name}</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+        Expected: <b>${po.expected_delivery_date}</b> • Total: <b>৳${po.total_amount_bdt.toFixed(2)}</b>
+      </div>
+      <div style="margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+        ${po.items.map(i => `
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">
+            <span>${i.product_name}</span>
+            <span style="font-family: var(--font-mono);">Ordered: ${i.ordered_quantity} | Recv: ${i.received_quantity}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectPO(poId) {
+  selectedPO = openPOs.find(p => p.po_id === poId);
+  if (!selectedPO) return;
+
+  document.getElementById('selectedPoHeader').innerText = `Active PO: ${selectedPO.po_number} (${selectedPO.supplier_name})`;
+  document.getElementById('receivingFormBody').style.display = 'flex';
+
+  const select = document.getElementById('recvProductSelect');
+  select.innerHTML = selectedPO.items.map(item => `
+    <option value="${item.product_id}" data-cost="${item.unit_cost_bdt}" data-remaining="${item.remaining_quantity}">
+      ${item.product_name} (${item.sku_code}) - Awaiting: ${item.remaining_quantity}
+    </option>
+  `).join('');
+
+  // Default dates
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('recvMfgDate').value = today;
+  
+  const future = new Date();
+  future.setDate(future.getDate() + 180);
+  document.getElementById('recvExpDate').value = future.toISOString().split('T')[0];
+
+  updateProductContext();
+  validateShelfLife();
+}
+
+function updateProductContext() {
+  const select = document.getElementById('recvProductSelect');
+  const opt = select.selectedOptions[0];
+  if (opt) {
+    const remaining = opt.getAttribute('data-remaining');
+    document.getElementById('recvQuantity').value = remaining > 0 ? remaining : 50;
+  }
+}
+
+function validateShelfLife() {
+  const mfg = new Date(document.getElementById('recvMfgDate').value);
+  const exp = new Date(document.getElementById('recvExpDate').value);
+  const now = new Date();
+
+  const totalLife = (exp - mfg) / (1000 * 60 * 60 * 24);
+  const remLife = (exp - now) / (1000 * 60 * 60 * 24);
+  const ratio = remLife / Math.max(totalLife, 1);
+
+  const pctEl = document.getElementById('shelfLifePct');
+  const noteEl = document.getElementById('shelfLifeNote');
+
+  if (isNaN(ratio) || ratio <= 0) {
+    pctEl.innerText = "EXPIRED";
+    pctEl.style.color = "var(--rose-400)";
+    noteEl.innerText = "❌ Warning: This batch is expired. Will be quarantined.";
+  } else if (ratio < 0.65) {
+    pctEl.innerText = `${Math.round(ratio * 100)}% (Critical Threshold Breach)`;
+    pctEl.style.color = "var(--rose-400)";
+    noteEl.innerText = "⚠️ Less than 65% shelf-life remaining. System will place in QUARANTINE.";
+  } else {
+    pctEl.innerText = `${Math.round(ratio * 100)}% (Quality Approved)`;
+    pctEl.style.color = "var(--emerald-400)";
+    noteEl.innerText = "✓ Shelf-life exceeds 65% threshold. Safe for putaway and retail distribution.";
+  }
+}
+
+async function submitGoodsReceipt() {
+  if (!selectedPO) return;
+  const select = document.getElementById('recvProductSelect');
+  const opt = select.selectedOptions[0];
+  if (!opt) return;
+
+  const payload = {
+    po_id: selectedPO.po_id,
+    notes: document.getElementById('recvNotes').value,
+    items: [
+      {
+        product_id: parseInt(select.value),
+        lot_number: document.getElementById('recvLotNumber').value,
+        manufacturing_date: document.getElementById('recvMfgDate').value,
+        expiry_date: document.getElementById('recvExpDate').value,
+        quantity_received: parseInt(document.getElementById('recvQuantity').value),
+        damaged_quantity: parseInt(document.getElementById('recvDamaged').value),
+        unit_cost_bdt: parseFloat(opt.getAttribute('data-cost'))
+      }
+    ]
+  };
+
+  try {
+    const res = await fetch('/api/v1/inbound/receive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert("Error receiving goods: " + (data.detail || "Validation failure"));
+      return;
+    }
+
+    alert(`🎉 Goods Receipt Note ${data.grn_number} issued successfully!\n${data.total_cartons_received} cartons accepted. Unallocated batches are now queued for Putaway.`);
+    loadOpenPOs();
+    document.getElementById('receivingFormBody').style.display = 'none';
+    document.getElementById('selectedPoHeader').innerText = "Select a PO from the left to start inspection";
+  } catch (e) {
+    alert("Network error: " + e.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadOpenPOs);
+</script>
+{% endblock %}

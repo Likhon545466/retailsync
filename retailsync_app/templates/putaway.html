@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Directed Putaway - RetailSync WMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Directed Putaway & Spatial Routing</h1>
+  <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Algorithmic bin allocation matching product temperature zones with lowest walking distance across Aisles A01–D01.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
+  <!-- Left: Unallocated Batches Queue -->
+  <div class="glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Batches Awaiting Putaway (Dock Staging)</h3>
+      <span class="badge badge-warning" id="pendingBatchCount">0 pending</span>
+    </div>
+
+    <div id="unallocatedList">
+      <div style="text-align: center; color: var(--text-muted); padding: 30px;">Loading staging dock queue...</div>
+    </div>
+  </div>
+
+  <!-- Right: Directed Routing Prompt -->
+  <div class="glass-panel" style="display: flex; flex-direction: column;">
+    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Operator Putaway Directive</h3>
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+      Follow physical floor routing to scan destination bin barcode.
+    </div>
+
+    <div id="directiveEmpty" style="text-align: center; color: var(--text-muted); padding: 50px 20px;">
+      Select an unallocated batch on the left to compute optimal spatial placement.
+    </div>
+
+    <div id="directiveActive" style="display: none; flex-direction: column; gap: 16px;">
+      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--cyan-500); border-radius: var(--radius-sm); padding: 18px;">
+        <div style="font-size: 11px; text-transform: uppercase; color: var(--cyan-400); font-weight: 700; letter-spacing: 0.5px;">Recommended Bin Location:</div>
+        <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: #fff; margin: 6px 0;" id="suggestedBinCode">
+          A01-R01-S1-B1
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+          <div>Zone: <b id="sugZone" style="color:var(--cyan-400);">Ambient</b></div>
+          <div>Aisle: <b id="sugAisle">A01</b></div>
+          <div>Rack: <b id="sugRack">R01</b></div>
+          <div>Shelf: <b id="sugShelf">Tier 1</b></div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; font-size: 12.5px; color: var(--text-secondary);" id="sugReason">
+        Matching temperature zone with empty capacity.
+      </div>
+
+      <div style="margin-top: 10px;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Scan Bin Barcode to Confirm Placement:</label>
+        <input type="text" id="confirmBinScan" class="form-input" placeholder="Scan bin barcode on physical rack..." style="margin-top: 4px;">
+      </div>
+
+      <button class="btn-sm btn-primary" onclick="confirmPlacement()" style="padding: 12px; font-size: 14px; font-weight: 700;">
+        Confirm Physical Bin Placement ✓
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let unallocated = [];
+let activeBatch = null;
+let activeSuggestion = null;
+
+async function loadUnallocated() {
+  try {
+    const res = await fetch('/api/v1/putaway/unallocated-batches');
+    unallocated = await res.json();
+    renderUnallocated();
+  } catch (e) {
+    console.error("Error loading unallocated batches:", e);
+  }
+}
+
+function renderUnallocated() {
+  const container = document.getElementById('unallocatedList');
+  const countEl = document.getElementById('pendingBatchCount');
+  countEl.innerText = `${unallocated.length} pending`;
+
+  if (unallocated.length === 0) {
+    container.innerHTML = `<div style="text-align: center; color: var(--emerald-400); padding: 40px;">✓ Staging dock is clear! All batches have been placed into warehouse bins.</div>`;
+    return;
+  }
+
+  container.innerHTML = unallocated.map(b => `
+    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s ease;"
+         onclick="requestSuggestion(${b.batch_id})" onmouseover="this.style.borderColor='var(--cyan-400)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-400); font-size: 12px;">${b.lot_number}</span>
+        <span class="badge badge-info">${b.temp_required}</span>
+      </div>
+      <div style="font-size: 14px; font-weight: 700; color: #fff;">${b.product_name}</div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+        <span>Quantity: <b>${b.current_quantity} PCS</b></span>
+        <span>Expiry: <b>${b.expiry_date}</b></span>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function requestSuggestion(batchId) {
+  activeBatch = unallocated.find(b => b.batch_id === batchId);
+  if (!activeBatch) return;
+
+  try {
+    const res = await fetch(`/api/v1/putaway/suggest/${batchId}`);
+    activeSuggestion = await res.json();
+
+    document.getElementById('directiveEmpty').style.display = 'none';
+    document.getElementById('directiveActive').style.display = 'flex';
+
+    document.getElementById('suggestedBinCode').innerText = activeSuggestion.suggested_bin_code;
+    document.getElementById('sugZone').innerText = activeSuggestion.temp_category;
+    document.getElementById('sugAisle').innerText = activeSuggestion.aisle;
+    document.getElementById('sugRack').innerText = activeSuggestion.rack;
+    document.getElementById('sugShelf').innerText = `Tier ${activeSuggestion.shelf}`;
+    document.getElementById('sugReason').innerText = activeSuggestion.reason;
+    document.getElementById('confirmBinScan').value = activeSuggestion.suggested_bin_code;
+  } catch (e) {
+    alert("Error fetching putaway suggestion: " + e.message);
+  }
+}
+
+async function confirmPlacement() {
+  if (!activeBatch || !activeSuggestion) return;
+
+  const scannedCode = document.getElementById('confirmBinScan').value.trim();
+  if (scannedCode !== activeSuggestion.suggested_bin_code) {
+    if (!confirm(`Scanned bin code "${scannedCode}" does not match suggested bin "${activeSuggestion.suggested_bin_code}". Override anyway?`)) {
+      return;
+    }
+  }
+
+  try {
+    const res = await fetch('/api/v1/putaway/confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        batch_id: activeBatch.batch_id,
+        bin_id: activeSuggestion.suggested_bin_id
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(`✓ Batch ${activeBatch.lot_number} successfully placed into Bin ${data.bin_code}!`);
+      document.getElementById('directiveEmpty').style.display = 'block';
+      document.getElementById('directiveActive').style.display = 'none';
+      activeBatch = null;
+      activeSuggestion = null;
+      loadUnallocated();
+    }
+  } catch (e) {
+    alert("Error confirming putaway: " + e.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadUnallocated);
+</script>
+{% endblock %}
