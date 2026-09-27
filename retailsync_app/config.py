@@ -8,7 +8,12 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     
     # Database: Supports SQLite (zero-config local) or PostgreSQL (production/docker)
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./retailsync.db")
+    # When deployed to Vercel Serverless / Lambda, use writable /tmp directory
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "sqlite:////tmp/retailsync.db" if (os.getenv("VERCEL") or os.getenv("VERCEL_ENV") or os.getenv("AWS_LAMBDA_FUNCTION_NAME")) else "sqlite:///./retailsync.db"
+    )
+
     
     # JWT Security
     SECRET_KEY: str = os.getenv("SECRET_KEY", "retailsync_diu_capstone_super_secret_jwt_key_2026")

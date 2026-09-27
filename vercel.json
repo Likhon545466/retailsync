@@ -1,10 +1,20 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "retailsync_app/**",
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
+    { "source": "/showcase", "destination": "/showcase.html" },
     { "source": "/slides", "destination": "/slides.html" },
     { "source": "/presentation", "destination": "/presentation_deck.html" },
     { "source": "/deck", "destination": "/RetailSync_Capstone_Proposal_Defense_Deck.pptx" },
-    { "source": "/proposal", "destination": "/RetailSync_WMS_Project_Proposal.pdf" }
+    { "source": "/proposal", "destination": "/RetailSync_WMS_Project_Proposal.pdf" },
+    { "source": "/static/(.*)", "destination": "/static/$1" },
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/(.*)", "destination": "/api/index.py" }
   ]
 }
