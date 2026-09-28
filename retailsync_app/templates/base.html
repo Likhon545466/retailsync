@@ -17,10 +17,15 @@
 <body>
   <!-- Top Navigation Bar -->
   <header class="navbar-app">
-    <a href="/dashboard" class="brand-wrapper">
-      <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img">
-      <div class="brand-title">RETAIL<span>SYNC</span> <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); margin-left: 6px;">WMS v1.0</span></div>
-    </a>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="/dashboard" class="brand-wrapper">
+        <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img">
+        <div class="brand-title">RETAIL<span class="accent">SYNC</span> <span class="badge-version">WMS v2.0-RELEASE</span></div>
+      </a>
+      <div class="engine-heartbeat-pill">
+        <span class="heartbeat-dot"></span> PG16 3NF ACTIVE • 02:00 BST SWEEP ON
+      </div>
+    </div>
 
     <nav class="nav-links">
       <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">📊 Overview</a>
@@ -57,13 +62,52 @@
     {% block content %}{% endblock %}
   </main>
 
+  <!-- Global Floating Toast Container -->
+  <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
   <!-- Footer -->
-  <footer style="text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border-subtle); margin-top: auto;">
+  <footer style="text-align: center; padding: 24px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border-subtle); margin-top: auto; background: var(--surface-low);">
     <b>RetailSync: Centralized Super Shop Warehouse Management System</b> • Department of Software Engineering, Daffodil International University (DIU)<br>
     Project Team: <b>Raisul Islam Likhon</b> (Lead: 251-35-508), <b>Shottobroto Dey</b> (251-35-017), <b>Golam Husnain Papon</b> (251-35-529) • Section: <b>SWE-44D</b>
   </footer>
 
   <script>
+    // Global M3 Expressive Floating Glass Toast System
+    function showToast(message, type = 'info', title = '') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast-item toast-${type}`;
+
+      const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+      const defaultTitle = type === 'success' ? 'Operation Approved' : type === 'error' ? 'Operational Alert' : 'System Notice';
+      const displayTitle = title || defaultTitle;
+
+      toast.innerHTML = `
+        <div class="toast-icon" style="color: ${type === 'success' ? '#059669' : type === 'error' ? 'var(--error)' : 'var(--primary)'}; font-weight: 800;">${icon}</div>
+        <div class="toast-body">
+          <div class="toast-title">${displayTitle}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close-btn" onclick="dismissToast(this.parentElement)" title="Dismiss">✕</button>
+      `;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        dismissToast(toast);
+      }, 3500);
+    }
+
+    function dismissToast(el) {
+      if (!el || el.classList.contains('toast-dismissing')) return;
+      el.classList.add('toast-dismissing');
+      setTimeout(() => {
+        if (el.parentElement) el.remove();
+      }, 250);
+    }
+
     async function switchDemoRole(username) {
       try {
         const res = await fetch('/api/v1/auth/login', {
@@ -72,10 +116,11 @@
           body: JSON.stringify({ username_or_email: username, password: 'Password123!' })
         });
         if (res.ok) {
-          window.location.reload();
+          showToast(`Switched operational role to ${username}`, 'success', 'Role Updated');
+          setTimeout(() => window.location.reload(), 400);
         }
       } catch (e) {
-        console.error("Role switch error:", e);
+        showToast("Role switch error: " + e.message, 'error', 'Authentication Failed');
       }
     }
   </script>

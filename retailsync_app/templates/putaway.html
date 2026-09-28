@@ -33,13 +33,36 @@
     </div>
 
     <div id="directiveActive" style="display: none; flex-direction: column; gap: 16px;">
-      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--cyan-500); border-radius: var(--radius-sm); padding: 18px;">
-        <div style="font-size: 11px; text-transform: uppercase; color: var(--cyan-400); font-weight: 700; letter-spacing: 0.5px;">Recommended Bin Location:</div>
-        <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--text-primary); margin: 6px 0;" id="suggestedBinCode">
+      <div class="spatial-breadcrumb-card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--primary-700); font-weight: 800; letter-spacing: 0.5px;">Recommended Bin Location:</div>
+          <span class="badge badge-info" id="sugZone">Ambient</span>
+        </div>
+        
+        <div style="font-family: var(--font-heading); font-size: 30px; font-weight: 800; color: var(--text-primary); margin: 6px 0;" id="suggestedBinCode">
           A01-R01-S1-B1
         </div>
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
-          <div>Zone: <b id="sugZone" style="color:var(--cyan-400);">Ambient</b></div>
+
+        <!-- 4-Step Spatial Breadcrumb Directive -->
+        <div class="breadcrumb-trail">
+          <div class="breadcrumb-step">
+            <span>📦 Dock Area</span>
+          </div>
+          <span class="breadcrumb-arrow">➔</span>
+          <div class="breadcrumb-step">
+            <span>Aisle <b id="bcAisle">A01</b></span>
+          </div>
+          <span class="breadcrumb-arrow">➔</span>
+          <div class="breadcrumb-step">
+            <span>Rack <b id="bcRack">R01</b></span>
+          </div>
+          <span class="breadcrumb-arrow">➔</span>
+          <div class="breadcrumb-step highlight">
+            <span>Slot <b id="bcSlot">B1</b></span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 10px;">
           <div>Aisle: <b id="sugAisle">A01</b></div>
           <div>Rack: <b id="sugRack">R01</b></div>
           <div>Shelf: <b id="sugShelf">Tier 1</b></div>
@@ -50,12 +73,12 @@
         Matching temperature zone with empty capacity.
       </div>
 
-      <div style="margin-top: 10px;">
+      <div style="margin-top: 6px;">
         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Scan Bin Barcode to Confirm Placement:</label>
         <input type="text" id="confirmBinScan" class="form-input" placeholder="Scan bin barcode on physical rack..." style="margin-top: 4px;">
       </div>
 
-      <button class="btn-sm btn-primary" onclick="confirmPlacement()" style="padding: 12px; font-size: 14px; font-weight: 700;">
+      <button class="btn-sm btn-primary" onclick="confirmPlacement()" style="padding: 14px; font-size: 14px; font-weight: 700; border-radius: var(--radius-full);">
         Confirm Physical Bin Placement ✓
       </button>
     </div>
@@ -76,6 +99,7 @@ async function loadUnallocated() {
     renderUnallocated();
   } catch (e) {
     console.error("Error loading unallocated batches:", e);
+    showToast("Failed to load staging dock batches", "error", "Data Error");
   }
 }
 
@@ -85,15 +109,15 @@ function renderUnallocated() {
   countEl.innerText = `${unallocated.length} pending`;
 
   if (unallocated.length === 0) {
-    container.innerHTML = `<div style="text-align: center; color: var(--emerald-400); padding: 40px;">✓ Staging dock is clear! All batches have been placed into warehouse bins.</div>`;
+    container.innerHTML = `<div style="text-align: center; color: var(--teal-700); padding: 40px; font-weight: 600;">✓ Staging dock is clear! All batches have been placed into warehouse bins.</div>`;
     return;
   }
 
   container.innerHTML = unallocated.map(b => `
     <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s ease;"
-         onclick="requestSuggestion(${b.batch_id})" onmouseover="this.style.borderColor='var(--cyan-400)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+         onclick="requestSuggestion(${b.batch_id})" onmouseover="this.style.borderColor='var(--primary-500)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-400); font-size: 12px;">${b.lot_number}</span>
+        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-600); font-size: 12px;">${b.lot_number}</span>
         <span class="badge badge-info">${b.temp_required}</span>
       </div>
       <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">${b.product_name}</div>
@@ -123,8 +147,17 @@ async function requestSuggestion(batchId) {
     document.getElementById('sugShelf').innerText = `Tier ${activeSuggestion.shelf}`;
     document.getElementById('sugReason').innerText = activeSuggestion.reason;
     document.getElementById('confirmBinScan').value = activeSuggestion.suggested_bin_code;
+
+    // Update 4-step breadcrumb
+    const binParts = activeSuggestion.suggested_bin_code.split('-');
+    const slotCode = binParts.length >= 4 ? binParts[3] : `B${activeSuggestion.shelf}`;
+    document.getElementById('bcAisle').innerText = activeSuggestion.aisle;
+    document.getElementById('bcRack').innerText = activeSuggestion.rack;
+    document.getElementById('bcSlot').innerText = slotCode;
+
+    showToast(`Optimal routing computed for ${activeBatch.lot_number} ➔ Aisle ${activeSuggestion.aisle}`, "info", "Putaway Directive");
   } catch (e) {
-    alert("Error fetching putaway suggestion: " + e.message);
+    showToast("Error fetching putaway suggestion: " + e.message, "error", "Suggestion Error");
   }
 }
 
@@ -132,10 +165,13 @@ async function confirmPlacement() {
   if (!activeBatch || !activeSuggestion) return;
 
   const scannedCode = document.getElementById('confirmBinScan').value.trim();
+  if (!scannedCode) {
+    showToast("Please scan or enter destination bin barcode", "error", "Barcode Required");
+    return;
+  }
+
   if (scannedCode !== activeSuggestion.suggested_bin_code) {
-    if (!confirm(`Scanned bin code "${scannedCode}" does not match suggested bin "${activeSuggestion.suggested_bin_code}". Override anyway?`)) {
-      return;
-    }
+    showToast(`Scanned bin "${scannedCode}" does not match directive "${activeSuggestion.suggested_bin_code}". Proceeding with manual override...`, "info", "Manual Override");
   }
 
   try {
@@ -149,15 +185,17 @@ async function confirmPlacement() {
     });
     const data = await res.json();
     if (res.ok) {
-      alert(`✓ Batch ${activeBatch.lot_number} successfully placed into Bin ${data.bin_code}!`);
+      showToast(`Batch ${activeBatch.lot_number} successfully placed into Bin ${data.bin_code}!`, "success", "Putaway Confirmed");
       document.getElementById('directiveEmpty').style.display = 'block';
       document.getElementById('directiveActive').style.display = 'none';
       activeBatch = null;
       activeSuggestion = null;
       loadUnallocated();
+    } else {
+      showToast(data.detail || "Putaway confirmation failed", "error", "Putaway Failed");
     }
   } catch (e) {
-    alert("Error confirming putaway: " + e.message);
+    showToast("Error confirming putaway: " + e.message, "error", "Network Error");
   }
 }
 

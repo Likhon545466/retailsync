@@ -10,26 +10,44 @@
 
 <!-- Interactive DSS Parameter Controls -->
 <div class="glass-panel" style="margin-bottom: 24px;">
+  <!-- One-Click Preset Scenario Buttons -->
+  <div style="margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle);">
+    <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+      Quick Scenario Presets:
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="scenarioPresets">
+      <button type="button" class="btn-sm btn-secondary" id="presetNormal" onclick="applyPreset('NORMAL')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px; background: var(--primary-600); color: #fff;">
+        Normal Operations (1.0x)
+      </button>
+      <button type="button" class="btn-sm btn-secondary" id="presetFriday" onclick="applyPreset('FRIDAY')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px;">
+        Friday Rush (1.4x)
+      </button>
+      <button type="button" class="btn-sm btn-secondary" id="presetRamadan" onclick="applyPreset('RAMADAN')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px;">
+        🌙 Ramadan Surge (+250% Demand)
+      </button>
+    </div>
+  </div>
+
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; align-items: center;">
     <div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
         <span style="color: var(--text-muted); text-transform: uppercase;">Service Level (Z-Score):</span>
-        <span id="zScoreVal" style="color: var(--cyan-400); font-family: var(--font-mono);">97.5% (Z = 1.96)</span>
+        <span id="zScoreVal" style="color: var(--primary-600); font-family: var(--font-mono); font-weight: 700;">97.5% (Z = 1.96)</span>
       </div>
-      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%; accent-color: var(--cyan-500);" oninput="updateCalculations()">
+      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%; accent-color: var(--primary-600);" oninput="clearPresetActive(); updateCalculations();">
     </div>
 
     <div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
         <span style="color: var(--text-muted); text-transform: uppercase;">Festival Demand Multiplier:</span>
-        <span id="multVal" style="color: var(--amber-400); font-family: var(--font-mono);">1.0x (Normal Operations)</span>
+        <span id="multVal" style="color: var(--amber-600); font-family: var(--font-mono); font-weight: 700;">1.0x (Normal Operations)</span>
       </div>
-      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%; accent-color: var(--amber-500);" oninput="updateCalculations()">
+      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%; accent-color: var(--amber-500);" oninput="clearPresetActive(); updateCalculations();">
     </div>
 
     <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; text-align: center;">
       <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Reorder Point Breaches</div>
-      <div style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--rose-400);" id="breachCount">0 SKUs</div>
+      <div style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--carmine-600);" id="breachCount">0 SKUs</div>
     </div>
   </div>
 </div>
@@ -62,6 +80,44 @@
 <script>
 let dssData = null;
 
+function clearPresetActive() {
+  document.querySelectorAll('#scenarioPresets button').forEach(btn => {
+    btn.style.background = 'var(--surface-container-medium)';
+    btn.style.color = 'var(--text-secondary)';
+    btn.style.borderColor = 'var(--border-subtle)';
+  });
+}
+
+function applyPreset(scenario) {
+  clearPresetActive();
+  const zSlider = document.getElementById('zScoreSlider');
+  const mSlider = document.getElementById('multiplierSlider');
+
+  if (scenario === 'NORMAL') {
+    zSlider.value = 1.96;
+    mSlider.value = 1.0;
+    const btn = document.getElementById('presetNormal');
+    btn.style.background = 'var(--primary-600)';
+    btn.style.color = '#FFFFFF';
+    showToast("Scenario preset: Normal Operations (1.0x) applied", "info", "Preset Loaded");
+  } else if (scenario === 'FRIDAY') {
+    zSlider.value = 1.96;
+    mSlider.value = 1.4;
+    const btn = document.getElementById('presetFriday');
+    btn.style.background = 'var(--primary-600)';
+    btn.style.color = '#FFFFFF';
+    showToast("Scenario preset: Friday Rush (1.4x demand) applied", "info", "Preset Loaded");
+  } else if (scenario === 'RAMADAN') {
+    zSlider.value = 2.33;
+    mSlider.value = 2.5;
+    const btn = document.getElementById('presetRamadan');
+    btn.style.background = 'var(--primary-600)';
+    btn.style.color = '#FFFFFF';
+    showToast("Scenario preset: 🌙 Ramadan Surge (+250% Demand) applied", "info", "Preset Loaded");
+  }
+  updateCalculations();
+}
+
 async function updateCalculations() {
   const zScore = parseFloat(document.getElementById('zScoreSlider').value);
   const mult = parseFloat(document.getElementById('multiplierSlider').value);
@@ -69,7 +125,7 @@ async function updateCalculations() {
   // Update labels
   const zText = zScore >= 2.33 ? "99.0% (Z = 2.33)" : zScore >= 1.96 ? "97.5% (Z = 1.96)" : "90.0% (Z = 1.28)";
   document.getElementById('zScoreVal').innerText = `${zText}`;
-  document.getElementById('multVal').innerText = mult > 1.0 ? `${mult.toFixed(1)}x (Festival / Rush Demand)` : "1.0x (Normal Operations)";
+  document.getElementById('multVal').innerText = mult > 1.0 ? `${mult.toFixed(1)}x (Festival / Surge Demand)` : "1.0x (Normal Operations)";
 
   try {
     const res = await fetch(`/api/v1/procurement/replenishment?z_score=${zScore}&multiplier=${mult}`);
@@ -77,6 +133,7 @@ async function updateCalculations() {
     renderTable();
   } catch (e) {
     console.error("Error fetching replenishment:", e);
+    showToast("Failed to fetch DSS replenishment calculations", "error", "Calculation Error");
   }
 }
 
@@ -87,17 +144,17 @@ function renderTable() {
   const tbody = document.getElementById('replenishTableBody');
 
   tbody.innerHTML = dssData.items.map(item => `
-    <tr style="${item.is_breached ? 'background: rgba(244, 63, 94, 0.05);' : ''}">
+    <tr style="${item.is_breached ? 'background: rgba(220, 38, 38, 0.04);' : ''}">
       <td>
         <div style="font-weight: 700; color: var(--text-primary);">${item.product_name}</div>
-        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan-400);">${item.sku_code} • ${item.category}</div>
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-600);">${item.sku_code} • ${item.category}</div>
       </td>
-      <td style="font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: ${item.is_breached ? 'var(--rose-400)' : 'var(--emerald-400)'};">
+      <td style="font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: ${item.is_breached ? 'var(--carmine-600)' : 'var(--teal-700)'};">
         ${item.current_stock} PCS
       </td>
       <td style="font-family: var(--font-mono);">${item.greasley_safety_stock} PCS</td>
       <td style="font-family: var(--font-mono); font-weight: 700;">${item.reorder_point} PCS</td>
-      <td style="font-family: var(--font-mono); color: var(--cyan-400); font-weight: 700;">${item.eoq_suggested_order_qty} PCS</td>
+      <td style="font-family: var(--font-mono); color: var(--primary-600); font-weight: 700;">${item.eoq_suggested_order_qty} PCS</td>
       <td style="font-family: var(--font-mono);">৳${item.estimated_po_cost_bdt.toFixed(2)}</td>
       <td>
         ${item.is_breached 
@@ -125,11 +182,13 @@ async function createPoForSku(prodId, supId, qty, cost) {
     });
     const data = await res.json();
     if (res.ok) {
-      alert(`🎉 Purchase Order ${data.po_number} successfully issued to ${data.supplier_name}!\nExpected Delivery: ${data.expected_delivery_date}\nTotal Amount: ৳${data.total_amount_bdt.toFixed(2)}`);
+      showToast(`PO ${data.po_number} successfully issued to ${data.supplier_name}! Expected delivery: ${data.expected_delivery_date}`, "success", "Purchase Order Issued");
       updateCalculations();
+    } else {
+      showToast(data.detail || "Failed to create PO", "error", "PO Creation Failed");
     }
   } catch (e) {
-    alert("Error creating PO: " + e.message);
+    showToast("Error creating PO: " + e.message, "error", "Network Error");
   }
 }
 

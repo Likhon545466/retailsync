@@ -9,27 +9,27 @@
     <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Live telemetry of warehouse bays, racks, tiers, and FEFO perishable batch aging.</p>
   </div>
   <!-- Legend -->
-  <div style="display: flex; gap: 14px; font-size: 12px; background: var(--bg-surface-glass); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: var(--radius-sm);">
-    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--emerald-400); border-radius: 2px;"></span> Occupied &amp; Healthy</span>
-    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--rose-400); border-radius: 2px;"></span> Near Expiry (&lt; 7 Days)</span>
-    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--border-medium); border-radius: 2px;"></span> Available / Empty</span>
+  <div style="display: flex; gap: 14px; font-size: 12px; background: var(--surface-low); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: var(--radius-full); box-shadow: var(--shadow-sm);">
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #10B981; border-radius: 50%;"></span> Occupied &amp; Healthy</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--error); border-radius: 50%;"></span> Near Expiry (&lt; 7 Days)</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: var(--border-medium); border-radius: 50%;"></span> Available / Empty</span>
   </div>
 </div>
 
 <div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px;">
-  <!-- Left: 2D Spatial Rack Grid -->
+  <!-- Left: 2D Spatial Rack Grid with Thermal Zone Bays -->
   <div class="glass-panel">
-    <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-      <button class="btn-sm btn-primary" onclick="filterAisle('ALL')">All Aisles</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('A01')">Aisle A01 (Ambient)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('A02')">Aisle A02 (Ambient)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('B01')">Aisle B01 (Ambient)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('C01')">Aisle C01 (Chilled Dairy)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('D01')">Aisle D01 (Deep Frozen)</button>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;" id="aisleFilterButtons">
+      <button class="btn-sm btn-primary" onclick="filterAisle('ALL', this)" style="border-radius: 9999px;">All Warehouse Bays</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('A01', this)" style="border-radius: 9999px;">Aisle A01 (Ambient)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('A02', this)" style="border-radius: 9999px;">Aisle A02 (Ambient)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('B01', this)" style="border-radius: 9999px;">Aisle B01 (Ambient)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('C01', this)" style="border-radius: 9999px;">❄️ Aisle C01 (Chilled)</button>
+      <button class="btn-sm btn-secondary" onclick="filterAisle('D01', this)" style="border-radius: 9999px;">🧊 Aisle D01 (Frozen)</button>
     </div>
 
-    <div class="warehouse-rack-grid" id="spatialGrid">
-      <div style="text-align: center; color: var(--text-muted); padding: 40px; grid-column: 1/-1;">Rendering spatial warehouse coordinates...</div>
+    <div class="warehouse-bays-container" id="spatialGrid">
+      <div style="text-align: center; color: var(--text-muted); padding: 40px;">Rendering spatial warehouse coordinates...</div>
     </div>
   </div>
 
@@ -79,11 +79,20 @@ async function loadGrid() {
     renderGrid();
   } catch (e) {
     console.error("Error loading warehouse grid:", e);
+    showToast("Failed to load warehouse grid telemetry", "error", "Telemetry Error");
   }
 }
 
-function filterAisle(aisle) {
+function filterAisle(aisle, btn) {
   currentFilter = aisle;
+  if (btn) {
+    document.querySelectorAll('#aisleFilterButtons button').forEach(b => {
+      b.className = 'btn-sm btn-secondary';
+      b.style.borderRadius = '9999px';
+    });
+    btn.className = 'btn-sm btn-primary';
+    btn.style.borderRadius = '9999px';
+  }
   renderGrid();
 }
 
@@ -91,28 +100,79 @@ function renderGrid() {
   const container = document.getElementById('spatialGrid');
   const filtered = currentFilter === 'ALL' ? gridData : gridData.filter(b => b.aisle_number === currentFilter);
 
-  container.innerHTML = filtered.map(b => {
-    let statusClass = 'empty';
-    let statusDot = '<span style="color:var(--text-muted);">● Empty</span>';
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px;">No bins match the selected aisle.</div>`;
+    return;
+  }
 
-    if (b.is_occupied) {
-      if (b.nearest_expiry_days !== null && b.nearest_expiry_days <= 7) {
-        statusClass = 'near-expiry';
-        statusDot = `<span style="color:var(--rose-400); font-weight:700;">● Exp: ${b.nearest_expiry_days}d</span>`;
-      } else {
-        statusClass = 'occupied';
-        statusDot = `<span style="color:var(--emerald-400); font-weight:700;">● Occupied</span>`;
-      }
+  // Group bins by physical aisle bays
+  const aisleMap = new Map();
+  filtered.forEach(b => {
+    if (!aisleMap.has(b.aisle_number)) {
+      aisleMap.set(b.aisle_number, {
+        aisle: b.aisle_number,
+        zone: b.temp_category || 'Ambient',
+        bins: []
+      });
+    }
+    aisleMap.get(b.aisle_number).bins.push(b);
+  });
+
+  let html = '';
+  aisleMap.forEach((group, aisle) => {
+    let zoneClass = 'ambient';
+    let icon = '🌿';
+    let badgeHtml = '<span class="badge" style="background: var(--zone-ambient-badge); color: var(--zone-ambient-text); border: 1px solid var(--zone-ambient-border);">🌿 Ambient Standard (20°C - 25°C)</span>';
+
+    if (group.zone.toLowerCase().includes('chilled') || aisle === 'C01') {
+      zoneClass = 'chilled';
+      icon = '❄️';
+      badgeHtml = '<span class="badge" style="background: var(--zone-cold-badge); color: var(--zone-cold-text); border: 1px solid var(--zone-cold-border);">❄️ Chilled Cold-Chain (2°C - 4°C)</span>';
+    } else if (group.zone.toLowerCase().includes('frozen') || aisle === 'D01') {
+      zoneClass = 'deep-freeze';
+      icon = '🧊';
+      badgeHtml = '<span class="badge" style="background: var(--zone-freeze-badge); color: var(--zone-freeze-text); border: 1px solid var(--zone-freeze-border);">🧊 Deep Frozen (-18°C)</span>';
     }
 
-    return `
-      <div class="bin-cell ${statusClass}" onclick="inspectBin(${b.bin_id})">
-        <div class="bin-code">${b.bin_code}</div>
-        <div class="bin-meta">${b.temp_category}</div>
-        <div style="font-size: 11px; margin-top: 6px;">${statusDot}</div>
+    html += `
+      <div class="aisle-bay-group ${zoneClass}">
+        <div class="aisle-bay-header">
+          <div class="aisle-bay-title">
+            <span>${icon} Aisle Bay ${aisle}</span>
+            <span style="font-size: 11.5px; font-weight: 600; color: var(--text-muted); font-family: var(--font-mono);">(${group.bins.length} Storage Bins)</span>
+          </div>
+          <div>${badgeHtml}</div>
+        </div>
+
+        <div class="warehouse-rack-grid">
+          ${group.bins.map(b => {
+            let statusClass = 'empty';
+            let statusDot = '<span style="color:var(--text-muted);">● Empty</span>';
+
+            if (b.is_occupied) {
+              if (b.nearest_expiry_days !== null && b.nearest_expiry_days <= 7) {
+                statusClass = 'near-expiry';
+                statusDot = `<span style="color:var(--carmine-600); font-weight:700;">● Exp: ${b.nearest_expiry_days}d</span>`;
+              } else {
+                statusClass = 'occupied';
+                statusDot = `<span style="color:var(--teal-700); font-weight:700;">● Occupied</span>`;
+              }
+            }
+
+            return `
+              <div class="bin-cell ${statusClass}" onclick="inspectBin(${b.bin_id})">
+                <div class="bin-code">${b.bin_code}</div>
+                <div class="bin-meta">${b.temp_category}</div>
+                <div style="font-size: 11px; margin-top: 6px;">${statusDot}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
       </div>
     `;
-  }).join('');
+  });
+
+  container.innerHTML = html;
 }
 
 function inspectBin(binId) {
@@ -131,7 +191,7 @@ function inspectBin(binId) {
   document.getElementById('inspSummary').innerText = bin.items_summary;
   
   if (bin.nearest_expiry_days !== null) {
-    document.getElementById('inspExpiry').innerHTML = `Nearest FEFO Expiry: <b style="color:${bin.nearest_expiry_days <= 7 ? 'var(--rose-400)' : 'var(--emerald-400)'}">${bin.nearest_expiry_days} days remaining</b>`;
+    document.getElementById('inspExpiry').innerHTML = `Nearest FEFO Expiry: <b style="color:${bin.nearest_expiry_days <= 7 ? 'var(--carmine-600)' : 'var(--teal-700)'}">${bin.nearest_expiry_days} days remaining</b>`;
   } else {
     document.getElementById('inspExpiry').innerText = 'Nearest FEFO Expiry: N/A';
   }

@@ -44,20 +44,20 @@
 <!-- Operational Modules Quick Launcher Grid -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 28px;">
   
-  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="launcher-card">
     <div>
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">🛒 Frontline Cashier POS</h3>
         <span class="badge badge-success">Sub-2.0s SLA</span>
       </div>
       <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
-        Barcode checkout terminal with live transactional row-level locking (`SELECT ... FOR UPDATE`), automated FEFO batch allocation, and concurrent rush-hour protection.
+        Barcode checkout terminal with live transactional row-level locking (`SELECT ... FOR UPDATE SKIP LOCKED`), automated FEFO batch allocation, and concurrent rush-hour protection.
       </p>
     </div>
     <a href="/pos" class="btn-sm btn-primary" style="text-align: center; padding: 10px;">Launch POS Terminal →</a>
   </div>
 
-  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="launcher-card">
     <div>
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">📥 Inbound Receiving Dock</h3>
@@ -70,7 +70,7 @@
     <a href="/inbound" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Open Dock Receiving →</a>
   </div>
 
-  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="launcher-card">
     <div>
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">📦 Directed Putaway & Picking</h3>
@@ -83,7 +83,7 @@
     <a href="/putaway" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Operator Putaway →</a>
   </div>
 
-  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="launcher-card">
     <div>
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">🗺️ Digital Twin Warehouse Grid</h3>
@@ -96,7 +96,7 @@
     <a href="/warehouse" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Inspect Spatial Twin →</a>
   </div>
 
-  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="launcher-card">
     <div>
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">📈 Replenishment DSS (SCM)</h3>
@@ -109,7 +109,7 @@
     <a href="/procurement" class="btn-sm btn-secondary" style="text-align: center; padding: 10px;">Open DSS Replenishment →</a>
   </div>
 
-  <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="launcher-card">
     <div>
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">📜 Stock Ledger Audit Trail</h3>
