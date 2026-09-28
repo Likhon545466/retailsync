@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Directed Putaway & Spatial Routing</h1>
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Directed Putaway & Spatial Routing</h1>
   <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Algorithmic bin allocation matching product temperature zones with lowest walking distance across Aisles A01–D01.</p>
 </div>
 
@@ -12,7 +12,7 @@
   <!-- Left: Unallocated Batches Queue -->
   <div class="glass-panel">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Batches Awaiting Putaway (Dock Staging)</h3>
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Batches Awaiting Putaway (Dock Staging)</h3>
       <span class="badge badge-warning" id="pendingBatchCount">0 pending</span>
     </div>
 
@@ -23,7 +23,7 @@
 
   <!-- Right: Directed Routing Prompt -->
   <div class="glass-panel" style="display: flex; flex-direction: column;">
-    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Operator Putaway Directive</h3>
+    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Operator Putaway Directive</h3>
     <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
       Follow physical floor routing to scan destination bin barcode.
     </div>
@@ -35,7 +35,7 @@
     <div id="directiveActive" style="display: none; flex-direction: column; gap: 16px;">
       <div style="background: var(--bg-surface-elevated); border: 1px solid var(--cyan-500); border-radius: var(--radius-sm); padding: 18px;">
         <div style="font-size: 11px; text-transform: uppercase; color: var(--cyan-400); font-weight: 700; letter-spacing: 0.5px;">Recommended Bin Location:</div>
-        <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: #fff; margin: 6px 0;" id="suggestedBinCode">
+        <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--text-primary); margin: 6px 0;" id="suggestedBinCode">
           A01-R01-S1-B1
         </div>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
@@ -96,7 +96,7 @@ function renderUnallocated() {
         <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-400); font-size: 12px;">${b.lot_number}</span>
         <span class="badge badge-info">${b.temp_required}</span>
       </div>
-      <div style="font-size: 14px; font-weight: 700; color: #fff;">${b.product_name}</div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">${b.product_name}</div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px;">
         <span>Quantity: <b>${b.current_quantity} PCS</b></span>
         <span>Expiry: <b>${b.expiry_date}</b></span>

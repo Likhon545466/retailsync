@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Algorithmic Replenishment & Decision Support System (DSS)</h1>
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Algorithmic Replenishment & Decision Support System (DSS)</h1>
   <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Dynamic Safety Stock factoring demand &amp; lead-time variance (Greasley's Formula), Wilson EOQ, and 1-click PO issuance.</p>
 </div>
 
@@ -89,7 +89,7 @@ function renderTable() {
   tbody.innerHTML = dssData.items.map(item => `
     <tr style="${item.is_breached ? 'background: rgba(244, 63, 94, 0.05);' : ''}">
       <td>
-        <div style="font-weight: 700; color: #fff;">${item.product_name}</div>
+        <div style="font-weight: 700; color: var(--text-primary);">${item.product_name}</div>
         <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan-400);">${item.sku_code} • ${item.category}</div>
       </td>
       <td style="font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: ${item.is_breached ? 'var(--rose-400)' : 'var(--emerald-400)'};">

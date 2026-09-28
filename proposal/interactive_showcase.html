@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8">
@@ -3008,8 +3008,7 @@
       localStorage.setItem('retailsync-theme', theme);
     }
 
-    const savedTheme = localStorage.getItem('retailsync-theme') ||
-      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    const savedTheme = localStorage.getItem('retailsync-theme') || 'light';
     applyTheme(savedTheme);
 
     themeToggleBtn.addEventListener('click', () => {

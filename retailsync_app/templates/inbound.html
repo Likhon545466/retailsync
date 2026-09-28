@@ -4,14 +4,14 @@
 
 {% block content %}
 <div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: #fff;">Inbound Receiving Dock & Quality Gate</h1>
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Inbound Receiving Dock & Quality Gate</h1>
   <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Digital PO receipt verification, automated shelf-life threshold validation (&gt; 65%), and Goods Receipt Note (GRN) generation.</p>
 </div>
 
 <div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
   <!-- Left: Open Purchase Orders List -->
   <div class="glass-panel">
-    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">Open Purchase Orders Awaiting Delivery</h3>
+    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">Open Purchase Orders Awaiting Delivery</h3>
     
     <div id="poListContainer">
       <!-- Populated via JS -->
@@ -21,7 +21,7 @@
 
   <!-- Right: Inbound Receiving Inspector Form -->
   <div class="glass-panel" id="receivingFormPanel" style="display: flex; flex-direction: column;">
-    <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Dock Quality Inspection</h3>
+    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Dock Quality Inspection</h3>
     <div style="font-size: 12px; color: var(--cyan-400); font-family: var(--font-mono); margin-bottom: 16px;" id="selectedPoHeader">
       Select a PO from the left to start inspection
     </div>
@@ -114,7 +114,7 @@ function renderPOList() {
         <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-400); font-size: 13px;">${po.po_number}</span>
         <span class="badge ${po.status === 'ISSUED' ? 'badge-info' : 'badge-warning'}">${po.status}</span>
       </div>
-      <div style="font-size: 14px; font-weight: 700; color: #fff;">${po.supplier_name}</div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">${po.supplier_name}</div>
       <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
         Expected: <b>${po.expected_delivery_date}</b> • Total: <b>৳${po.total_amount_bdt.toFixed(2)}</b>
       </div>
