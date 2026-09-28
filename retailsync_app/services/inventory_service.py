@@ -83,8 +83,8 @@ class InventoryService:
             ).order_by(models.InventoryBatch.expiry_date.asc())
 
             try:
-                # Use row-level locking where supported
-                batches = batches_query.with_for_update().all()
+                # Non-blocking FEFO batch acquisition: SKIP LOCKED prevents queue stacking
+                batches = batches_query.with_for_update(skip_locked=True).all()
             except Exception:
                 # Fallback gracefully for SQLite
                 batches = batches_query.all()
