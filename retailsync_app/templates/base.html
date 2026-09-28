@@ -16,7 +16,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/static/css/app.css?v=2.0.1">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
@@ -26,33 +26,33 @@
   <!-- Top Navigation Bar (Strict 3-Zone Flex Layout) -->
   <header class="navbar-wrapper">
     <div class="navbar-app">
-      <!-- Zone 1 (Left): Brand logo + RETAILSYNC + v2.0-RELEASE pill badge -->
+      <!-- Zone 1 (Left): Brand logo (30x30) + RETAILSYNC + v2.0-RELEASE badge -->
       <div class="nav-zone-left">
         <a href="/dashboard" class="brand-wrapper">
-          <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img">
+          <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img" style="width: 30px; height: 30px;">
           <div class="brand-title">RETAIL<span class="accent">SYNC</span> <span class="badge-version">v2.0-RELEASE</span></div>
         </a>
       </div>
 
-      <!-- Zone 2 (Center): Clean, refined navigation links -->
+      <!-- Zone 2 (Center): Clean, text-only navigation links (Zero Wrapping Guaranteed) -->
       <nav class="nav-zone-center nav-links">
-        <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">📊 Overview</a>
-        <a href="/pos" class="nav-item {% if active_page == 'pos' %}active{% endif %}">🛒 POS Register</a>
-        <a href="/inbound" class="nav-item {% if active_page == 'inbound' %}active{% endif %}">📥 Inbound Dock</a>
-        <a href="/putaway" class="nav-item {% if active_page == 'putaway' %}active{% endif %}">📦 Putaway</a>
-        <a href="/warehouse" class="nav-item {% if active_page == 'warehouse' %}active{% endif %}">🗺️ Digital Twin</a>
-        <a href="/procurement" class="nav-item {% if active_page == 'procurement' %}active{% endif %}">📈 Replenishment DSS</a>
-        <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">📜 Stock Ledger</a>
+        <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">Overview</a>
+        <a href="/pos" class="nav-item {% if active_page == 'pos' %}active{% endif %}">POS Register</a>
+        <a href="/inbound" class="nav-item {% if active_page == 'inbound' %}active{% endif %}">Inbound Dock</a>
+        <a href="/putaway" class="nav-item {% if active_page == 'putaway' %}active{% endif %}">Putaway</a>
+        <a href="/warehouse" class="nav-item {% if active_page == 'warehouse' %}active{% endif %}">Digital Twin</a>
+        <a href="/procurement" class="nav-item {% if active_page == 'procurement' %}active{% endif %}">Replenishment DSS</a>
+        <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">Stock Ledger</a>
       </nav>
 
       <!-- Zone 3 (Right - Compact Utility Dock) -->
       <div class="nav-zone-right user-controls">
         <!-- Theme Toggle Button -->
-        <button id="themeToggleBtn" onclick="toggleTheme()" class="btn-theme-toggle" title="Switch Theme">☀️</button>
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="btn-theme-toggle" title="Toggle Theme" style="background:none; border:1px solid var(--border-subtle); border-radius:8px; padding:6px 10px; cursor:pointer; font-size:14px;">☀️</button>
 
         <!-- Compact Role Switcher with Custom Chevron -->
         <div class="role-select-wrapper">
-          <select id="roleSwitcher" class="select-role-compact" onchange="switchDemoRole(this.value)" title="Quickly switch operational role for demonstration">
+          <select id="roleSwitcher" class="select-role-compact" onchange="switchDemoRole(this.value)" title="Quickly switch operational role for demonstration" style="border: 1px solid var(--border-subtle); border-radius: 8px;">
             <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Role: Cashier</option>
             <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Role: Dock Clerk</option>
             <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Role: Floor Operator</option>
@@ -64,13 +64,13 @@
         </div>
 
         <!-- Clean Compact Showcase & Slides Links -->
-        <a href="/showcase" target="_blank" class="nav-ext-link" title="Open Public Proposal Showcase">Showcase ↗</a>
-        <a href="/slides" target="_blank" class="nav-ext-link" title="Open Defense Slides">Slides ↗</a>
+        <a href="/showcase" target="_blank" class="nav-ext-link" title="Open Public Proposal Showcase" style="font-size: 12px;">Showcase ↗</a>
+        <a href="/slides" target="_blank" class="nav-ext-link" title="Open Defense Slides" style="font-size: 12px;">Slides ↗</a>
       </div>
     </div>
   </header>
 
-  <!-- Main Content Container (max-width: 1320px) -->
+  <!-- Main Content Container (max-width: 1280px) -->
   <main class="app-container">
     {% block content %}{% endblock %}
   </main>
@@ -95,22 +95,20 @@
   </footer>
 
   <script>
-    // Theme Toggle JavaScript Logic
+    // Theme Toggle Persistence Script
     function initTheme() {
       const saved = localStorage.getItem('retailsync-theme') || 'light';
       document.documentElement.setAttribute('data-theme', saved);
-      updateThemeIcon(saved);
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.innerText = saved === 'light' ? '🌙' : '☀️';
     }
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       const next = current === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('retailsync-theme', next);
-      updateThemeIcon(next);
-    }
-    function updateThemeIcon(theme) {
       const btn = document.getElementById('themeToggleBtn');
-      if (btn) btn.innerHTML = theme === 'light' ? '🌙' : '☀️';
+      if (btn) btn.innerText = next === 'light' ? '🌙' : '☀️';
     }
     document.addEventListener('DOMContentLoaded', initTheme);
 

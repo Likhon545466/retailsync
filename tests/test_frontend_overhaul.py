@@ -131,35 +131,43 @@ def test_procurement_scenario_presets():
 
 
 def test_css_dual_theme_tokens():
-    """Verify app.css defines all required Light and Dark mode variables."""
+    """Verify app.css defines all required Light and Dark mode variables for Apple Bento Clean."""
     css_path = os.path.join(os.path.dirname(__file__), "..", "retailsync_app", "static", "css", "app.css")
     with open(css_path, "r", encoding="utf-8") as f:
         css = f.read()
 
-    # Day Mode tokens
-    assert 'html[data-theme="light"]' in css
-    assert "--bg-canvas: #eef2f6" in css
-    assert "--bg-surface: #ffffff" in css
-    assert "--primary-500: #2563eb" in css
-    assert "--emerald-400: #059669" in css
-    assert "--amber-400: #d97706" in css
-    assert "--rose-400: #dc2626" in css
-    assert "--cyan-400: #0284c7" in css
-    assert "--table-th-bg: #e2e8f0" in css
-    assert "--table-row-alt: #f8fafc" in css
+    # Typography
+    assert "--font-heading: 'Manrope'" in css
+    assert "--font-body: 'Inter'" in css
+    assert "--font-mono: 'JetBrains Mono'" in css
 
-    # Dark Mode tokens
+    # Day Mode tokens (Apple Calm Mist)
+    assert 'html[data-theme="light"]' in css
+    assert "--bg-canvas: #f5f6f8" in css
+    assert "--bg-surface: #ffffff" in css
+    assert "--primary: #2563eb" in css
+    assert "--emerald: #059669" in css
+    assert "--amber: #d97706" in css
+    assert "--rose: #dc2626" in css
+    assert "--cyan: #0284c7" in css
+    assert "--table-th-bg: #f9fafb" in css
+    assert "--table-row-alt: #fcfdfe" in css
+    assert "--radius-card: 16px" in css
+    assert "--shadow-bento:" in css
+
+    # Dark Mode tokens (Apple Space Charcoal)
     assert 'html[data-theme="dark"]' in css
-    assert "--bg-canvas: #0b0f19" in css
-    assert "--bg-surface: #111827" in css
-    assert "--primary-500: #38bdf8" in css
-    assert "--emerald-400: #10b981" in css
-    assert "--amber-400: #f59e0b" in css
-    assert "--rose-400: #f43f5e" in css
-    assert "--cyan-400: #38bdf8" in css
-    assert "--table-th-bg: #1e293b" in css
-    assert "--table-row-alt: #162032" in css
+    assert "--bg-canvas: #0c0e14" in css
+    assert "--bg-surface: #151821" in css
+    assert "--primary: #38bdf8" in css
+    assert "--emerald: #10b981" in css
+    assert "--amber: #f59e0b" in css
+    assert "--rose: #f43f5e" in css
+    assert "--cyan: #38bdf8" in css
+    assert "--table-th-bg: #1c202d" in css
+    assert "--table-row-alt: #181c27" in css
 
     # Constraints
     assert "max-width: 1440px" in css
-    assert "max-width: 1320px" in css
+    assert "max-width: 1280px" in css
+

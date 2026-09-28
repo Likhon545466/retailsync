@@ -8,38 +8,32 @@
   <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Tamper-proof chronological transaction ledger tracking physical inventory deltas across all retail channels.</p>
 </div>
 
-<div class="glass-panel">
-  <div class="table-toolbar">
-    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-      <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">Stock Ledger Audit Trail</h3>
-      <span id="ledgerCountBadge" class="badge badge-info">0 records</span>
-    </div>
+<div class="bento-card glass-panel" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 24px; box-shadow: var(--shadow-bento);">
+  <!-- Search & Export Toolbar -->
+  <div class="table-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;">
+      <!-- Search input -->
+      <input type="text" id="ledgerSearchInput" placeholder="Filter transactions by SKU, Ref #, Product, or User..." class="form-input" style="max-width: 380px;" oninput="filterLedger()">
 
-    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <!-- Live Search Input -->
-      <div class="table-search-wrapper">
-        <input type="text" id="ledgerSearchInput" class="form-input table-search-input" placeholder="Search by SKU, Reference #, Product Name, or Operator..." oninput="filterLedger()">
-      </div>
-
-      <!-- Filter dropdown by Transaction Type -->
-      <select id="ledgerTypeFilter" class="form-input" onchange="filterLedger()" style="min-height: 36px; padding: 6px 12px; font-size: 12.5px; width: auto;">
-        <option value="ALL">All Types</option>
-        <option value="POS_SALE_FEFO">POS_SALE_FEFO</option>
-        <option value="GRN_RECEIPT">GRN_RECEIPT</option>
-        <option value="PUTAWAY">PUTAWAY</option>
-        <option value="WRITE_OFF">WRITE_OFF</option>
+      <!-- Transaction Type filter -->
+      <select id="ledgerTypeFilter" name="typeFilter" class="form-input" style="max-width: 200px;" onchange="filterLedger()">
+        <option value="ALL">All Transaction Types</option>
+        <option value="POS_SALE">POS Sales</option>
+        <option value="POS_SALE_FEFO">POS Sales (FEFO)</option>
+        <option value="GRN_RECEIPT">Inbound Receipts</option>
+        <option value="PUTAWAY">Putaway Moves</option>
+        <option value="QUARANTINE">Quarantine</option>
+        <option value="WRITE_OFF">Write Offs</option>
       </select>
 
-      <!-- ⬇ Export CSV button -->
-      <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()" title="Export compliant audit ledger to CSV">
-        ⬇ Export CSV
-      </button>
-
-      <!-- Refresh button -->
-      <button class="btn-sm btn-secondary" onclick="loadLedger()" title="Refresh transaction ledger">
-        ↻ Refresh
-      </button>
+      <span id="ledgerCountBadge" class="badge badge-info" style="font-family: var(--font-mono); font-variant-numeric: tabular-nums;">0 records</span>
     </div>
+
+    <!-- Export CSV button -->
+    <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()" style="margin-left: auto;">⬇ Export CSV</button>
+
+    <!-- Refresh button -->
+    <button class="btn-sm btn-secondary" onclick="loadLedger()" title="Refresh transaction ledger">↻ Refresh</button>
   </div>
 
   <div class="table-responsive">
@@ -81,13 +75,19 @@ async function loadLedger() {
 
 function filterLedger() {
   const searchInput = document.getElementById('ledgerSearchInput');
-  const typeFilter = document.getElementById('ledgerTypeFilter');
+  const typeFilter = document.getElementById('ledgerTypeFilter') || document.getElementById('typeFilter');
   const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
   const type = typeFilter ? typeFilter.value : 'ALL';
 
   const filtered = allLedgerEntries.filter(e => {
-    if (type !== 'ALL' && e.transaction_type !== type) {
-      return false;
+    if (type !== 'ALL') {
+      if (type === 'POS_SALE' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
+        // match
+      } else if (type === 'POS_SALE_FEFO' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
+        // match
+      } else if (e.transaction_type !== type) {
+        return false;
+      }
     }
     if (!q) return true;
     const matchRef = (e.reference_number || '').toLowerCase().includes(q);
@@ -115,26 +115,26 @@ function renderLedger(entries) {
 
   tbody.innerHTML = entries.map(e => {
     const isDeduction = e.quantity_change < 0;
-    const deltaColor = isDeduction ? 'var(--rose-400)' : 'var(--emerald-400)';
-    const deltaBg = isDeduction ? 'var(--rose-50)' : 'var(--emerald-50)';
+    const deltaColor = isDeduction ? 'var(--rose)' : 'var(--emerald)';
+    const deltaBg = isDeduction ? 'var(--rose-soft)' : 'var(--emerald-soft)';
     const deltaSign = e.quantity_change > 0 ? `+${e.quantity_change}` : `${e.quantity_change}`;
 
     return `
       <tr>
-        <td style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); white-space: nowrap;">${e.timestamp}</td>
-        <td style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-500); white-space: nowrap;">${e.reference_number || 'N/A'}</td>
+        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 11.5px; color: var(--text-muted); white-space: nowrap;">${e.timestamp}</td>
+        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; color: var(--primary); white-space: nowrap;">${e.reference_number || 'N/A'}</td>
         <td>
           <div style="font-weight: 700; color: var(--text-primary);">${e.product_name}</div>
-          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">${e.sku_code}</div>
+          <div style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 11px; color: var(--text-muted);">${e.sku_code}</div>
         </td>
-        <td style="font-family: var(--font-mono); white-space: nowrap;">${e.lot_number}</td>
+        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap;">${e.lot_number}</td>
         <td><span class="badge badge-info">${e.transaction_type}</span></td>
         <td style="white-space: nowrap;">
-          <span style="font-family: var(--font-mono); font-weight: 800; font-size: 12.5px; padding: 3px 9px; border-radius: var(--radius-full); background: ${deltaBg}; color: ${deltaColor}; border: 1px solid var(--border-subtle); display: inline-block;">
+          <span style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 12.5px; padding: 3px 9px; border-radius: var(--radius-full); background: ${deltaBg}; color: ${deltaColor}; border: 1px solid var(--border-subtle); display: inline-block;">
             ${deltaSign} PCS
           </span>
         </td>
-        <td style="font-family: var(--font-mono); font-size: 12.5px; white-space: nowrap;">
+        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12.5px; white-space: nowrap;">
           ${e.previous_balance} → <b style="color: var(--text-primary);">${e.new_balance} PCS</b>
         </td>
         <td style="white-space: nowrap;">
@@ -145,14 +145,23 @@ function renderLedger(entries) {
   }).join('');
 }
 
+
 function exportLedgerCSV() {
   const searchInput = document.getElementById('ledgerSearchInput');
-  const typeFilter = document.getElementById('ledgerTypeFilter');
+  const typeFilter = document.getElementById('ledgerTypeFilter') || document.getElementById('typeFilter');
   const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
   const type = typeFilter ? typeFilter.value : 'ALL';
 
   const dataToExport = allLedgerEntries.filter(e => {
-    if (type !== 'ALL' && e.transaction_type !== type) return false;
+    if (type !== 'ALL') {
+      if (type === 'POS_SALE' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
+        // match
+      } else if (type === 'POS_SALE_FEFO' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
+        // match
+      } else if (e.transaction_type !== type) {
+        return false;
+      }
+    }
     if (!q) return true;
     return (e.reference_number || '').toLowerCase().includes(q) ||
            (e.sku_code || '').toLowerCase().includes(q) ||

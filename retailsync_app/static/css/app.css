@@ -1,204 +1,223 @@
 /* ==============================================================================
-   RetailSync Enterprise WMS - Dual Theme System (Day & Night Mode)
+   RetailSync Enterprise WMS - Apple Bento Clean Design System
    Modern Enterprise Architecture for Centralized Super Shop Operations
    Author: Raisul Islam Likhon (251-35-508), Shottobroto Dey, Golam Husnain Papon
    Institution: Daffodil International University (DIU) — SWE-44D
    ============================================================================== */
 
 /* ------------------------------------------------------------------------------
-   1. Design Tokens & CSS Variables (Day & Night Architecture)
+   1. Design Tokens & CSS Variables (Apple Bento Clean: Day & Night)
    ------------------------------------------------------------------------------ */
 
 :root,
-html[data-theme="light"] {
-  /* Typography Tokens */
-  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+html[data-theme="light"],
+[data-theme="light"] {
+  /* Typography Tokens: Manrope (Headings) + Inter (Body) + JetBrains Mono (Code/Numerics) */
+  --font-heading: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  /* [data-theme="light"] (Day Mode - Rich Architectural Slate, ZERO glare) */
-  --bg-canvas: #eef2f6;
+  /* [data-theme="light"] (Day Mode - Apple Calm Mist, ZERO eye glare) */
+  --bg-canvas: #f5f6f8;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #f8fafc;
-  --bg-interactive: #e2e8f0;
-  --bg-interactive-hover: #cbd5e1;
-  --border-subtle: #cbd5e1;
-  --border-medium: #94a3b8;
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --primary-500: #2563eb;
-  --primary-50: #eff6ff;
-  --emerald-400: #059669;
-  --emerald-50: #ecfdf5;
-  --amber-400: #d97706;
-  --amber-50: #fef3c7;
-  --rose-400: #dc2626;
-  --rose-50: #fee2e2;
-  --cyan-400: #0284c7;
-  --cyan-50: #e0f2fe;
-  --table-th-bg: #e2e8f0;
-  --table-row-alt: #f8fafc;
-  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
-  --shadow-card-hover: 0 10px 24px -3px rgba(15, 23, 42, 0.12), 0 4px 6px -2px rgba(15, 23, 42, 0.05);
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-modal: 0 24px 48px -12px rgba(15, 23, 42, 0.18), 0 12px 24px -8px rgba(15, 23, 42, 0.10);
-  --shadow-toast: 0 16px 36px -6px rgba(15, 23, 42, 0.14), 0 6px 16px -4px rgba(15, 23, 42, 0.08);
+  --bg-surface-elevated: #fafbfc;
+  --border-subtle: #e5e7eb;
+  --border-medium: #d1d5db;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --primary: #2563eb;
+  --primary-soft: #eff6ff;
+  --emerald: #059669;
+  --emerald-soft: #ecfdf5;
+  --amber: #d97706;
+  --amber-soft: #fef3c7;
+  --rose: #dc2626;
+  --rose-soft: #fee2e2;
+  --cyan: #0284c7;
+  --cyan-soft: #e0f2fe;
 
-  /* Legacy & Semantic Variable Bridges */
-  --surface-low: var(--bg-surface);
-  --surface-medium: var(--bg-surface-elevated);
-  --surface-high: var(--bg-interactive);
-  --surface-container-medium: var(--bg-surface-elevated);
-  
-  --primary: var(--primary-500);
+  /* Expressive Bento Geometry & Shadows */
+  --radius-card: 16px;
+  --radius-sm: 10px;
+  --radius-full: 9999px;
+  --shadow-bento: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.07), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
+  --table-th-bg: #f9fafb;
+  --table-row-alt: #fcfdfe;
+
+  /* Aliases & Semantic Bridges */
+  --primary-500: var(--primary);
+  --primary-600: var(--primary);
+  --primary-700: #1d4ed8;
+  --primary-50: var(--primary-soft);
+  --primary-container: var(--primary-soft);
   --primary-hover: #1d4ed8;
-  --primary-container: var(--primary-50);
   --on-primary: #ffffff;
   --on-primary-container: #1e40af;
 
-  --secondary: var(--emerald-400);
+  --emerald-400: var(--emerald);
+  --emerald-50: var(--emerald-soft);
+  --secondary: var(--emerald);
   --secondary-hover: #047857;
-  --secondary-container: var(--emerald-50);
+  --secondary-container: var(--emerald-soft);
   --on-secondary: #ffffff;
-  --on-secondary-container: #065f46;
 
-  --tertiary: var(--amber-400);
-  --tertiary-hover: #b45309;
-  --tertiary-container: var(--amber-50);
-  --on-tertiary: #ffffff;
-  --on-tertiary-container: #78350f;
-
-  --error: var(--rose-400);
-  --error-hover: #b91c1c;
-  --error-container: var(--rose-50);
-  --on-error: #ffffff;
-  --on-error-container: #991b1b;
-
-  --primary-600: var(--primary-500);
-  --primary-700: #1d4ed8;
-  --teal-700: var(--emerald-400);
-  --carmine-600: var(--rose-400);
-  --amber-500: var(--amber-400);
+  --amber-400: var(--amber);
+  --amber-50: var(--amber-soft);
+  --amber-500: var(--amber);
   --amber-600: #b45309;
+  --tertiary: var(--amber);
+  --tertiary-hover: #b45309;
+  --tertiary-container: var(--amber-soft);
+  --on-tertiary: #ffffff;
+
+  --rose-400: var(--rose);
+  --rose-50: var(--rose-soft);
+  --error: var(--rose);
+  --error-hover: #b91c1c;
+  --error-container: var(--rose-soft);
+  --on-error: #ffffff;
+
+  --cyan-400: var(--cyan);
+  --cyan-50: var(--cyan-soft);
+  --teal-700: var(--emerald);
+  --carmine-600: var(--rose);
+
+  --surface-low: var(--bg-surface);
+  --surface-medium: var(--bg-surface-elevated);
+  --surface-high: #e2e8f0;
+  --surface-container-low: var(--bg-surface);
+  --surface-container-medium: var(--bg-surface-elevated);
+  --shadow-card: var(--shadow-bento);
+  --shadow-card-hover: var(--shadow-hover);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.12), 0 12px 24px -8px rgba(0, 0, 0, 0.06);
+  --shadow-toast: 0 16px 36px -6px rgba(0, 0, 0, 0.12), 0 6px 16px -4px rgba(0, 0, 0, 0.06);
+
+  --radius-xs: 6px;
+  --radius-md: 14px;
+  --radius-modal: 20px;
+  --target-touch-min: 44px;
+  --target-touch-lg: 52px;
 
   /* Warehouse Temperature Zones (Light) */
   --zone-ambient-bg: #ecfdf5;
   --zone-ambient-border: #a7f3d0;
   --zone-ambient-text: #065f46;
   --zone-ambient-badge: #d1fae5;
-
   --zone-cold-bg: #f0f9ff;
   --zone-cold-border: #bae6fd;
   --zone-cold-text: #0369a1;
   --zone-cold-badge: #e0f2fe;
-
   --zone-freeze-bg: #faf5ff;
   --zone-freeze-border: #e9d5ff;
   --zone-freeze-text: #6b21a8;
   --zone-freeze-badge: #f3e8ff;
-
   --zone-cage-bg: #fffbeb;
   --zone-cage-border: #fde68a;
   --zone-cage-text: #92400e;
   --zone-cage-badge: #fef3c7;
-
-  /* Expressive Geometry */
-  --radius-xs: 6px;
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-card: 16px;
-  --radius-modal: 20px;
-  --radius-full: 9999px;
-
-  /* Touch Targets */
-  --target-touch-min: 44px;
-  --target-touch-lg: 52px;
 }
 
-html[data-theme="dark"] {
-  /* [data-theme="dark"] (Night Mode - Deep Obsidian Tech, matches /slides & /showcase) */
-  --bg-canvas: #0b0f19;
-  --bg-surface: #111827;
-  --bg-surface-elevated: #1e293b;
-  --bg-interactive: #1f2937;
-  --bg-interactive-hover: #374151;
-  --border-subtle: rgba(255, 255, 255, 0.12);
-  --border-medium: rgba(255, 255, 255, 0.22);
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --primary-500: #38bdf8;
-  --primary-50: rgba(14, 165, 233, 0.18);
-  --emerald-400: #10b981;
-  --emerald-50: rgba(16, 185, 129, 0.18);
-  --amber-400: #f59e0b;
-  --amber-50: rgba(245, 158, 11, 0.18);
-  --rose-400: #f43f5e;
-  --rose-50: rgba(244, 63, 94, 0.18);
-  --cyan-400: #38bdf8;
-  --cyan-50: rgba(56, 189, 248, 0.18);
-  --table-th-bg: #1e293b;
-  --table-row-alt: #162032;
-  --shadow-card: 0 8px 24px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --shadow-card-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+html[data-theme="dark"],
+[data-theme="dark"] {
+  /* [data-theme="dark"] (Night Mode - Apple Space Charcoal) */
+  --bg-canvas: #0c0e14;
+  --bg-surface: #151821;
+  --bg-surface-elevated: #1c202d;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --primary: #38bdf8;
+  --primary-soft: rgba(56, 189, 248, 0.15);
+  --emerald: #10b981;
+  --emerald-soft: rgba(16, 185, 129, 0.15);
+  --amber: #f59e0b;
+  --amber-soft: rgba(245, 158, 11, 0.15);
+  --rose: #f43f5e;
+  --rose-soft: rgba(244, 63, 94, 0.15);
+  --cyan: #38bdf8;
+  --cyan-soft: rgba(56, 189, 248, 0.15);
+
+  --radius-card: 16px;
+  --radius-sm: 10px;
+  --radius-full: 9999px;
+  --shadow-bento: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-hover: 0 16px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --table-th-bg: #1c202d;
+  --table-row-alt: #181c27;
+
+  /* Aliases & Semantic Bridges */
+  --primary-500: var(--primary);
+  --primary-600: var(--primary);
+  --primary-700: #7dd3fc;
+  --primary-50: var(--primary-soft);
+  --primary-container: var(--primary-soft);
+  --primary-hover: #0284c7;
+  --on-primary: #0c0e14;
+  --on-primary-container: #bae6fd;
+
+  --emerald-400: var(--emerald);
+  --emerald-50: var(--emerald-soft);
+  --secondary: var(--emerald);
+  --secondary-hover: #059669;
+  --secondary-container: var(--emerald-soft);
+  --on-secondary: #0c0e14;
+
+  --amber-400: var(--amber);
+  --amber-50: var(--amber-soft);
+  --amber-500: var(--amber);
+  --amber-600: #fbbf24;
+  --tertiary: var(--amber);
+  --tertiary-hover: #d97706;
+  --tertiary-container: var(--amber-soft);
+  --on-tertiary: #0c0e14;
+
+  --rose-400: var(--rose);
+  --rose-50: var(--rose-soft);
+  --error: var(--rose);
+  --error-hover: #e11d48;
+  --error-container: var(--rose-soft);
+  --on-error: #0c0e14;
+
+  --cyan-400: var(--cyan);
+  --cyan-50: var(--cyan-soft);
+  --teal-700: var(--emerald);
+  --carmine-600: var(--rose);
+
+  --surface-low: var(--bg-surface);
+  --surface-medium: var(--bg-surface-elevated);
+  --surface-high: #1c202d;
+  --surface-container-low: var(--bg-surface);
+  --surface-container-medium: var(--bg-surface-elevated);
+  --shadow-card: var(--shadow-bento);
+  --shadow-card-hover: var(--shadow-hover);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
   --shadow-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --shadow-toast: 0 16px 36px -6px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
-  /* Legacy & Semantic Variable Bridges */
-  --surface-low: var(--bg-surface);
-  --surface-medium: var(--bg-surface-elevated);
-  --surface-high: var(--bg-interactive);
-  --surface-container-medium: var(--bg-surface-elevated);
-
-  --primary: var(--primary-500);
-  --primary-hover: #0284c7;
-  --primary-container: var(--primary-50);
-  --on-primary: #0b0f19;
-  --on-primary-container: #bae6fd;
-
-  --secondary: var(--emerald-400);
-  --secondary-hover: #059669;
-  --secondary-container: var(--emerald-50);
-  --on-secondary: #0b0f19;
-  --on-secondary-container: #a7f3d0;
-
-  --tertiary: var(--amber-400);
-  --tertiary-hover: #d97706;
-  --tertiary-container: var(--amber-50);
-  --on-tertiary: #0b0f19;
-  --on-tertiary-container: #fde68a;
-
-  --error: var(--rose-400);
-  --error-hover: #e11d48;
-  --error-container: var(--rose-50);
-  --on-error: #0b0f19;
-  --on-error-container: #fecdd3;
-
-  --primary-600: var(--primary-500);
-  --primary-700: #7dd3fc;
-  --teal-700: var(--emerald-400);
-  --carmine-600: var(--rose-400);
-  --amber-500: var(--amber-400);
-  --amber-600: #fbbf24;
+  --radius-xs: 6px;
+  --radius-md: 14px;
+  --radius-modal: 20px;
+  --target-touch-min: 44px;
+  --target-touch-lg: 52px;
 
   /* Warehouse Temperature Zones (Dark) */
   --zone-ambient-bg: rgba(16, 185, 129, 0.12);
   --zone-ambient-border: rgba(16, 185, 129, 0.35);
   --zone-ambient-text: #34d399;
   --zone-ambient-badge: rgba(16, 185, 129, 0.2);
-
   --zone-cold-bg: rgba(56, 189, 248, 0.12);
   --zone-cold-border: rgba(56, 189, 248, 0.35);
   --zone-cold-text: #7dd3fc;
   --zone-cold-badge: rgba(56, 189, 248, 0.2);
-
   --zone-freeze-bg: rgba(168, 85, 247, 0.12);
   --zone-freeze-border: rgba(168, 85, 247, 0.35);
   --zone-freeze-text: #c084fc;
   --zone-freeze-badge: rgba(168, 85, 247, 0.2);
-
   --zone-cage-bg: rgba(245, 158, 11, 0.12);
   --zone-cage-border: rgba(245, 158, 11, 0.35);
   --zone-cage-text: #fbbf24;
@@ -236,28 +255,29 @@ body {
   top: 0;
   z-index: 1000;
   width: 100%;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Strict 3-Zone Flex Navbar */
+/* Strict 3-Zone Flex Navbar (Never Wraps) */
 .navbar-app {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 12px 28px;
+  padding: 12px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+  flex-wrap: nowrap;
 }
 
 /* Main Application Container */
 .app-container {
-  max-width: 1320px;
+  max-width: 1280px;
   margin: 0 auto;
   width: 100%;
-  padding: 32px 24px;
+  padding: 36px 24px;
   flex: 1;
 }
 
@@ -327,7 +347,7 @@ body {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 6px;
   background: transparent;
   padding: 0;
   border: none;
@@ -336,30 +356,29 @@ body {
 
 .nav-item {
   color: var(--text-secondary);
-  text-decoration: none;
   font-size: 13.5px;
-  font-weight: 600;
-  padding: 6px 2px;
+  font-weight: 500;
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 8px;
   border-bottom: 2px solid transparent;
   background: transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   white-space: nowrap;
 }
 
 .nav-item:hover {
   color: var(--text-primary);
-  background: transparent;
+  background: var(--bg-surface-elevated);
 }
 
 .nav-item.active {
-  color: var(--primary-500);
+  color: var(--primary);
   font-weight: 700;
-  border-bottom: 2px solid var(--primary-500);
+  border-bottom: 2px solid var(--primary);
   background: transparent;
-  padding-bottom: 6px;
   box-shadow: none;
 }
 
@@ -368,7 +387,7 @@ body {
 .user-controls {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -377,20 +396,19 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
+  background: none;
   border: 1px solid var(--border-subtle);
-  background: var(--bg-surface-elevated);
-  color: var(--text-primary);
-  font-size: 16px;
+  border-radius: 8px;
+  padding: 6px 10px;
   cursor: pointer;
+  font-size: 14px;
+  color: var(--text-primary);
   line-height: 1;
   transition: all 0.15s ease;
 }
 
 .btn-theme-toggle:hover {
-  background: var(--bg-interactive-hover);
+  background: var(--bg-surface-elevated);
   border-color: var(--border-medium);
   transform: scale(1.05);
 }
@@ -411,7 +429,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   padding: 6px 28px 6px 12px;
-  border-radius: var(--radius-full);
+  border-radius: 8px;
   cursor: pointer;
   outline: none;
   transition: all 0.15s ease;
@@ -421,7 +439,7 @@ body {
 .select-role-compact:hover,
 .select-role-compact:focus {
   border-color: var(--border-medium);
-  background: var(--bg-interactive);
+  background: var(--bg-surface);
 }
 
 .select-chevron {
@@ -435,11 +453,11 @@ body {
 /* Compact External Links */
 .nav-ext-link {
   font-size: 12px;
-  font-weight: 600;
-  padding: 5px 10px;
+  font-weight: 500;
+  padding: 6px 10px;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface-elevated);
+  border-radius: 8px;
+  background: transparent;
   color: var(--text-secondary);
   text-decoration: none;
   transition: all 0.15s ease;
@@ -451,7 +469,7 @@ body {
 }
 
 .nav-ext-link:hover {
-  background: var(--bg-interactive-hover);
+  background: var(--bg-surface-elevated);
   color: var(--text-primary);
   border-color: var(--border-medium);
 }
@@ -569,12 +587,13 @@ html[data-theme="dark"] .btn-checkout-emerald {
    5. Card Containers & Bento Grids
    ------------------------------------------------------------------------------ */
 
-.glass-panel {
+.glass-panel,
+.bento-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: 24px;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-bento);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
@@ -694,9 +713,10 @@ html[data-theme="dark"] .btn-checkout-emerald {
 }
 
 .retailsync-table td {
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-secondary);
+  font-size: 13.5px;
   transition: background 0.15s ease;
 }
 
