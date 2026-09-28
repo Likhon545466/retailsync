@@ -2007,7 +2007,7 @@
             <div>
               <div class="smart-metric">⚡ &lt; 2.0s <span style="font-size:12px; font-weight:600; color:var(--emerald-500); background:rgba(16,185,129,0.15); padding:2px 8px; border-radius:4px;">p95 &le; 800ms</span></div>
               <div class="smart-title">O-01: Sub-Second POS Concurrency & ACID Integrity</div>
-              <p class="smart-desc">Execute atomic stock deductions from retail cash registers via PostgreSQL row-level locks (<code>SELECT ... FOR UPDATE</code>), achieving p95 latency &le; 800ms with zero deadlocks and zero negative balances across 10 concurrent registers.</p>
+              <p class="smart-desc">Execute atomic stock deductions from retail cash registers via non-blocking PostgreSQL row-level locks (<code>SELECT ... FOR UPDATE SKIP LOCKED</code>), achieving p95 latency &le; 800ms with zero deadlocks and zero negative balances across 10 concurrent registers.</p>
             </div>
             <div style="margin-top:12px; font-size:11.5px; font-family:var(--font-mono); color:var(--cyan-400);">Verified in Sprint 4 via Locust Load Test</div>
           </div>
@@ -2016,16 +2016,16 @@
             <div>
               <div class="smart-metric">🥛 &lt; 6% <span style="font-size:12px; font-weight:600; color:var(--emerald-500); background:rgba(16,185,129,0.15); padding:2px 8px; border-radius:4px;">100% FEFO Queue</span></div>
               <div class="smart-title">O-02: Automated FEFO Priority & Food Safety Quarantine</div>
-              <p class="smart-desc">Enforce database-level First-Expired, First-Out allocation ensuring 100% of store replenishment orders pick earliest expiring batches; automatically quarantine stock reaching &le; 3 days to expiry, reducing spoilage to &lt; 6%.</p>
+              <p class="smart-desc">Enforce database-level First-Expired, First-Out allocation ensuring 100% of store replenishment orders pick earliest expiring batches; automatically quarantine stock reaching &le; 3 days to expiry via daily 02:00 BST Celery sweep, reducing spoilage to &lt; 6%.</p>
             </div>
             <div style="margin-top:12px; font-size:11.5px; font-family:var(--font-mono); color:var(--cyan-400);">Verified in Sprint 3 via Celery Expiry Watcher</div>
           </div>
 
           <div class="smart-card">
             <div>
-              <div class="smart-metric">🤖 MAPE &le; 15% <span style="font-size:12px; font-weight:600; color:var(--rose-400); background:rgba(225,29,72,0.15); padding:2px 8px; border-radius:4px;">LightGBM ML</span></div>
+              <div class="smart-metric">🤖 MAPE &le; 15% <span style="font-size:12px; font-weight:600; color:var(--rose-400); background:rgba(225,29,72,0.15); padding:2px 8px; border-radius:4px;">CatBoost ML</span></div>
               <div class="smart-title">O-03: AI Demand Forecasting & Dynamic Replenishment</div>
-              <p class="smart-desc">Deploy a Machine Learning Time-Series Forecasting engine achieving MAPE &le; 15% on high-velocity FMCG items; dynamically compute Reorder Points (ROP) using Greasley's Safety Stock with calendar festival embeddings (Ramadan, Eid).</p>
+              <p class="smart-desc">Deploy a CatBoost Machine Learning Time-Series Forecasting engine achieving MAPE &le; 15% on high-velocity FMCG items; dynamically compute Reorder Points (ROP) using Greasley's Safety Stock with native festival embeddings (LightGBM deferred to roadmap).</p>
             </div>
             <div style="margin-top:12px; font-size:11.5px; font-family:var(--font-mono); color:var(--rose-400);">Verified in Sprint 5 via Walk-Forward Validation</div>
           </div>
@@ -2034,7 +2034,7 @@
             <div>
               <div class="smart-metric">📱 &le; 350ms <span style="font-size:12px; font-weight:600; color:var(--cyan-400); background:rgba(14,165,233,0.15); padding:2px 8px; border-radius:4px;">90% Capex Cut</span></div>
               <div class="smart-title">O-04: Frugal Hardware Architecture & Mobile PWA</div>
-              <p class="smart-desc">Engineer a mobile Progressive Web Application (PWA) running on consumer Android smartphones paired with Bluetooth HID trigger grips (&lt; 4,000 BDT), achieving barcode decode latency &le; 350ms and cutting terminal capex by 90% vs industrial terminals.</p>
+              <p class="smart-desc">Engineer a mobile Progressive Web Application (PWA) running on consumer Android smartphones paired with Bluetooth HID trigger grips (&lt; 4,000 BDT), achieving barcode decode latency &le; 350ms and cutting terminal capex by 90% vs industrial terminals (ESP32/MQTT cut from scope).</p>
             </div>
             <div style="margin-top:12px; font-size:11.5px; font-family:var(--font-mono); color:var(--cyan-400);">Verified in Sprint 2 on Physical Android 13 Device</div>
           </div>
@@ -2043,7 +2043,7 @@
             <div>
               <div class="smart-metric">🛡️ &ge; 200 Tx <span style="font-size:12px; font-weight:600; color:var(--amber-400); background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:4px;">Zero Data Loss</span></div>
               <div class="smart-title">O-05: Offline Network Resilience & Idempotent Replay</div>
-              <p class="smart-desc">Implement Service Worker background sync and encrypted IndexedDB client storage to buffer &ge; 200 sales transactions during warehouse broadband outages, replaying idempotently via Redis X-Idempotency-Key upon connection restoration.</p>
+              <p class="smart-desc">Implement Service Worker background sync and encrypted IndexedDB client storage to buffer &ge; 200 sales transactions during warehouse broadband outages, replaying idempotently via client-generated X-Idempotency-Key ({device_id}-{epoch_ms}-{local_sequence}).</p>
             </div>
             <div style="margin-top:12px; font-size:11.5px; font-family:var(--font-mono); color:var(--cyan-400);">Verified in Sprint 4 via Network Blackout Drill</div>
           </div>
@@ -2063,12 +2063,12 @@
           <div class="scope-box" style="border-top: 3px solid var(--cyan-400);">
             <h4 style="color: var(--cyan-400);">1. Core Functional Scope</h4>
             <ul>
-              <li><b>Inbound Receiving & GRN:</b> PO barcode validation, remaining shelf-life verification (&ge; 75%), digital Goods Receipt Note.</li>
+              <li><b>Inbound Receiving & GRN:</b> PO barcode validation, remaining shelf-life verification (&ge; 65%), digital Goods Receipt Note.</li>
               <li><b>Directed Spatial Putaway:</b> ABC turnover velocity mapping, Zone-Aisle-Rack-Shelf-Bin 3D routing.</li>
               <li><b>Real-Time FEFO Batch Ledger:</b> Batch-level expiration tracking, automated quarantine locks at &le; 3 days.</li>
-              <li><b>Sub-2.0s POS Concurrency:</b> Row-level locking (<code>SELECT ... FOR UPDATE</code>), zero overselling.</li>
-              <li><b>AI Demand Forecasting DSS:</b> 7-day rolling predictions, Greasley dynamic safety stock, automated draft POs.</li>
-              <li><b>Continuous Blind Cycle Counting:</b> System counts hidden from staff; discrepancy approval workflow.</li>
+              <li><b>Sub-2.0s POS Concurrency:</b> Non-blocking row-level locking (<code>SELECT ... FOR UPDATE SKIP LOCKED</code>), zero overselling.</li>
+              <li><b>AI Demand Forecasting DSS:</b> CatBoost 7-day rolling predictions, Greasley dynamic safety stock, automated draft POs.</li>
+              <li><b>Continuous Blind Cycle Counting:</b> System counts hidden from staff; rule-based shrinkage threshold alert (>3% variance).</li>
             </ul>
           </div>
 
@@ -2078,7 +2078,7 @@
               <li><b>Controlled Testbed:</b> 1 Central Warehouse / Distribution Center serving up to 3 Retail Branch Stores.</li>
               <li><b>Catalog Scope:</b> 500 representative FMCG SKUs across 4 supermarket categories (Perishable Dairy, Ambient Staples, Packaged FMCG, Household).</li>
               <li><b>Workload Simulation:</b> 10 concurrent POS checkout cash registers and 10 warehouse mobile handheld scanners.</li>
-              <li><b>Hardware Model:</b> Consumer Android 13+ smartphones with Bluetooth trigger grips; stationary ESP32 dock gate.</li>
+              <li><b>Hardware Model:</b> Consumer Android 13+ smartphones with Bluetooth trigger grips (< 4,000 BDT); ESP32/MQTT firmware cut from scope.</li>
             </ul>
           </div>
 
@@ -2088,8 +2088,8 @@
               <li><b>Frontend Client:</b> Next.js 14 Progressive Web App (PWA) with Service Workers & IndexedDB.</li>
               <li><b>Backend API:</b> Asynchronous Python 3.11+ FastAPI with Pydantic v2 validation.</li>
               <li><b>Relational Persistence:</b> PostgreSQL 16 3NF normalized schema with B-Tree indexes and ACID ledger.</li>
-              <li><b>Cache & Idempotency:</b> Redis 7 for sub-ms session tokens and 48-hour idempotency locks.</li>
-              <li><b>AI & ML Worker:</b> LightGBM time-series regressor and Isolation Forest anomaly worker via Celery.</li>
+              <li><b>Cache & Idempotency:</b> Redis 7 for sub-ms session tokens and client-generated idempotency key locks.</li>
+              <li><b>AI & ML Worker:</b> CatBoost time-series regressor and daily 02:00 BST quarantine sweep worker via Celery.</li>
             </ul>
           </div>
 

@@ -1054,10 +1054,10 @@ HTML_CONTENT = """<!DOCTYPE html>
                   Engineered to solve the structural operational disconnect between frontline retail registers and back-of-house warehouses across Bangladesh:
                 </p>
                 <ul class="dense-list">
-                  <li><strong>Distributed Concurrency:</strong> Sub-500ms multi-till inventory sync via PostgreSQL row locks & Redis cache keys.</li>
+                  <li><strong>Distributed Concurrency:</strong> Sub-500ms multi-till inventory sync via PostgreSQL row locks (SKIP LOCKED) & Redis cache keys.</li>
                   <li><strong>Perishable Waste Control:</strong> Dynamic First-Expired, First-Out (FEFO) batch priority cutting spoilage by ≥ 35%.</li>
-                  <li><strong>AI Decision Support:</strong> LightGBM demand forecasting with calendar festival awareness (MAPE ≤ 15%).</li>
-                  <li><strong>Frugal Edge Architecture:</strong> HTML5 WebRTC barcode scanning eliminating $1,200 hardware handheld terminals.</li>
+                  <li><strong>AI Decision Support:</strong> CatBoost demand forecasting with native festival calendar awareness (MAPE ≤ 15%).</li>
+                  <li><strong>Frugal Edge Architecture:</strong> HTML5 WebRTC barcode scanning & Bluetooth HID grips eliminating expensive handheld terminals.</li>
                 </ul>
               </div>
               <div class="telemetry-strip">
@@ -1201,7 +1201,7 @@ HTML_CONTENT = """<!DOCTYPE html>
                   <li><strong>Sub-Second Real-Time Sync:</strong> Multi-till stock deduction broadcast in &lt; 500ms latency across 50 concurrent cashiers via Redis Pub/Sub & WebSocket event pipeline.</li>
                   <li><strong>Zero-Cost Hardware Access:</strong> HTML5 WebRTC camera barcode scanning on standard $80 Android smartphones, achieving ≥ 99% first-pass accuracy in &lt; 85ms.</li>
                   <li><strong>Automated FEFO Priority:</strong> Dynamic shelf-priority routing reduces perishable write-offs by ≥ 35% compared to baseline manual FIFO operations.</li>
-                  <li><strong>AI Demand Forecasting:</strong> LightGBM tabular regression pipeline predicting 7-day SKU replenishment with MAPE &le; 15% using calendar festival feature engineering.</li>
+                  <li><strong>AI Demand Forecasting:</strong> CatBoost tabular regression pipeline predicting 7-day SKU replenishment with MAPE &le; 15% using native calendar festival embeddings (LightGBM deferred).</li>
                 </ul>
               </div>
               <div class="telemetry-strip">
@@ -1267,7 +1267,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <div class="card-title" style="font-size: 20px; margin-top: 6px;">AI Demand Forecasting</div>
               <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">Tabular ML replenishment model with festival calendar embeddings.</p>
               <ul class="dense-list" style="font-size: 16px;">
-                <li>LightGBM tabular trees</li>
+                <li>CatBoost tabular trees</li>
                 <li>Eid & payday multipliers</li>
                 <li>1-click PO trigger DSS</li>
               </ul>
@@ -1283,7 +1283,7 @@ HTML_CONTENT = """<!DOCTYPE html>
               <div class="card-title" style="font-size: 20px; margin-top: 6px;">POS Concurrency Safety</div>
               <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">Pessimistic row-locking preventing double-selling during rushes.</p>
               <ul class="dense-list" style="font-size: 16px;">
-                <li>FOR UPDATE NOWAIT</li>
+                <li>FOR UPDATE SKIP LOCKED</li>
                 <li>Sub-500ms p95 latency</li>
                 <li>50 concurrent threads</li>
               </ul>
@@ -1346,15 +1346,15 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div>
               <div class="card-title"><span class="stat-badge badge-purple">IN-SCOPE AI</span>Machine Learning Forecasting Engine</div>
               <ul class="dense-list">
-                <li><strong>LightGBM GBDT Regressor:</strong> Gradient boosted trees trained on 2-year tabular grocery series.</li>
-                <li><strong>Feature Engineering:</strong> Lag-7, Lag-14, 30-day rolling averages, Ramadan & Eid festival flags.</li>
+                <li><strong>CatBoost GBDT Regressor:</strong> Gradient boosted trees with native categorical handling of festival calendar flags.</li>
+                <li><strong>Feature Engineering:</strong> Lag-7, Lag-14, 30-day rolling averages, Ramadan & Eid festival embeddings.</li>
                 <li><strong>Automated Reorder DSS:</strong> Dynamic Safety Stock calculation based on supplier lead-time variance.</li>
                 <li><strong>Manager Dashboard:</strong> Interactive forecast vs. actual performance curves with 1-click PO dispatch.</li>
               </ul>
             </div>
             <div class="telemetry-strip">
               <div class="telemetry-pill">Inference: <span>&lt; 45ms per SKU</span></div>
-              <div class="telemetry-pill">Algorithm: <span>GBDT (LightGBM)</span></div>
+              <div class="telemetry-pill">Algorithm: <span>GBDT (CatBoost)</span></div>
             </div>
           </div>
 
@@ -1432,7 +1432,7 @@ HTML_CONTENT = """<!DOCTYPE html>
                 <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">TIER 2</span>Application & AI Engine</div>
                 <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
                   <li><strong>Node.js / Express Core:</strong> High-throughput REST API with JWT auth.</li>
-                  <li><strong>Python FastAPI AI Service:</strong> Microservice hosting LightGBM models.</li>
+                  <li><strong>Python FastAPI AI Service:</strong> Microservice hosting CatBoost models.</li>
                   <li><strong>WebSocket Event Hub:</strong> Real-time till stock delta broadcast.</li>
                 </ul>
               </div>
@@ -1551,15 +1551,15 @@ HTML_CONTENT = """<!DOCTYPE html>
           <div class="col-4">
             <div class="card highlight-purple" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
               <div>
-                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">MODEL</span>LightGBM Regression Engine</div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">MODEL</span>CatBoost Regression Engine</div>
                 <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
                   <li>Tree-based gradient boosting optimized for tabular grocery series.</li>
-                  <li>8x faster training than deep LSTM neural nets; native NaN support.</li>
-                  <li>Hyperparameters: max_depth=6, num_leaves=31, learning_rate=0.05.</li>
+                  <li>Native categorical festival support without target leakage or manual encoding.</li>
+                  <li>Hyperparameters: depth=6, l2_leaf_reg=3, learning_rate=0.05.</li>
                 </ul>
               </div>
               <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
-                <div class="telemetry-pill" style="font-size: 14.5px;">Algorithm: <span>GBDT (LightGBM)</span></div>
+                <div class="telemetry-pill" style="font-size: 14.5px;">Algorithm: <span>GBDT (CatBoost)</span></div>
               </div>
             </div>
 
@@ -1617,11 +1617,12 @@ HTML_CONTENT = """<!DOCTYPE html>
                   Guarantees zero overselling when multiple cashiers scan the last item in stock simultaneously:
                 </p>
                 <div class="mini-code">
-                  BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;<br>
-                  SELECT quantity FROM stock_batches<br>
-                  WHERE sku_id = $1 AND branch_id = $2<br>
-                  <strong>FOR UPDATE NOWAIT;</strong><br>
-                  -- Immediate lock acquisition or instant 409 conflict
+                  BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;<br>
+                  SELECT id, current_qty FROM product_batches<br>
+                  WHERE product_id = $1 AND current_qty &gt; 0<br>
+                  ORDER BY expiry_date ASC LIMIT 1<br>
+                  <strong>FOR UPDATE SKIP LOCKED;</strong><br>
+                  -- Non-blocking FEFO allocation across parallel cashiers
                 </div>
                 <ul class="dense-list">
                   <li><strong>Lock Duration:</strong> Held only for stock deduction duration (&lt; 4.8ms).</li>
@@ -1703,8 +1704,8 @@ HTML_CONTENT = """<!DOCTYPE html>
                 <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">PHASE 2</span>Sprints 3-4 (Weeks 5-8)</div>
                 <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
                   <li>Inbound dock intake, spatial put-away & FEFO routing engine.</li>
-                  <li>WebRTC mobile camera barcode scanner PWA with audio feedback.</li>
-                  <li>PostgreSQL `FOR UPDATE NOWAIT` POS checkout concurrency locks.</li>
+                  <li>WebRTC mobile camera barcode scanner PWA with Bluetooth HID grips.</li>
+                  <li>PostgreSQL `FOR UPDATE SKIP LOCKED` POS checkout concurrency locks.</li>
                 </ul>
               </div>
               <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
@@ -1716,8 +1717,8 @@ HTML_CONTENT = """<!DOCTYPE html>
               <div>
                 <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-emerald">PHASE 3</span>Sprints 5-6 (Weeks 9-14)</div>
                 <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
-                  <li>FastAPI LightGBM demand forecasting & safety stock pipeline.</li>
-                  <li>50-thread concurrent stress testing via Apache JMeter.</li>
+                  <li>FastAPI CatBoost demand forecasting & safety stock pipeline.</li>
+                  <li>50-thread concurrent stress testing via Locust / Apache JMeter.</li>
                   <li>User Acceptance Testing (UAT) with SME retail managers & Defense.</li>
                 </ul>
               </div>
@@ -1850,14 +1851,14 @@ HTML_CONTENT = """<!DOCTYPE html>
                 <div>
                   <div class="card-title"><span class="stat-badge badge-purple">02</span>Actionable Intelligence</div>
                   <ul class="dense-list">
-                    <li>LightGBM tabular demand forecasting.</li>
+                    <li>CatBoost tabular demand forecasting.</li>
                     <li>Festival calendar & salary surge awareness.</li>
                     <li>Dynamic FEFO routing cutting spoilage ≥ 35%.</li>
                     <li>Automated purchase order recommendations.</li>
                   </ul>
                 </div>
                 <div class="telemetry-strip">
-                  <div class="telemetry-pill">Forecaster: <span>LightGBM</span></div>
+                  <div class="telemetry-pill">Forecaster: <span>CatBoost</span></div>
                 </div>
               </div>
             </div>
@@ -1984,10 +1985,10 @@ HTML_CONTENT = """<!DOCTYPE html>
       },
       4: {
         time: "1:15 min",
-        spoken: "Our project is governed by five SMART objectives. Objective 1 unifies the warehouse and branches into a single real-time truth. Objective 2 cuts perishable waste by at least 35% through automated batch-expiry FEFO routing. Objective 3 integrates LightGBM machine learning to forecast 7-day demand with a target MAPE under 15%. Objective 4 guarantees sub-500ms multi-till concurrency protection with zero overselling. And Objective 5 delivers 100% hardware accessibility by utilizing smartphone cameras at zero additional CapEx.",
+        spoken: "Our project is governed by five SMART objectives. Objective 1 unifies the warehouse and branches into a single real-time truth. Objective 2 cuts perishable waste by at least 35% through automated batch-expiry FEFO routing. Objective 3 integrates CatBoost machine learning to forecast 7-day demand with a target MAPE under 15% using native festival calendar embeddings. Objective 4 guarantees sub-500ms multi-till concurrency protection with non-blocking row-level locks (SKIP LOCKED) and zero overselling. And Objective 5 delivers 100% hardware accessibility by utilizing consumer Android smartphones paired with Bluetooth trigger grips at 90% reduced CapEx.",
         keyPoints: [
           "Walk through O-01 to O-05 concisely.",
-          "Highlight that every objective has a specific, measurable target (35%, 15% MAPE, 500ms, $0 CapEx).",
+          "Highlight that every objective has a specific, measurable target (35%, 15% MAPE, 500ms, frugal CapEx).",
           "Explain how these 5 objectives directly solve the 3 profit leaks mentioned on Slide 2."
         ],
         trapTip: "If an evaluator asks how you will measure the 35% waste reduction: 'We test it against simulated historical batch rot rates comparing standard FIFO vs. our batch-expiry FEFO routing algorithm.'"
@@ -2004,17 +2005,17 @@ HTML_CONTENT = """<!DOCTYPE html>
       },
       6: {
         time: "1:15 min",
-        spoken: "Turning to our system architecture in Figure 1: RetailSync adopts a clean, decoupled 4-tier model. Tier 1 delivers responsive user interfaces via React.js for managers and a lightweight PWA for warehouse staff. Tier 2 splits business operations into an event-driven Node.js REST API and a high-performance Python FastAPI microservice dedicated to AI model inference. Tier 3 leverages PostgreSQL for strict ACID compliance alongside Redis for sub-second distributed locks and pub/sub push notifications. Finally, Tier 4 connects low-cost smartphone cameras via HTML5 WebRTC.",
+        spoken: "Turning to our system architecture in Figure 1: RetailSync adopts a clean, decoupled 4-tier model. Tier 1 delivers responsive user interfaces via Next.js 14 PWA with offline IndexedDB. Tier 2 provides edge security and TLS termination. Tier 3 leverages asynchronous Python 3.11+ FastAPI for business logic and Celery background workers for CatBoost inference and daily 02:00 BST quarantine sweeps. Tier 4 leverages PostgreSQL 16 for strict 3NF ACID compliance alongside Redis 7 for sub-second idempotency key locks.",
         keyPoints: [
           "Click the diagram to zoom in if the board wants a closer inspection.",
-          "Explain why you chose a dual-service backend (Node.js for I/O operations, Python for ML inference).",
+          "Explain why you chose FastAPI (async ASGI performance, native OpenAPI 3.1, Pydantic v2).",
           "Highlight PostgreSQL's ACID guarantees as essential for financial and inventory audits."
         ],
         trapTip: "If asked: 'Why not use MongoDB?', answer: 'Inventory cannot tolerate eventual consistency. A single lost stock update corrupts accounting. PostgreSQL provides strict ACID guarantees, foreign keys, and row-level locks needed for concurrency.'"
       },
       7: {
         time: "1:00 min",
-        spoken: "Figure 2 details the operational lifecycle. When goods arrive at the loading dock, receiving staff scan the supplier barcode using their phone camera. The system validates the items against the purchase order. Once approved, the system generates a directed put-away command, assigning a specific bay and shelf while indexing the expiration date. When retail branches request replenishment, our picking engine directs staff to the oldest batches first, enforcing FEFO automatically before goods are dispatched.",
+        spoken: "Figure 2 details the operational lifecycle. When goods arrive at the loading dock, receiving staff scan the supplier barcode using their mobile phone paired with a Bluetooth trigger grip. The system validates the items against the purchase order. Once approved, the system generates a directed put-away command, assigning a specific bay and shelf while indexing the expiration date. When retail branches request replenishment, our picking engine directs staff to the oldest batches first, enforcing FEFO automatically before goods are dispatched.",
         keyPoints: [
           "Walk step-by-step from Inbound Dock to Storefront Shelf.",
           "Point out the digital quarantine step for damaged or near-expiry shipments.",
@@ -2024,27 +2025,27 @@ HTML_CONTENT = """<!DOCTYPE html>
       },
       8: {
         time: "1:15 min",
-        spoken: "In Figure 3, we illustrate our AI Demand Forecasting pipeline. Rather than arbitrary human guesswork, our engine ingests historical daily sales, lag features, rolling standard deviations, and external factors like day-of-week and festive calendar flags. We selected LightGBM because it trains 8 times faster than deep neural nets on tabular sales data and handles missing data natively. The model outputs a 7-day predicted demand curve, which our automated decision engine translates into recommended purchase orders based on safety stock and supplier lead times.",
+        spoken: "In Figure 3, we illustrate our AI Demand Forecasting pipeline. Rather than arbitrary human guesswork, our engine ingests historical daily sales, lag features, rolling standard deviations, and external factors like day-of-week and festive calendar flags. We selected CatBoost because of its native handling of categorical features and calendar flags without target leakage or manual one-hot encoding overhead. The model outputs a 7-day predicted demand curve, which our automated decision engine translates into recommended purchase orders based on safety stock and supplier lead times.",
         keyPoints: [
           "Explain feature engineering (Eid spikes, weekend surges, payday cycles).",
-          "Justify LightGBM over complex deep learning (better performance on tabular retail data, faster inference, low resource footprint).",
+          "Justify CatBoost over complex deep learning and LightGBM (native categorical handling, sub-50ms inference, zero target leakage).",
           "Stress that AI outputs are actionable suggestions that managers can review and approve with one click."
         ],
         trapTip: "If asked: 'Where do you get training data?', answer: 'We synthesize a 2-year realistic Bangladeshi grocery sales dataset modeled on public retail benchmarks (such as Kaggle retail grocery datasets and local pricing/calendar patterns).'"
       },
       9: {
         time: "1:00 min",
-        spoken: "Two of our biggest technical differentiators are shown on Slide 9. To solve the multi-till race condition, we implement PostgreSQL pessimistic row-level locking using 'SELECT FOR UPDATE NOWAIT'. If two cashiers scan the last packet of milk at the exact same millisecond, the database serializes the transaction; the first succeeds, and the second receives an instant 'out-of-stock' alert with zero overselling. Simultaneously, our mobile barcode scanner uses HTML5 WebRTC and WebAssembly zxing-js, giving warehouse clerks enterprise-grade scanning on their existing personal smartphones at zero hardware cost.",
+        spoken: "Two of our biggest technical differentiators are shown on Slide 9. To solve the multi-till race condition, we implement PostgreSQL pessimistic row-level locking using 'SELECT ... FOR UPDATE SKIP LOCKED'. If multiple cashiers scan items simultaneously, the database locks only the active batch and skips locked rows for adjacent batches; parallel transactions proceed safely with zero deadlocks and zero overselling. Simultaneously, our mobile barcode scanner runs on commodity Android smartphones paired with Bluetooth trigger grips, giving warehouse clerks enterprise-grade scanning at over 75% hardware savings.",
         keyPoints: [
           "Walk through the SQL snippet on the slide.",
-          "Contrast expensive Honeywell terminals ($1,200) with ubiquitous Android smartphones ($0 extra).",
+          "Contrast expensive Honeywell terminals ($1,200) with ubiquitous Android smartphones and Bluetooth trigger grips (< 4,000 BDT).",
           "Mention audio beep and haptic vibration feedback for warehouse ergonomics."
         ],
         trapTip: "If asked about database lock contention: 'Row locks only hold for the duration of the stock deduction transaction (under 5 milliseconds), preventing any user-perceptible cashier delays.'"
       },
       10: {
         time: "0:50 min",
-        spoken: "Our 14-week Agile Scrum roadmap is illustrated in Figure 4. Sprints 1 and 2 establish our relational database schema and core API framework. Sprints 3 and 4 deliver the warehouse operational workflows, FEFO routing, and WebRTC scanner. Sprints 5 and 6 integrate the LightGBM forecasting engine, complete load and stress testing under concurrent till simulations, and conduct user acceptance testing, culminating in our final project defense.",
+        spoken: "Our 14-week Agile Scrum roadmap is illustrated in Figure 4. Sprints 1 and 2 establish our relational database schema and core API framework. Sprints 3 and 4 deliver the warehouse operational workflows, FEFO routing, and mobile scanner. Sprints 5 and 6 integrate the CatBoost forecasting engine, complete load and stress testing under concurrent till simulations, and conduct user acceptance testing, culminating in our final project defense.",
         keyPoints: [
           "Confirm that you are fully on schedule and tracking every milestone.",
           "Point out that the 14 weeks are broken down into 2-week bi-weekly sprints.",

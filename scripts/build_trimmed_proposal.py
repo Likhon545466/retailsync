@@ -167,7 +167,7 @@ def build_trimmed_proposal():
         "unifies central distribution warehouses and frontline checkout counters into a single, real-time relational core. "
         "By enforcing strict Third Normal Form (3NF) database constraints, pessimistic row-level locking on checkout deductions, "
         "directed spatial putaway, automated First-Expired, First-Out (FEFO) batch rotation, and machine-learning demand forecasting "
-        "(LightGBM with festival calendar awareness), RetailSync directly tackles the three largest profit leaks in supermarket operations: "
+        "(CatBoost with native festival calendar awareness; LightGBM deferred to roadmap), RetailSync directly tackles the three largest profit leaks in supermarket operations: "
         "(1) perishable food spoilage (15% to 22% annual loss), (2) unrecorded inventory shrinkage (1.8% to 2.4% write-offs), and "
         "(3) peak-hour stockouts during festival surges (7.5% to 11.2% lost sales)."
     )
@@ -202,7 +202,7 @@ def build_trimmed_proposal():
         ["Section 1", "Industry Background & Problem Statement", "Operational context, profit leaks, grounded value taxonomy, and problem-to-feature mapping."],
         ["Section 2", "Project Objectives & Scope Boundaries", "Quantitative SMART goals (O-01 to O-05), pilot constraints, and 4-quadrant scope boundaries."],
         ["Section 3", "Target Personas & Operational Workflows", "Four core supermarket personas (Manager, Cashier, Operator, Buyer) and end-to-end floor journeys."],
-        ["Section 4", "Core Functional Modules & AI Replenishment Engine", "Eleven modular domain services with in-depth spotlight on Module M-07 (LightGBM & Greasley DSS)."],
+        ["Section 4", "Core Functional Modules & AI Replenishment Engine", "Eleven modular domain services with in-depth spotlight on Module M-07 (CatBoost & Greasley DSS)."],
         ["Section 5", "Non-Functional Requirements & Performance SLOs", "Latency SLOs, throughput benchmarks, ACID concurrency guarantees, and Food Safety Act compliance."],
         ["Section 6", "System Architecture & Technical Design", "4-tier architecture, process data flow, AI ML pipeline, PostgreSQL 16 3NF schema, and row-locking."],
         ["Section 7", "Curated Technology Stack & Hardware Strategy", "Full-stack technology matrix (Next.js, FastAPI, PostgreSQL, Redis) and frugal smartphone scanner model."],
@@ -322,7 +322,7 @@ def build_trimmed_proposal():
     )
     add_bullet(
         doc,
-        "Execute atomic stock deductions from retail cash registers via PostgreSQL row-level locks (SELECT ... FOR UPDATE), achieving p95 latency ≤ 800ms and p99 ≤ 1.5s with zero deadlocks across 10 concurrent registers.",
+        "Execute atomic stock deductions from retail cash registers via PostgreSQL non-blocking row-level locks (SELECT ... FOR UPDATE SKIP LOCKED), achieving p95 latency ≤ 800ms and p99 ≤ 1.5s with zero deadlocks across 10 concurrent registers.",
         bold_prefix="O-01 (Sub-Second POS Concurrency & ACID Integrity): "
     )
     add_bullet(
@@ -332,7 +332,7 @@ def build_trimmed_proposal():
     )
     add_bullet(
         doc,
-        "Deploy a Machine Learning Time-Series Forecasting engine (LightGBM/XGBoost) achieving MAPE ≤ 15% on high-velocity FMCG items; dynamically compute Reorder Points (ROP) using Greasley's Safety Stock with calendar festival embeddings (Ramadan, Eid).",
+        "Deploy a CatBoost Machine Learning Time-Series Forecasting engine achieving MAPE ≤ 15% on high-velocity FMCG items; dynamically compute Reorder Points (ROP) using Greasley's Safety Stock with native calendar festival embeddings (LightGBM deferred to roadmap).",
         bold_prefix="O-03 (AI-Driven Demand Forecasting & Dynamic Replenishment): "
     )
     add_bullet(
@@ -353,10 +353,16 @@ def build_trimmed_proposal():
         "accounting ERPs or physical automated robotics). To guard against scope creep and establish clear expectations, RetailSync "
         "defines four explicit scope quadrants:"
     )
+    scope_headers = [
+        "Scope Quadrant / Dimension",
+        "In-Scope Capabilities & Modules",
+        "Pilot Constraints & Sizing",
+        "Explicitly Out of Scope"
+    ]
     build_styled_table(
         doc,
-        UPGRADED_SCOPE_MATRIX[0],
-        UPGRADED_SCOPE_MATRIX[1:],
+        scope_headers,
+        UPGRADED_SCOPE_MATRIX,
         col_widths=[1.3, 1.8, 1.8, 1.9]
     )
     make_callout(
@@ -392,7 +398,7 @@ def build_trimmed_proposal():
     lifecycle_steps = [
         ("Step 1: Inbound Receiving & GRN Verification", "When a supplier delivery truck arrives at the warehouse dock, the receiving clerk scans carton barcodes against the active digital Purchase Order. The system captures manufacturer batch numbers, production dates, and expiration dates, generating a digital Goods Receipt Note (GRN) with automatic short-shipment tagging."),
         ("Step 2: Directed Spatial Putaway", "Upon GRN confirmation, the system calculates the optimal storage coordinate (Zone-Aisle-Rack-Shelf-Bin) based on product category, storage temperature (Chilled, Ambient, Frozen), and SKU turnover velocity. The operator confirms docking by scanning the physical bin barcode."),
-        ("Step 3: Real-Time POS Inventory Deduction", "When a retail customer purchases an item at the frontline checkout register, the POS sends an atomic deduction request to the API. The system executes a pessimistic row lock (`SELECT ... FOR UPDATE`) on the earliest active batch, deducting stock in < 2.0 seconds with zero overselling."),
+        ("Step 3: Real-Time POS Inventory Deduction", "When a retail customer purchases an item at the frontline checkout register, the POS sends an atomic deduction request to the API. The system executes a non-blocking row lock (`SELECT ... FOR UPDATE SKIP LOCKED`) on the earliest active batch, deducting stock in < 2.0 seconds with zero overselling."),
         ("Step 4: Strict FEFO Outbound Allocation", "When supermarket branches submit store replenishment requisitions, the picking engine allocates stock strictly from the earliest expiring available batch. Expired or quarantined lots are mechanically excluded from pick lists."),
         ("Step 5: Algorithmic Replenishment Trigger", "Every stock transaction updates the net available balance. When stock breaches the calculated Reorder Point (ROP), the system triggers an automated replenishment advisory populating a draft PO with the mathematically optimal EOQ quantity.")
     ]
@@ -420,9 +426,9 @@ def build_trimmed_proposal():
         ("M-04: Directed Spatial Putaway Engine", "Calculates optimal 3D bin coordinates factoring SKU velocity (Class-A items docked near dispatch doors), climate zones (Chiller, Deep Freezer, Ambient), and shelf weight capacities, requiring two-scan confirmation."),
         ("M-05: Real-Time FEFO Inventory Ledger", "Maintains batch-level granularity (`product_batches`). Automates First-Expired, First-Out picking allocation and executes nightly background triggers to transition expiring batches to QUARANTINED and EXPIRED states."),
         ("M-06: Sub-2.0s Point of Sale (POS) Concurrency Sync", "Exposes high-performance transactional REST deduction endpoints. Implements pessimistic row-level locking (`SELECT ... FOR UPDATE`) to guarantee atomic stock updates with zero deadlocks and zero phantom sales."),
-        ("M-07: AI Demand Forecasting & Replenishment DSS", "Integrates supervised machine learning (LightGBM/XGBoost) with classical inventory science. Predicts 7-day and 14-day rolling SKU demand utilizing calendar festival embeddings (Ramadan, Eid-ul-Fitr, Eid-ul-Adha, payday spikes). Feeds predicted demand into Greasley's Statistical Safety Stock to dynamically adjust Reorder Points (ROP) before stockouts occur."),
+        ("M-07: AI Demand Forecasting & Replenishment DSS", "Integrates supervised machine learning (CatBoost regressor; LightGBM deferred to roadmap) with classical inventory science. Predicts 7-day and 14-day rolling SKU demand utilizing calendar festival embeddings (Ramadan, Eid-ul-Fitr, Eid-ul-Adha, payday spikes). Feeds predicted demand into Greasley's Statistical Safety Stock to dynamically adjust Reorder Points (ROP) before stockouts occur."),
         ("M-08: Outbound Multi-Store Wave Picking", "Consolidates multiple retail branch requisitions into batch pick waves. Generates shortest-path picker routes through aisles (TSP heuristic), reducing warehouse walking travel by over 40%."),
-        ("M-09: Blind Cycle Counting & Shrinkage ML", "Generates daily ABC-classified cycle counting task sheets where expected system quantities are hidden from floor workers to prevent confirmation bias. Integrates an unsupervised Scikit-learn Isolation Forest model to detect pilferage and anomalous loss clusters.")
+        ("M-09: Blind Cycle Counting & Shrinkage Anomaly Alert", "Generates daily ABC-classified cycle counting task sheets where expected system quantities are hidden from floor workers to prevent confirmation bias. Integrates an empirical rule-based shrinkage anomaly threshold alert (>3% variance) to flag pilferage and anomalous loss clusters; ML anomaly detection deferred to v2.0.")
     ]
     for mod_title, mod_desc in modules_breakdown:
         add_p(doc, mod_desc, bold_prefix=f"{mod_title}: ")
@@ -431,7 +437,7 @@ def build_trimmed_proposal():
     make_callout(
         doc,
         [
-            "1. Supervised Machine Learning Demand Predictor: d_hat_{t+L} = f_LightGBM(X_features)  [X incorporates 7-day lags, rolling statistics, calendar flags for Ramadan/Eid, and payday cycles]",
+            "1. Supervised Machine Learning Demand Predictor: d_hat_{t+L} = f_CatBoost(X_features)  [X incorporates 7-day lags, rolling statistics, native categorical flags for Ramadan/Eid, and payday cycles; LightGBM deferred to roadmap]",
             "2. Greasley's Dynamic Statistical Safety Stock: SS = Z × √((L̄ × σ_d²) + (d_hat² × σ_L²))  [Replaces static average demand with AI-predicted future surge demand d_hat]",
             "3. Dynamic Reorder Point: ROP = (d_hat × L̄) + SS  [Automatically lifts replenishment triggers 10 days ahead of holiday spikes]",
             "4. Dynamic Economic Order Quantity: EOQ = √((2 × D × S) / H)  [Calculates optimal batch size minimizing holding costs]"
@@ -487,8 +493,8 @@ def build_trimmed_proposal():
     )
     arch_tiers = [
         ("Tier 1: Client Edge (Handheld & POS PWA)", "Responsive Progressive Web Application built in Next.js 14 and Tailwind CSS. Operates on warehouse floor smartphones, tablets, and POS desktop terminals. Integrates pure JavaScript barcode engines (ZXing / Html5-QRCode) and Service Worker IndexedDB offline queues."),
-        ("Tier 2: Edge Gateway & Security Layer", "Reverse proxy (Nginx) terminating TLS 1.3 encryption, managing rate limiting, CORS policies, and local edge routing. For stationary dock gates, an ESP32 microcontroller with RFID/fixed barcode readers communicates over MQTT with TLS."),
-        ("Tier 3: Core Application Services & AI Worker Tier", "Stateless, asynchronous REST API powered by Python 3.11+ and FastAPI. Paired with background Celery workers executing LightGBM demand forecasting and Isolation Forest shrinkage anomaly models."),
+        ("Tier 2: Edge Gateway & Security Layer", "Reverse proxy (Nginx) terminating TLS 1.3 encryption, managing rate limiting, CORS policies, and local edge routing. Dock receiving is standardized on wireless Bluetooth HID trigger grips paired with Android PWAs, cutting custom ESP32/MQTT firmware overhead."),
+        ("Tier 3: Core Application Services & AI Worker Tier", "Stateless, asynchronous REST API powered by Python 3.11+ and FastAPI. Paired with background Celery workers executing CatBoost demand forecasting and scheduled daily 02:00 BST quarantine sweeps."),
         ("Tier 4: Enterprise Data & In-Memory Storage", "PostgreSQL 16 relational database with strict 3NF normalization, foreign key referential integrity, and composite B-Tree indexes. Paired with Redis 7 for in-memory session management, idempotency key caching, and distributed rate locks.")
     ]
     for tier_title, tier_desc in arch_tiers:
@@ -508,10 +514,10 @@ def build_trimmed_proposal():
     add_p(
         doc,
         "When an `/api/v1/pos/sync` deduction transaction begins, the database queries `product_batches` using "
-        "`SELECT id, current_qty FROM product_batches WHERE product_id = :p_id AND current_qty > 0 ORDER BY expiry_date ASC LIMIT 1 FOR UPDATE`. "
-        "This locks exclusively that specific batch record. Subsequent concurrent POS requests for the same batch queue safely "
-        "for milliseconds without deadlocking or reading stale stock balances. Once the deduction is written to the ledger, "
-        "the lock releases, guaranteeing absolute ACID consistency."
+        "`SELECT id, current_qty FROM product_batches WHERE product_id = :p_id AND current_qty > 0 ORDER BY expiry_date ASC LIMIT 1 FOR UPDATE SKIP LOCKED`. "
+        "This locks exclusively that specific batch record without blocking parallel sales on adjacent batches. "
+        "Subsequent concurrent POS requests for the same batch queue safely for milliseconds without deadlocking or reading stale stock balances. "
+        "Once the deduction is written to the ledger, the lock releases, guaranteeing absolute ACID consistency.",
     )
 
     add_h2(doc, "6.3 Relational Database Schema Overview (15 Tables)")
@@ -539,8 +545,8 @@ def build_trimmed_proposal():
         ("ADR-01: Next.js PWA over Native Android App", "Building as a Progressive Web Application eliminates app store review friction and device MDM management. Any update deployed to the web server is instantly available to all floor devices upon refresh. Service Workers and IndexedDB provide native-grade offline caching."),
         ("ADR-02: FastAPI Asynchronous ASGI over Django/Flask", "FastAPI's native Python async/await event loop provides high-concurrency I/O performance capable of handling thousands of requests per second, with automatic OpenAPI 3.1 documentation and Pydantic v2 data validation."),
         ("ADR-03: Normalized PostgreSQL 16 over MongoDB / NoSQL", "Inventory transactions represent legal and financial records requiring strict ACID double-entry ledger guarantees. PostgreSQL foreign keys and row locks prevent orphaned transactions and phantom inventory anomalies."),
-        ("ADR-04: Redis 7 In-Memory Caching & Idempotency", "Redis provides sub-millisecond validation of `X-Idempotency-Key` headers on POS sync endpoints, preventing duplicate sales deductions during network retries while caching active user sessions."),
-        ("ADR-05: LightGBM for Tabular Time-Series Forecasting", "LightGBM provides sub-50ms inference times on tabular retail sales data, handles categorical calendar embeddings (Ramadan/Eid) natively, and delivers higher accuracy with lower compute overhead than heavy recurrent neural networks on edge servers.")
+        ("ADR-04: Redis 7 In-Memory Caching & Idempotency", "Redis provides sub-millisecond validation of client-generated `X-Idempotency-Key` headers ({device_id}-{epoch_ms}-{local_sequence}) on POS sync endpoints, preventing duplicate sales deductions during network retries while caching active user sessions."),
+        ("ADR-05: CatBoost for Tabular Time-Series Forecasting", "CatBoost provides native categorical handling of festival calendar flags (Ramadan/Eid) without target leakage or manual encoding overhead, delivering sub-50ms inference times. LightGBM is formally deferred to the post-capstone v2.0 benchmark roadmap.")
     ]
     for adr_title, adr_desc in adr_data:
         add_p(doc, adr_desc, bold_prefix=f"{adr_title}: ")
@@ -690,6 +696,34 @@ def build_trimmed_proposal():
     ]
     build_styled_table(doc, roi_data[0], roi_data[1:], col_widths=[1.5, 1.8, 1.5, 2.0])
 
+    add_p(
+        doc,
+        "To establish rigorous financial feasibility, the complete Initial Capital Expenditure (CapEx) for 14-week "
+        "engineering delivery, pilot staging, and hardware deployment is itemized below:",
+        space_after=4
+    )
+    capex_data = [
+        ["Cost Category", "Amount (BDT)", "Description & Justification"],
+        ["Hardware Terminals & Peripherals", "34,050", "Android smartphone (12,500), 2x Bluetooth trigger grips (7,600), thermal printer (6,500), adhesive barcode labels (1,950), 6-month staging VPS (5,500)."],
+        ["Development & Engineering Labour", "420,000", "3-member engineering team × 14 weeks × standard software engineering stipend rate (~10,000 BDT/week/member)."],
+        ["Contingency Reserve (5%)", "22,700", "Dedicated contingency buffer for hardware replacement, mobile data packs, and peripheral spares during pilot operations."],
+        ["Regulatory & Compliance Documentation", "8,250", "BSTI/BFSA audit documentation, printed pilot manuals, thermal roll refills, and domain/SSL certificates."],
+        ["Total Estimated Initial CapEx", "485,000 BDT", "Total initial capitalization required for 14-week delivery and pilot deployment."]
+    ]
+    build_styled_table(doc, capex_data[0], capex_data[1:], col_widths=[2.0, 1.3, 3.5])
+
+    make_callout(
+        doc,
+        [
+            "Working Financial Payback Arithmetic: Payback Period = Total CapEx / (Monthly Gross Savings - Monthly OpEx)",
+            "= 485,000 BDT / (187,200 BDT - 14,000 BDT) = 485,000 / 173,200 ≈ 2.80 MONTHS (~84 Days)",
+            "• Spoilage Savings: 112,000 BDT/mo | Shrinkage Elimination: 45,200 BDT/mo | Stockout Recovery: 30,000 BDT/mo",
+            "• Monthly Operational Overhead (OpEx): 14,000 BDT/mo (VPS, label rolls, 4G data backup)",
+            "• Economic Feasibility Verdict: Full capital recoupment is achieved within under 3 months of live pilot operations."
+        ],
+        title="EMPIRICAL RETURN ON INVESTMENT (ROI) & 2.80-MONTH PAYBACK PERIOD"
+    )
+
     add_h2(doc, "10.3 Capstone Part 1 Conclusion & Transition to Part 2")
     add_p(
         doc,
@@ -710,9 +744,10 @@ def build_trimmed_proposal():
         "5. PostgreSQL Global Development Group, 'PostgreSQL 16 Documentation: Concurrency Control and Explicit Locking,' 2024. [Online]. Available: https://www.postgresql.org/docs/16/explicit-locking.html",
         "6. Schwaber, K. and Sutherland, J., 'The Scrum Guide: The Definitive Guide to Scrum: The Rules of the Game,' Scrum.org, 2020.",
         "7. Bangladesh Bureau of Statistics (BBS), 'Report on Wholesale and Retail Trade Survey in Bangladesh,' Ministry of Planning, Dhaka, 2022.",
-        "8. Ke, G. et al., 'LightGBM: A Highly Efficient Gradient Boosting Decision Tree,' Advances in Neural Information Processing Systems (NeurIPS), 2017.",
-        "9. Bangladesh Supermarket Owners Association (BSOA), 'Annual Report on Supermarket Operations, Wastage, and Modern Trade Dynamics in Bangladesh,' Dhaka, 2023.",
-        "10. Food and Agriculture Organization of the United Nations (FAO), 'Food Loss and Waste in Retail Supply Chains in South Asia,' Rome, 2021."
+        "8. Prokhorenkova, L. et al., 'CatBoost: unbiased boosting with categorical features,' Advances in Neural Information Processing Systems (NeurIPS 31), 2018.",
+        "9. Ke, G. et al., 'LightGBM: A Highly Efficient Gradient Boosting Decision Tree,' Advances in Neural Information Processing Systems (NeurIPS), 2017. (Deferred to v2.0 benchmark roadmap).",
+        "10. Bangladesh Supermarket Owners Association (BSOA), 'Annual Report on Supermarket Operations, Wastage, and Modern Trade Dynamics in Bangladesh,' Dhaka, 2023.",
+        "11. Food and Agriculture Organization of the United Nations (FAO), 'Food Loss and Waste in Retail Supply Chains in South Asia,' Rome, 2021."
     ]
     for r in refs:
         add_p(doc, r, space_after=3)

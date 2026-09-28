@@ -393,7 +393,7 @@ def create_slide_deck():
          "Gate: Automated Pytest batch sorting assertions & Celery quarantine triggers.",
          "Sprint 3 (Weeks 5–6)", COLOR_EMERALD),
         ("O-03: AI-Driven Demand Forecasting & Dynamic Replenishment",
-         "Deploy a Machine Learning Time-Series Forecasting engine (LightGBM/XGBoost) achieving MAPE ≤ 15% on high-velocity FMCG items; dynamically compute Reorder Points (ROP) using Greasley's Safety Stock with calendar festival embeddings (Ramadan, Eid).",
+         "Deploy a CatBoost Machine Learning Time-Series Forecasting engine achieving MAPE ≤ 15% on high-velocity FMCG items; dynamically compute Reorder Points (ROP) using Greasley's Safety Stock with native calendar festival embeddings (LightGBM deferred to roadmap).",
          "Gate: 12-month walk-forward backtesting against historical FMCG sales series.",
          "Sprint 5 (Weeks 9–10)", COLOR_PURPLE),
         ("O-04: Frugal Hardware Architecture & Sub-350ms Scanning",
@@ -444,9 +444,9 @@ def create_slide_deck():
 
     slide4.notes_slide.notes_text_frame.text = (
         "Slide 4 Script: Our five SMART objectives are engineered to be verifiable: "
-        "O-01 targets sub-2.0s POS concurrency with zero overselling, verified by Locust load tests in Sprint 4. "
+        "O-01 targets sub-2.0s POS concurrency with non-blocking row locks (SKIP LOCKED) and zero overselling, verified by Locust load tests in Sprint 4. "
         "O-02 enforces automated FEFO batch rotation and a 3-day food safety quarantine lock in Sprint 3. "
-        "O-03 introduces our AI demand forecasting engine using LightGBM and festival calendar embeddings in Sprint 5. "
+        "O-03 introduces our AI demand forecasting engine using CatBoost with native festival calendar embeddings in Sprint 5. "
         "O-04 proves our frugal smartphone scanning model with sub-350ms decode in Sprint 2. "
         "And O-05 delivers offline resilience by buffering up to 200 sales in client IndexedDB during broadband dropouts."
     )
@@ -461,13 +461,13 @@ def create_slide_deck():
 
     quadrants = [
         ("Quadrant 1: In-Scope Functional Capabilities",
-         "• Handheld barcode receiving & digital GRN generation\n• Directed spatial putaway (ABC turnover velocity)\n• Real-time FEFO batch ledger & automated quarantine\n• Sub-2.0s atomic POS inventory deduction with row locks\n• AI Demand Forecasting & Greasley dynamic safety stock\n• Blind cycle counting with supervisor discrepancy signoff\n• Isolation Forest shrinkage anomaly ML detection",
+         "• Handheld barcode receiving & digital GRN generation\n• Directed spatial putaway (ABC turnover velocity)\n• Real-time FEFO batch ledger & automated quarantine\n• Sub-2.0s atomic POS inventory deduction (SELECT ... FOR UPDATE SKIP LOCKED)\n• CatBoost Demand Forecasting & Greasley dynamic safety stock\n• Blind cycle counting with supervisor discrepancy signoff\n• Rule-based shrinkage anomaly threshold alerts (>3% variance)",
          COLOR_CYAN),
         ("Quadrant 2: Pilot Operational Boundaries",
          "• Central Warehouse: 1 Central Distribution Center testbed\n• Retail Outlets: Up to 3 Retail Branch Store environments\n• Catalog Scale: 500 representative FMCG & grocery SKUs\n• Concurrency Load: 10 concurrent POS registers + 10 floor scanners\n• Pilot Duration: 4 weeks of simulated operational runs\n• Geographic Scope: Metropolitan Dhaka retail environment",
          COLOR_EMERALD),
         ("Quadrant 3: Technical & Architectural Scope",
-         "• Frontend: Next.js 14 PWA (TypeScript, Tailwind CSS)\n• Backend API: FastAPI asynchronous ASGI (Python 3.11+)\n• Relational Core: PostgreSQL 16 (3NF, ACID, Row Locks)\n• In-Memory Tier: Redis 7 (Idempotency, Session Tokens)\n• ML Worker: Celery + Redis with LightGBM / CatBoost\n• Deployment: Multi-container Docker Compose staging",
+         "• Frontend: Next.js 14 PWA (TypeScript, Tailwind CSS)\n• Backend API: FastAPI asynchronous ASGI (Python 3.11+)\n• Relational Core: PostgreSQL 16 (3NF, ACID, Non-Blocking Row Locks)\n• In-Memory Tier: Redis 7 (Client-generated Idempotency Keys, Session Tokens)\n• ML Worker: Celery + Redis with CatBoost & Daily 02:00 BST Quarantine Sweep\n• Deployment: Multi-container Docker Compose staging",
          COLOR_AMBER),
         ("Quadrant 4: Explicit Out-of-Scope (Deliberately Excluded)",
          "• NO Full Corporate Accounting: No general ledger or payroll (exports CSV/JSON audit trails to external ERPs)\n• NO Warehouse Robotics: No physical automated cranes (AGVs) or motor conveyor belts\n• NO Consumer Delivery: No B2C grocery shopping or courier app\n• NO Merchant Payment Gateways: POS billing handles credit card/bKash settlement externally",
@@ -536,7 +536,7 @@ def create_slide_deck():
     tiers = [
         ("Tier 1: Client Edge (PWA & Terminals)", "Next.js 14 PWA running on Android smartphones, tablets, and POS PCs. Pure JS barcode scanning (ZXing) with IndexedDB offline queue (< 150ms UI response)."),
         ("Tier 2: Edge Gateway & Security", "Nginx reverse proxy terminating TLS 1.3, managing JWT bearer token authentication and rate limiting (< 10ms gateway overhead)."),
-        ("Tier 3: Core Application & AI Workers", "Python 3.11+ FastAPI asynchronous ASGI backend. Paired with Celery workers running LightGBM demand forecasting and Greasley safety stock calculations (< 180ms p95 SLA)."),
+        ("Tier 3: Core Application & AI Workers", "Python 3.11+ FastAPI asynchronous ASGI backend. Paired with Celery workers running CatBoost demand forecasting and scheduled quarantine sweeps (< 180ms p95 SLA)."),
         ("Tier 4: Enterprise Persistence & Cache", "PostgreSQL 16 relational database with strict 3NF schema, row-level locks, and composite B-Trees. Redis 7 for distributed locks and idempotency caching (< 50ms commit).")
     ]
     for t_name, t_desc in tiers:
@@ -562,8 +562,8 @@ def create_slide_deck():
         "Slide 6 Script: Here is our Figure 1: 4-Tier Cyber-Physical System Architecture. "
         "At Tier 1, our Next.js PWA runs on warehouse smartphones and POS registers. It uses Service Workers and IndexedDB for offline buffering. "
         "At Tier 2, an Nginx reverse proxy handles TLS 1.3 termination, JWT authentication, and edge rate-limiting. "
-        "At Tier 3, our asynchronous FastAPI backend processes business logic, while background Celery workers execute LightGBM forecasting. "
-        "At Tier 4, PostgreSQL 16 guarantees ACID double-entry inventory transactions with pessimistic row locks, and Redis 7 caches idempotency keys."
+        "At Tier 3, our asynchronous FastAPI backend processes business logic, while background Celery workers execute CatBoost forecasting. "
+        "At Tier 4, PostgreSQL 16 guarantees ACID double-entry inventory transactions with non-blocking row locks (SKIP LOCKED), and Redis 7 caches client-generated idempotency keys."
     )
 
     # =========================================================================
@@ -639,8 +639,8 @@ def create_slide_deck():
 
     ml_points = [
         "The Flaw of Classic EOQ: Traditional inventory models assume constant demand (d). In Bangladeshi retail, demand surges 300% during Ramadan, Eid, and payday weekends.",
-        "LightGBM Multi-Horizon Predictor: Trains gradient boosted decision trees over historical POS sales. Features include 7-day lags, rolling statistics, and local calendar embeddings.",
-        "Festival Calendar Awareness: Embeds binary flags for Ramadan (Iftar rushes), Eid-ul-Fitr, Eid-ul-Adha, and corporate salary disbursement cycles (1st to 7th of each month).",
+        "CatBoost Multi-Horizon Predictor: Trains gradient boosted decision trees over historical POS sales. Features include 7-day lags, rolling statistics, and native categorical festival calendar embeddings.",
+        "Festival Calendar Awareness: Native handling of categorical flags for Ramadan (Iftar rushes), Eid-ul-Fitr, Eid-ul-Adha, and corporate salary disbursement cycles (1st to 7th of each month) without target leakage.",
         "Greasley Dynamic Formula:\nSS = Z × √((L̄ × σ_d²) + (d_hat² × σ_L²))\nROP = (d_hat × L̄) + SS\nBy replacing static demand with AI-predicted demand (d_hat), replenishment orders trigger 10 days in advance of holiday surges."
     ]
     for mp in ml_points:
@@ -658,7 +658,7 @@ def create_slide_deck():
     slide8.notes_slide.notes_text_frame.text = (
         "Slide 8 Script: Figure 3 illustrates our machine learning replenishment pipeline. "
         "Standard inventory formulas assume demand is static, which is why supermarkets run out of soybean oil during Ramadan. "
-        "RetailSync deploys a LightGBM regressor trained on POS sales. We feed it lag features and local calendar embeddings for Ramadan, "
+        "RetailSync deploys a CatBoost regressor trained on POS sales. We feed it lag features and native categorical embeddings for Ramadan, "
         "Eid, and payday cycles. The model outputs predicted daily demand (d_hat). We then plug d_hat directly into Greasley's statistical "
         "safety stock equation. This dynamically raises reorder points 10 days before a festival rush, preventing stockouts without over-ordering after the holiday."
     )
@@ -899,7 +899,7 @@ def create_slide_deck():
     sum_points = [
         "1. Centralized Relational Integrity: Bridges frontline POS and warehouse bins with strict 3NF schema and sub-2.0s row locking.",
         "2. Automated FEFO Food Safety: Mechanically prevents expired product sales under Bangladesh Food Safety Act 2013.",
-        "3. AI Replenishment Engine: LightGBM demand predictor with festival embeddings coupled to Greasley's dynamic safety stock.",
+        "3. AI Replenishment Engine: CatBoost demand predictor with native festival embeddings coupled to Greasley's dynamic safety stock (LightGBM deferred to roadmap).",
         "4. Frugal Hardware Model: Standard Android smartphones cut deployment costs by 90% with sub-350ms scan speed."
     ]
     for sp in sum_points:
@@ -923,7 +923,8 @@ def create_slide_deck():
         "• BSOA (2024). Annual Report on Supermarket Operations & Wastage.",
         "• FAO (2022). Post-Harvest Losses in South Asian Retail Supply Chains.",
         "• Greasley, A. (2013). Operations Management, 3rd ed., Wiley.",
-        "• Ke, G. et al. (2017). LightGBM: A Highly Efficient GBDT, NeurIPS.",
+        "• Prokhorenkova, L. et al. (2018). CatBoost: Unbiased Boosting with Categorical Features.",
+        "• Ke, G. et al. (2017). LightGBM: A Highly Efficient GBDT, NeurIPS (Deferred).",
         "• Kleppmann, M. (2017). Designing Data-Intensive Applications, O'Reilly."
     ]
     for r in refs_short:
