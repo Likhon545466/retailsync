@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -120,4 +120,66 @@ def audits_view(request: Request, user: models.User = Depends(auth.get_current_u
         name="audits.html",
         context={"active_page": "audits", "current_user": user}
     )
+
+@app.get("/showcase", response_class=HTMLResponse)
+def showcase_view():
+    showcase_path = os.path.join(root_dir, "proposal", "interactive_showcase.html")
+    if os.path.exists(showcase_path):
+        return FileResponse(showcase_path)
+    return HTMLResponse("<h1>Proposal Showcase</h1><p>File not found.</p>", status_code=404)
+
+@app.get("/slides", response_class=HTMLResponse)
+@app.get("/presentation", response_class=HTMLResponse)
+def slides_view():
+    slides_path = os.path.join(root_dir, "proposal", "presentation_deck.html")
+    if os.path.exists(slides_path):
+        return FileResponse(slides_path)
+    return HTMLResponse("<h1>Defense Slides</h1><p>File not found.</p>", status_code=404)
+
+@app.get("/deck")
+def deck_download():
+    deck_path = os.path.join(root_dir, "proposal", "RetailSync_Capstone_Proposal_Defense_Deck.pptx")
+    if os.path.exists(deck_path):
+        return FileResponse(
+            deck_path,
+            filename="RetailSync_Capstone_Proposal_Defense_Deck.pptx",
+            media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+    return HTMLResponse("<h1>Deck Not Found</h1>", status_code=404)
+
+@app.get("/proposal")
+def proposal_download():
+    pdf_path = os.path.join(root_dir, "proposal", "RetailSync_WMS_Project_Proposal.pdf")
+    if os.path.exists(pdf_path):
+        return FileResponse(
+            pdf_path,
+            filename="RetailSync_WMS_Project_Proposal.pdf",
+            media_type="application/pdf"
+        )
+    return HTMLResponse("<h1>Proposal PDF Not Found</h1>", status_code=404)
+
+@app.get("/api")
+def api_root():
+    return {
+        "status": "online",
+        "app": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "institution": settings.INSTITUTION,
+        "team": settings.TEAM_MEMBERS,
+        "documentation": "/api/docs",
+        "routes": {
+            "dashboard": "/dashboard",
+            "pos": "/pos",
+            "inbound": "/inbound",
+            "putaway": "/putaway",
+            "warehouse": "/warehouse",
+            "procurement": "/procurement",
+            "audits": "/audits",
+            "showcase": "/showcase",
+            "slides": "/slides",
+            "deck": "/deck",
+            "proposal": "/proposal"
+        }
+    }
+
 
