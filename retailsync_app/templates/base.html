@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}RetailSync - Enterprise Super Shop WMS{% endblock %}</title>
+
+  <!-- Pre-render Theme Initialization (Prevents FOUC) -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('retailsync-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,49 +23,54 @@
   {% block head_extra %}{% endblock %}
 </head>
 <body>
-  <!-- Top Navigation Bar -->
-  <header class="navbar-app">
-    <div style="display: flex; align-items: center; gap: 14px;">
-      <a href="/dashboard" class="brand-wrapper">
-        <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img">
-        <div class="brand-title">RETAIL<span class="accent">SYNC</span> <span class="badge-version">WMS v2.0-RELEASE</span></div>
-      </a>
-      <div class="engine-heartbeat-pill">
-        <span class="heartbeat-dot"></span> PG16 3NF ACTIVE • 02:00 BST SWEEP ON
+  <!-- Top Navigation Bar (Strict 3-Zone Flex Layout) -->
+  <header class="navbar-wrapper">
+    <div class="navbar-app">
+      <!-- Zone 1 (Left): Brand logo + RETAILSYNC + v2.0-RELEASE pill badge -->
+      <div class="nav-zone-left">
+        <a href="/dashboard" class="brand-wrapper">
+          <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img">
+          <div class="brand-title">RETAIL<span class="accent">SYNC</span> <span class="badge-version">v2.0-RELEASE</span></div>
+        </a>
       </div>
-    </div>
 
-    <nav class="nav-links">
-      <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">📊 Overview</a>
-      <a href="/pos" class="nav-item {% if active_page == 'pos' %}active{% endif %}">🛒 POS Register</a>
-      <a href="/inbound" class="nav-item {% if active_page == 'inbound' %}active{% endif %}">📥 Inbound Dock</a>
-      <a href="/putaway" class="nav-item {% if active_page == 'putaway' %}active{% endif %}">📦 Putaway</a>
-      <a href="/warehouse" class="nav-item {% if active_page == 'warehouse' %}active{% endif %}">🗺️ Digital Twin</a>
-      <a href="/procurement" class="nav-item {% if active_page == 'procurement' %}active{% endif %}">📈 Replenishment DSS</a>
-      <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">📜 Stock Ledger</a>
-    </nav>
+      <!-- Zone 2 (Center): Clean, refined navigation links -->
+      <nav class="nav-zone-center nav-links">
+        <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">📊 Overview</a>
+        <a href="/pos" class="nav-item {% if active_page == 'pos' %}active{% endif %}">🛒 POS Register</a>
+        <a href="/inbound" class="nav-item {% if active_page == 'inbound' %}active{% endif %}">📥 Inbound Dock</a>
+        <a href="/putaway" class="nav-item {% if active_page == 'putaway' %}active{% endif %}">📦 Putaway</a>
+        <a href="/warehouse" class="nav-item {% if active_page == 'warehouse' %}active{% endif %}">🗺️ Digital Twin</a>
+        <a href="/procurement" class="nav-item {% if active_page == 'procurement' %}active{% endif %}">📈 Replenishment DSS</a>
+        <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">📜 Stock Ledger</a>
+      </nav>
 
-    <div class="user-controls">
-      <!-- Quick Role Switcher for Defense Demonstration -->
-      <select id="roleSwitcher" class="btn-sm btn-secondary" onchange="switchDemoRole(this.value)" title="Quickly switch operational role for demonstration">
-        <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Role: Cashier (Nusrat)</option>
-        <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Role: Dock Clerk (Kabir)</option>
-        <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Role: Floor Operator (Tariq)</option>
-        <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Role: Supervisor (Farhan)</option>
-        <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>Role: SCM Officer (Tanvir)</option>
-        <option value="admin" {% if current_user and current_user.username == 'admin' %}selected{% endif %}>Role: Admin (Rafiq)</option>
-      </select>
+      <!-- Zone 3 (Right - Compact Utility Dock) -->
+      <div class="nav-zone-right user-controls">
+        <!-- Theme Toggle Button -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="btn-theme-toggle" title="Switch Theme">☀️</button>
 
-      <span class="user-badge">
-        <span>●</span> {{ current_user.full_name if current_user else 'Demo User' }}
-      </span>
+        <!-- Compact Role Switcher with Custom Chevron -->
+        <div class="role-select-wrapper">
+          <select id="roleSwitcher" class="select-role-compact" onchange="switchDemoRole(this.value)" title="Quickly switch operational role for demonstration">
+            <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Role: Cashier</option>
+            <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Role: Dock Clerk</option>
+            <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Role: Floor Operator</option>
+            <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Role: Supervisor</option>
+            <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>Role: SCM Officer</option>
+            <option value="admin" {% if current_user and current_user.username == 'admin' %}selected{% endif %}>Role: Admin</option>
+          </select>
+          <span class="select-chevron">▾</span>
+        </div>
 
-      <a href="/showcase" target="_blank" class="btn-sm btn-secondary" title="Open Public Proposal Showcase">Proposal Showcase ↗</a>
-      <a href="/slides" target="_blank" class="btn-sm btn-secondary" title="Open Defense Slides">Defense Slides ↗</a>
+        <!-- Clean Compact Showcase & Slides Links -->
+        <a href="/showcase" target="_blank" class="nav-ext-link" title="Open Public Proposal Showcase">Showcase ↗</a>
+        <a href="/slides" target="_blank" class="nav-ext-link" title="Open Defense Slides">Slides ↗</a>
+      </div>
     </div>
   </header>
 
-  <!-- Main Content Container -->
+  <!-- Main Content Container (max-width: 1320px) -->
   <main class="app-container">
     {% block content %}{% endblock %}
   </main>
@@ -65,14 +78,43 @@
   <!-- Global Floating Toast Container -->
   <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Footer -->
-  <footer style="text-align: center; padding: 24px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border-subtle); margin-top: auto; background: var(--surface-low);">
-    <b>RetailSync: Centralized Super Shop Warehouse Management System</b> • Department of Software Engineering, Daffodil International University (DIU)<br>
-    Project Team: <b>Raisul Islam Likhon</b> (Lead: 251-35-508), <b>Shottobroto Dey</b> (251-35-017), <b>Golam Husnain Papon</b> (251-35-529) • Section: <b>SWE-44D</b>
+  <!-- Footer with Telemetry Bar -->
+  <footer class="app-footer">
+    <div class="footer-telemetry">
+      <span class="heartbeat-dot"></span>
+      <span>PG16 3NF ACTIVE</span>
+      <span class="footer-sep">•</span>
+      <span>02:00 BST SWEEP ON</span>
+      <span class="footer-sep">•</span>
+      <span>PostgreSQL 16 Engine Synchronized</span>
+    </div>
+    <div class="footer-meta">
+      <b>RetailSync: Centralized Super Shop Warehouse Management System</b> • Department of Software Engineering, Daffodil International University (DIU)<br>
+      Project Team: <b>Raisul Islam Likhon</b> (Lead: 251-35-508), <b>Shottobroto Dey</b> (251-35-017), <b>Golam Husnain Papon</b> (251-35-529) • Section: <b>SWE-44D</b>
+    </div>
   </footer>
 
   <script>
-    // Global M3 Expressive Floating Glass Toast System
+    // Theme Toggle JavaScript Logic
+    function initTheme() {
+      const saved = localStorage.getItem('retailsync-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      updateThemeIcon(saved);
+    }
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('retailsync-theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.innerHTML = theme === 'light' ? '🌙' : '☀️';
+    }
+    document.addEventListener('DOMContentLoaded', initTheme);
+
+    // Global Floating Glass Toast System
     function showToast(message, type = 'info', title = '') {
       const container = document.getElementById('toastContainer');
       if (!container) return;
@@ -81,11 +123,12 @@
       toast.className = `toast-item toast-${type}`;
 
       const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+      const iconColor = type === 'success' ? 'var(--emerald-400)' : type === 'error' ? 'var(--rose-400)' : 'var(--primary-500)';
       const defaultTitle = type === 'success' ? 'Operation Approved' : type === 'error' ? 'Operational Alert' : 'System Notice';
       const displayTitle = title || defaultTitle;
 
       toast.innerHTML = `
-        <div class="toast-icon" style="color: ${type === 'success' ? '#059669' : type === 'error' ? 'var(--error)' : 'var(--primary)'}; font-weight: 800;">${icon}</div>
+        <div class="toast-icon" style="color: ${iconColor}; font-weight: 800;">${icon}</div>
         <div class="toast-body">
           <div class="toast-title">${displayTitle}</div>
           <div class="toast-message">${message}</div>
@@ -99,6 +142,15 @@
         dismissToast(toast);
       }, 3500);
     }
+
+    // Intercept native browser alert() and confirm() to use floating toasts
+    window.alert = function(msg) {
+      showToast(String(msg), 'info', 'System Notice');
+    };
+    window.confirm = function(msg) {
+      showToast(String(msg), 'info', 'Action Confirmed');
+      return true;
+    };
 
     function dismissToast(el) {
       if (!el || el.classList.contains('toast-dismissing')) return;
@@ -122,6 +174,113 @@
       } catch (e) {
         showToast("Role switch error: " + e.message, 'error', 'Authentication Failed');
       }
+    }
+
+    // Universal Table Search & CSV Export Utilities
+    function initTableSearch(inputId, tableId, countBadgeId = null) {
+      const input = document.getElementById(inputId);
+      const table = document.getElementById(tableId);
+      if (!input || !table) return;
+
+      const handler = function() {
+        const q = input.value.trim().toLowerCase();
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr:not(.table-empty-row)');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+          if (row.cells.length === 1 && row.cells[0].colSpan > 1) return;
+          const text = row.textContent.toLowerCase();
+          const match = !q || text.includes(q);
+          row.style.display = match ? '' : 'none';
+          if (match) visibleCount++;
+        });
+
+        let emptyRow = tbody.querySelector('.table-empty-row');
+        if (visibleCount === 0 && rows.length > 0 && !(rows.length === 1 && rows[0].cells[0].colSpan > 1)) {
+          if (!emptyRow) {
+            emptyRow = document.createElement('tr');
+            emptyRow.className = 'table-empty-row';
+            const colCount = table.querySelectorAll('thead th').length || 8;
+            emptyRow.innerHTML = `<td colspan="${colCount}" style="text-align: center; color: var(--text-muted); padding: 32px 16px;">No matching records found for "${input.value}".</td>`;
+            tbody.appendChild(emptyRow);
+          } else {
+            emptyRow.style.display = '';
+            emptyRow.querySelector('td').innerText = `No matching records found for "${input.value}".`;
+          }
+        } else if (emptyRow) {
+          emptyRow.style.display = 'none';
+        }
+
+        if (countBadgeId) {
+          const badge = document.getElementById(countBadgeId);
+          if (badge) {
+            badge.innerText = q ? `${visibleCount} of ${rows.length} records` : `${rows.length} records`;
+          }
+        }
+      };
+
+      if (input._tableSearchHandler) {
+        input.removeEventListener('input', input._tableSearchHandler);
+      }
+      input._tableSearchHandler = handler;
+      input.addEventListener('input', handler);
+      if (input.value) handler();
+    }
+
+    function exportTableToCSV(tableId, filename = 'retailsync_export.csv') {
+      const table = document.getElementById(tableId);
+      if (!table) return;
+
+      const rows = [];
+      const headerCells = table.querySelectorAll('thead th');
+      const headers = [];
+      headerCells.forEach(th => {
+        const title = th.innerText.trim();
+        if (title && !['action', 'actions'].includes(title.toLowerCase())) {
+          headers.push(`"${title.replace(/"/g, '""')}"`);
+        }
+      });
+      if (headers.length > 0) rows.push(headers.join(','));
+
+      const dataRows = table.querySelectorAll('tbody tr:not(.table-empty-row)');
+      let exportedCount = 0;
+      dataRows.forEach(tr => {
+        if (tr.style.display === 'none') return;
+        const cells = tr.querySelectorAll('td');
+        if (cells.length === 0 || (cells.length === 1 && cells[0].colSpan > 1)) return;
+
+        const rowData = [];
+        cells.forEach((td, idx) => {
+          if (headerCells[idx] && ['action', 'actions'].includes(headerCells[idx].innerText.trim().toLowerCase())) {
+            return;
+          }
+          let val = td.innerText.trim().replace(/\r?\n+/g, ' ');
+          rowData.push(`"${val.replace(/"/g, '""')}"`);
+        });
+        rows.push(rowData.join(','));
+        exportedCount++;
+      });
+
+      if (exportedCount === 0) {
+        showToast("No records available to export", "info", "Export Notice");
+        return;
+      }
+
+      const csvContent = "\uFEFF" + rows.join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const dateStr = new Date().toISOString().slice(0, 10);
+      a.download = filename.endsWith('.csv') ? filename.replace('.csv', `_${dateStr}.csv`) : `${filename}_${dateStr}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(`Successfully exported ${exportedCount} rows to CSV!`, "success", "Export Complete");
     }
   </script>
   {% block scripts %}{% endblock %}

@@ -152,10 +152,10 @@ function renderGrid() {
             if (b.is_occupied) {
               if (b.nearest_expiry_days !== null && b.nearest_expiry_days <= 7) {
                 statusClass = 'near-expiry';
-                statusDot = `<span style="color:var(--carmine-600); font-weight:700;">● Exp: ${b.nearest_expiry_days}d</span>`;
+                statusDot = `<span style="color:var(--rose-400); font-weight:700;">● Exp: ${b.nearest_expiry_days}d</span>`;
               } else {
                 statusClass = 'occupied';
-                statusDot = `<span style="color:var(--teal-700); font-weight:700;">● Occupied</span>`;
+                statusDot = `<span style="color:var(--emerald-400); font-weight:700;">● Occupied</span>`;
               }
             }
 
@@ -191,7 +191,7 @@ function inspectBin(binId) {
   document.getElementById('inspSummary').innerText = bin.items_summary;
   
   if (bin.nearest_expiry_days !== null) {
-    document.getElementById('inspExpiry').innerHTML = `Nearest FEFO Expiry: <b style="color:${bin.nearest_expiry_days <= 7 ? 'var(--carmine-600)' : 'var(--teal-700)'}">${bin.nearest_expiry_days} days remaining</b>`;
+    document.getElementById('inspExpiry').innerHTML = `Nearest FEFO Expiry: <b style="color:${bin.nearest_expiry_days <= 7 ? 'var(--rose-400)' : 'var(--emerald-400)'}">${bin.nearest_expiry_days} days remaining</b>`;
   } else {
     document.getElementById('inspExpiry').innerText = 'Nearest FEFO Expiry: N/A';
   }

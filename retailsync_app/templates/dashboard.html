@@ -3,9 +3,17 @@
 {% block title %}Operational Dashboard - RetailSync WMS{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--text-primary);">Operational Command Center</h1>
-  <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Real-time enterprise warehouse telemetry, inventory valuation, and multi-channel synchronization.</p>
+<div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+  <div>
+    <h1 style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--text-primary);">Operational Command Center</h1>
+    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Real-time enterprise warehouse telemetry, inventory valuation, and multi-channel synchronization.</p>
+  </div>
+  <div class="footer-telemetry" style="margin: 0; box-shadow: var(--shadow-sm);">
+    <span class="heartbeat-dot"></span>
+    <span>PG16 3NF ACTIVE</span>
+    <span class="footer-sep">•</span>
+    <span>02:00 BST SWEEP ON</span>
+  </div>
 </div>
 
 <!-- Metrics Bento Grid -->

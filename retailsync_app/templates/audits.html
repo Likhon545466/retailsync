@@ -9,13 +9,41 @@
 </div>
 
 <div class="glass-panel">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Recent Stock Ledger Movements</h3>
-    <button class="btn-sm btn-secondary" onclick="loadLedger()">↻ Refresh Ledger</button>
+  <div class="table-toolbar">
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">Stock Ledger Audit Trail</h3>
+      <span id="ledgerCountBadge" class="badge badge-info">0 records</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <!-- Live Search Input -->
+      <div class="table-search-wrapper">
+        <input type="text" id="ledgerSearchInput" class="form-input table-search-input" placeholder="Search by SKU, Reference #, Product Name, or Operator..." oninput="filterLedger()">
+      </div>
+
+      <!-- Filter dropdown by Transaction Type -->
+      <select id="ledgerTypeFilter" class="form-input" onchange="filterLedger()" style="min-height: 36px; padding: 6px 12px; font-size: 12.5px; width: auto;">
+        <option value="ALL">All Types</option>
+        <option value="POS_SALE_FEFO">POS_SALE_FEFO</option>
+        <option value="GRN_RECEIPT">GRN_RECEIPT</option>
+        <option value="PUTAWAY">PUTAWAY</option>
+        <option value="WRITE_OFF">WRITE_OFF</option>
+      </select>
+
+      <!-- ⬇ Export CSV button -->
+      <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()" title="Export compliant audit ledger to CSV">
+        ⬇ Export CSV
+      </button>
+
+      <!-- Refresh button -->
+      <button class="btn-sm btn-secondary" onclick="loadLedger()" title="Refresh transaction ledger">
+        ↻ Refresh
+      </button>
+    </div>
   </div>
 
   <div class="table-responsive">
-    <table class="retailsync-table">
+    <table class="retailsync-table" id="ledgerTable">
       <thead>
         <tr>
           <th>Timestamp (UTC)</th>
@@ -38,49 +66,153 @@
 
 {% block scripts %}
 <script>
+let allLedgerEntries = [];
+
 async function loadLedger() {
   try {
-    const res = await fetch('/api/v1/warehouse/ledger?limit=40');
-    const entries = await res.json();
-    renderLedger(entries);
+    const res = await fetch('/api/v1/warehouse/ledger?limit=100');
+    allLedgerEntries = await res.json();
+    filterLedger();
   } catch (e) {
     console.error("Error loading ledger:", e);
     showToast("Failed to load stock ledger transactions", "error", "Data Error");
   }
 }
 
+function filterLedger() {
+  const searchInput = document.getElementById('ledgerSearchInput');
+  const typeFilter = document.getElementById('ledgerTypeFilter');
+  const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  const type = typeFilter ? typeFilter.value : 'ALL';
+
+  const filtered = allLedgerEntries.filter(e => {
+    if (type !== 'ALL' && e.transaction_type !== type) {
+      return false;
+    }
+    if (!q) return true;
+    const matchRef = (e.reference_number || '').toLowerCase().includes(q);
+    const matchSku = (e.sku_code || '').toLowerCase().includes(q);
+    const matchProd = (e.product_name || '').toLowerCase().includes(q);
+    const matchUser = (e.user_name || '').toLowerCase().includes(q);
+    const matchLot = (e.lot_number || '').toLowerCase().includes(q);
+    return matchRef || matchSku || matchProd || matchUser || matchLot;
+  });
+
+  renderLedger(filtered);
+}
+
 function renderLedger(entries) {
   const tbody = document.getElementById('ledgerTableBody');
+  const countBadge = document.getElementById('ledgerCountBadge');
+  if (countBadge) {
+    countBadge.innerText = `${entries.length} of ${allLedgerEntries.length} records`;
+  }
+
   if (entries.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">No transaction records logged yet.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 36px 16px;">No ledger transactions found matching the selected filter criteria.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = entries.map(e => {
     const isDeduction = e.quantity_change < 0;
-    const deltaColor = isDeduction ? 'var(--carmine-600)' : 'var(--teal-700)';
+    const deltaColor = isDeduction ? 'var(--rose-400)' : 'var(--emerald-400)';
+    const deltaBg = isDeduction ? 'var(--rose-50)' : 'var(--emerald-50)';
     const deltaSign = e.quantity_change > 0 ? `+${e.quantity_change}` : `${e.quantity_change}`;
 
     return `
       <tr>
-        <td style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">${e.timestamp}</td>
-        <td style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-600);">${e.reference_number || 'N/A'}</td>
+        <td style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); white-space: nowrap;">${e.timestamp}</td>
+        <td style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-500); white-space: nowrap;">${e.reference_number || 'N/A'}</td>
         <td>
           <div style="font-weight: 700; color: var(--text-primary);">${e.product_name}</div>
-          <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">${e.sku_code}</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">${e.sku_code}</div>
         </td>
-        <td style="font-family: var(--font-mono);">${e.lot_number}</td>
+        <td style="font-family: var(--font-mono); white-space: nowrap;">${e.lot_number}</td>
         <td><span class="badge badge-info">${e.transaction_type}</span></td>
-        <td style="font-family: var(--font-mono); font-weight: 800; font-size: 13px; color: ${deltaColor};">
-          ${deltaSign}
+        <td style="white-space: nowrap;">
+          <span style="font-family: var(--font-mono); font-weight: 800; font-size: 12.5px; padding: 3px 9px; border-radius: var(--radius-full); background: ${deltaBg}; color: ${deltaColor}; border: 1px solid var(--border-subtle); display: inline-block;">
+            ${deltaSign} PCS
+          </span>
         </td>
-        <td style="font-family: var(--font-mono); font-size: 12px;">
-          ${e.previous_balance} → <b>${e.new_balance}</b>
+        <td style="font-family: var(--font-mono); font-size: 12.5px; white-space: nowrap;">
+          ${e.previous_balance} → <b style="color: var(--text-primary);">${e.new_balance} PCS</b>
         </td>
-        <td>${e.user_name}</td>
+        <td style="white-space: nowrap;">
+          <span style="font-weight: 600; color: var(--text-secondary);">${e.user_name}</span>
+        </td>
       </tr>
     `;
   }).join('');
+}
+
+function exportLedgerCSV() {
+  const searchInput = document.getElementById('ledgerSearchInput');
+  const typeFilter = document.getElementById('ledgerTypeFilter');
+  const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  const type = typeFilter ? typeFilter.value : 'ALL';
+
+  const dataToExport = allLedgerEntries.filter(e => {
+    if (type !== 'ALL' && e.transaction_type !== type) return false;
+    if (!q) return true;
+    return (e.reference_number || '').toLowerCase().includes(q) ||
+           (e.sku_code || '').toLowerCase().includes(q) ||
+           (e.product_name || '').toLowerCase().includes(q) ||
+           (e.user_name || '').toLowerCase().includes(q) ||
+           (e.lot_number || '').toLowerCase().includes(q);
+  });
+
+  if (dataToExport.length === 0) {
+    showToast("No records available to export for the current filter", "info", "Export Notice");
+    return;
+  }
+
+  // Bangladesh Food Safety Act 2013 compliant compliance ledger headers
+  const headers = [
+    "Timestamp (UTC)",
+    "Audit Reference #",
+    "Product Name",
+    "SKU Code",
+    "Batch Lot #",
+    "Transaction Type",
+    "Quantity Delta (PCS)",
+    "Previous Balance (PCS)",
+    "New Balance (PCS)",
+    "Authorized Operator",
+    "Regulatory Compliance Standard"
+  ];
+
+  const rows = [headers.map(h => `"${h}"`).join(',')];
+
+  dataToExport.forEach(e => {
+    const deltaSign = e.quantity_change > 0 ? `+${e.quantity_change}` : `${e.quantity_change}`;
+    const row = [
+      e.timestamp,
+      e.reference_number || 'N/A',
+      (e.product_name || '').replace(/"/g, '""'),
+      e.sku_code || '',
+      e.lot_number || '',
+      e.transaction_type || '',
+      `${deltaSign} PCS`,
+      `${e.previous_balance} PCS`,
+      `${e.new_balance} PCS`,
+      (e.user_name || '').replace(/"/g, '""'),
+      "Bangladesh Food Safety Act 2013 (FEFO / Tamper-Proof 3NF Audit Trail)"
+    ];
+    rows.push(row.map(cell => `"${cell}"`).join(','));
+  });
+
+  const csvContent = "\uFEFF" + rows.join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "RetailSync_Stock_Ledger_Audit.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showToast(`Exported ${dataToExport.length} audit records to RetailSync_Stock_Ledger_Audit.csv`, "success", "BFSA Audit Export Ready");
 }
 
 document.addEventListener('DOMContentLoaded', loadLedger);

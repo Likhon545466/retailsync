@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Algorithmic Replenishment & Decision Support System (DSS)</h1>
+  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Algorithmic Replenishment &amp; Decision Support System (DSS)</h1>
   <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Dynamic Safety Stock factoring demand &amp; lead-time variance (Greasley's Formula), Wilson EOQ, and 1-click PO issuance.</p>
 </div>
 
@@ -16,14 +16,14 @@
       Quick Scenario Presets:
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="scenarioPresets">
-      <button type="button" class="btn-sm btn-secondary" id="presetNormal" onclick="applyPreset('NORMAL')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px; background: var(--primary-600); color: #fff;">
+      <button type="button" class="btn-sm btn-primary" id="presetNormal" onclick="applyPreset('NORMAL')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px;">
         Normal Operations (1.0x)
       </button>
       <button type="button" class="btn-sm btn-secondary" id="presetFriday" onclick="applyPreset('FRIDAY')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px;">
         Friday Rush (1.4x)
       </button>
       <button type="button" class="btn-sm btn-secondary" id="presetRamadan" onclick="applyPreset('RAMADAN')" style="border-radius: 9999px; font-size: 12px; padding: 6px 16px;">
-        🌙 Ramadan Surge (+250% Demand)
+        🌙 Ramadan Surge (2.5x)
       </button>
     </div>
   </div>
@@ -32,30 +32,49 @@
     <div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
         <span style="color: var(--text-muted); text-transform: uppercase;">Service Level (Z-Score):</span>
-        <span id="zScoreVal" style="color: var(--primary-600); font-family: var(--font-mono); font-weight: 700;">97.5% (Z = 1.96)</span>
+        <span id="zScoreVal" style="color: var(--primary-500); font-family: var(--font-mono); font-weight: 700;">97.5% (Z = 1.96)</span>
       </div>
-      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%; accent-color: var(--primary-600);" oninput="clearPresetActive(); updateCalculations();">
+      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%; accent-color: var(--primary-500);" oninput="clearPresetActive(); updateCalculations();">
     </div>
 
     <div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
         <span style="color: var(--text-muted); text-transform: uppercase;">Festival Demand Multiplier:</span>
-        <span id="multVal" style="color: var(--amber-600); font-family: var(--font-mono); font-weight: 700;">1.0x (Normal Operations)</span>
+        <span id="multVal" style="color: var(--amber-400); font-family: var(--font-mono); font-weight: 700;">1.0x (Normal Operations)</span>
       </div>
-      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%; accent-color: var(--amber-500);" oninput="clearPresetActive(); updateCalculations();">
+      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%; accent-color: var(--amber-400);" oninput="clearPresetActive(); updateCalculations();">
     </div>
 
     <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; text-align: center;">
       <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Reorder Point Breaches</div>
-      <div style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--carmine-600);" id="breachCount">0 SKUs</div>
+      <div style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--rose-400);" id="breachCount">0 SKUs</div>
     </div>
   </div>
 </div>
 
 <!-- Replenishment Recommendations Table -->
 <div class="glass-panel">
+  <div class="table-toolbar">
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">Statistical Replenishment Recommendations</h3>
+      <span id="replenishCountBadge" class="badge badge-info">0 recommendations</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <div class="table-search-wrapper">
+        <input type="text" id="replenishSearchInput" class="form-input table-search-input" placeholder="🔍 Search SKU, product name, or status...">
+      </div>
+      <button class="btn-sm btn-secondary" onclick="exportTableToCSV('replenishTable', 'retailsync_replenishment_orders.csv')" title="Export recommendations to CSV">
+        📥 Export CSV
+      </button>
+      <button class="btn-sm btn-secondary" onclick="updateCalculations()" title="Recalculate DSS parameters">
+        ↻ Recalculate
+      </button>
+    </div>
+  </div>
+
   <div class="table-responsive">
-    <table class="retailsync-table">
+    <table class="retailsync-table" id="replenishTable">
       <thead>
         <tr>
           <th>SKU / Product</th>
@@ -82,9 +101,8 @@ let dssData = null;
 
 function clearPresetActive() {
   document.querySelectorAll('#scenarioPresets button').forEach(btn => {
-    btn.style.background = 'var(--surface-container-medium)';
-    btn.style.color = 'var(--text-secondary)';
-    btn.style.borderColor = 'var(--border-subtle)';
+    btn.className = 'btn-sm btn-secondary';
+    btn.style.borderRadius = '9999px';
   });
 }
 
@@ -97,22 +115,19 @@ function applyPreset(scenario) {
     zSlider.value = 1.96;
     mSlider.value = 1.0;
     const btn = document.getElementById('presetNormal');
-    btn.style.background = 'var(--primary-600)';
-    btn.style.color = '#FFFFFF';
+    btn.className = 'btn-sm btn-primary';
     showToast("Scenario preset: Normal Operations (1.0x) applied", "info", "Preset Loaded");
   } else if (scenario === 'FRIDAY') {
     zSlider.value = 1.96;
     mSlider.value = 1.4;
     const btn = document.getElementById('presetFriday');
-    btn.style.background = 'var(--primary-600)';
-    btn.style.color = '#FFFFFF';
+    btn.className = 'btn-sm btn-primary';
     showToast("Scenario preset: Friday Rush (1.4x demand) applied", "info", "Preset Loaded");
   } else if (scenario === 'RAMADAN') {
     zSlider.value = 2.33;
     mSlider.value = 2.5;
     const btn = document.getElementById('presetRamadan');
-    btn.style.background = 'var(--primary-600)';
-    btn.style.color = '#FFFFFF';
+    btn.className = 'btn-sm btn-primary';
     showToast("Scenario preset: 🌙 Ramadan Surge (+250% Demand) applied", "info", "Preset Loaded");
   }
   updateCalculations();
@@ -141,20 +156,23 @@ function renderTable() {
   if (!dssData) return;
 
   document.getElementById('breachCount').innerText = `${dssData.breached_skus_count} SKUs`;
+  const countBadge = document.getElementById('replenishCountBadge');
+  if (countBadge) countBadge.innerText = `${dssData.items.length} recommendations`;
+
   const tbody = document.getElementById('replenishTableBody');
 
   tbody.innerHTML = dssData.items.map(item => `
-    <tr style="${item.is_breached ? 'background: rgba(220, 38, 38, 0.04);' : ''}">
+    <tr style="${item.is_breached ? 'background: var(--rose-50);' : ''}">
       <td>
         <div style="font-weight: 700; color: var(--text-primary);">${item.product_name}</div>
-        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-600);">${item.sku_code} • ${item.category}</div>
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-500);">${item.sku_code} • ${item.category}</div>
       </td>
-      <td style="font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: ${item.is_breached ? 'var(--carmine-600)' : 'var(--teal-700)'};">
+      <td style="font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: ${item.is_breached ? 'var(--rose-400)' : 'var(--emerald-400)'};">
         ${item.current_stock} PCS
       </td>
       <td style="font-family: var(--font-mono);">${item.greasley_safety_stock} PCS</td>
       <td style="font-family: var(--font-mono); font-weight: 700;">${item.reorder_point} PCS</td>
-      <td style="font-family: var(--font-mono); color: var(--primary-600); font-weight: 700;">${item.eoq_suggested_order_qty} PCS</td>
+      <td style="font-family: var(--font-mono); color: var(--primary-500); font-weight: 700;">${item.eoq_suggested_order_qty} PCS</td>
       <td style="font-family: var(--font-mono);">৳${item.estimated_po_cost_bdt.toFixed(2)}</td>
       <td>
         ${item.is_breached 
@@ -168,6 +186,8 @@ function renderTable() {
       </td>
     </tr>
   `).join('');
+
+  initTableSearch('replenishSearchInput', 'replenishTable', 'replenishCountBadge');
 }
 
 async function createPoForSku(prodId, supId, qty, cost) {

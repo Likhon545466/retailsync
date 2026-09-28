@@ -60,7 +60,7 @@
       <div id="shelfLifeIndicator" class="shelflife-tracker">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
           <span style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Remaining Shelf Life:</span>
-          <span id="shelfLifePct" style="font-weight: 800; font-size: 13px; color: var(--primary-600); font-family: var(--font-mono);">Select expiry date</span>
+          <span id="shelfLifePct" style="font-weight: 800; font-size: 13px; color: var(--primary-500); font-family: var(--font-mono);">Select expiry date</span>
         </div>
 
         <!-- Visual Segmented Progress Bar with 65% Quality Gate Marker -->
@@ -68,7 +68,7 @@
           <div class="shelflife-bar-track">
             <div class="shelflife-zone-quarantine" title="Quarantine Zone (< 65%)"></div>
             <div class="shelflife-zone-approved" title="Approved Zone (≥ 65%)"></div>
-            <div id="shelfLifeFill" class="shelflife-fill" style="width: 0%; background: var(--teal-700);"></div>
+            <div id="shelfLifeFill" class="shelflife-fill" style="width: 0%; background: var(--emerald-400);"></div>
           </div>
           <div class="shelflife-marker-65"></div>
           <div class="shelflife-marker-label">65% QUALITY GATE</div>
@@ -76,8 +76,8 @@
 
         <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px;">
           <span>0% Expired</span>
-          <span style="color: var(--carmine-600); font-weight: 700;">Quarantine &lt; 65%</span>
-          <span style="color: var(--teal-700); font-weight: 700;">Approved ≥ 65%</span>
+          <span style="color: var(--rose-400); font-weight: 700;">Quarantine &lt; 65%</span>
+          <span style="color: var(--emerald-400); font-weight: 700;">Approved ≥ 65%</span>
           <span>100% Fresh</span>
         </div>
 
@@ -131,7 +131,7 @@ function renderPOList() {
     <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s ease;"
          onclick="selectPO(${po.po_id})" onmouseover="this.style.borderColor='var(--primary-500)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-600); font-size: 13px;">${po.po_number}</span>
+        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-500); font-size: 13px;">${po.po_number}</span>
         <span class="badge ${po.status === 'ISSUED' ? 'badge-info' : 'badge-warning'}">${po.status}</span>
       </div>
       <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">${po.supplier_name}</div>
@@ -200,30 +200,30 @@ function validateShelfLife() {
 
   if (isNaN(ratio) || ratio <= 0) {
     pctEl.innerText = "EXPIRED (0%)";
-    pctEl.style.color = "var(--carmine-600)";
+    pctEl.style.color = "var(--rose-400)";
     if (fillEl) {
       fillEl.style.width = "0%";
-      fillEl.style.backgroundColor = "var(--carmine-600)";
+      fillEl.style.backgroundColor = "var(--rose-400)";
     }
-    noteEl.innerHTML = "<b style='color: var(--carmine-600);'>❌ Batch is expired. System will automatically quarantine.</b>";
+    noteEl.innerHTML = "<b style='color: var(--rose-400);'>❌ Batch is expired. System will automatically quarantine.</b>";
   } else if (ratio < 0.65) {
     const pct = Math.round(ratio * 100);
     pctEl.innerText = `${pct}% (Quality Gate Breach)`;
-    pctEl.style.color = "var(--carmine-600)";
+    pctEl.style.color = "var(--rose-400)";
     if (fillEl) {
       fillEl.style.width = `${Math.min(pct, 100)}%`;
-      fillEl.style.backgroundColor = "var(--carmine-600)";
+      fillEl.style.backgroundColor = "var(--rose-400)";
     }
-    noteEl.innerHTML = `<b style='color: var(--carmine-600);'>⚠️ Critical: Only ${pct}% shelf-life remaining (&lt; 65% threshold). System will place in QUARANTINE.</b>`;
+    noteEl.innerHTML = `<b style='color: var(--rose-400);'>⚠️ Critical: Only ${pct}% shelf-life remaining (&lt; 65% threshold). System will place in QUARANTINE.</b>`;
   } else {
     const pct = Math.round(ratio * 100);
     pctEl.innerText = `${pct}% (Quality Approved)`;
-    pctEl.style.color = "var(--teal-700)";
+    pctEl.style.color = "var(--emerald-400)";
     if (fillEl) {
       fillEl.style.width = `${Math.min(pct, 100)}%`;
-      fillEl.style.backgroundColor = "var(--teal-700)";
+      fillEl.style.backgroundColor = "var(--emerald-400)";
     }
-    noteEl.innerHTML = `<b style='color: var(--teal-700);'>✓ Quality Approved (${pct}% remaining). Meets 65% quality gate for putaway & distribution.</b>`;
+    noteEl.innerHTML = `<b style='color: var(--emerald-400);'>✓ Quality Approved (${pct}% remaining). Meets 65% quality gate for putaway & distribution.</b>`;
   }
 }
 

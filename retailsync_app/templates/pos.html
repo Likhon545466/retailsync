@@ -73,9 +73,9 @@
             <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender(500)" style="border-radius: 9999px; font-size: 11.5px; padding: 4px 12px;">৳500</button>
             <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender(1000)" style="border-radius: 9999px; font-size: 11.5px; padding: 4px 12px;">৳1000</button>
           </div>
-          <div id="changeReturnRow" style="display: none; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-top: 8px; padding: 6px 12px; background: var(--surface-container-medium); border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div id="changeReturnRow" style="display: none; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-top: 8px; padding: 6px 12px; background: var(--bg-surface-elevated); border-radius: 8px; border: 1px solid var(--border-subtle);">
             <span>Tendered: <b id="tenderedAmount" style="color: var(--text-primary);">৳0.00</b></span>
-            <span>Change Return: <b id="changeReturnAmount" style="color: var(--teal-700);">৳0.00</b></span>
+            <span>Change Return: <b id="changeReturnAmount" style="color: var(--emerald-400);">৳0.00</b></span>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@
       <div class="receipt-header">
         <div class="receipt-title">RETAILSYNC SUPER SHOP</div>
         <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Central Warehouse POS • Branch: Dhanmondi-01</div>
-        <div style="font-family: var(--font-mono); font-size: 12px; color: var(--primary-600); font-weight: 700; margin-top: 4px;" id="receiptNo"></div>
+        <div style="font-family: var(--font-mono); font-size: 12px; color: var(--primary-500); font-weight: 700; margin-top: 4px;" id="receiptNo"></div>
         <div style="font-size: 11px; color: var(--text-muted);" id="receiptTime"></div>
       </div>
 
@@ -105,15 +105,15 @@
       <div style="border-top: 1px dashed #CBD5E1; padding-top: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: var(--text-primary);">
           <span>Total Paid</span>
-          <span id="receiptTotal" style="color: var(--teal-700);"></span>
+          <span id="receiptTotal" style="color: var(--emerald-400);"></span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 4px;">
           <span>Execution Latency</span>
-          <span id="receiptLatency" style="color: var(--primary-600); font-family: var(--font-mono); font-weight: 700;"></span>
+          <span id="receiptLatency" style="color: var(--primary-500); font-family: var(--font-mono); font-weight: 700;"></span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 2px;">
           <span>FEFO Batch Compliance</span>
-          <span style="color: var(--teal-700); font-weight: 700;">100% Guaranteed</span>
+          <span style="color: var(--emerald-400); font-weight: 700;">100% Guaranteed</span>
         </div>
       </div>
 
@@ -141,7 +141,7 @@
       </button>
     </div>
 
-    <div id="concurrencyResults" style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; min-height: 140px; max-height: 280px; overflow-y: auto; font-family: var(--font-mono); font-size: 12px;">
+    <div id="concurrencyResults" style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; min-height: 140px; max-height: 280px; overflow-y: auto; font-family: var(--font-mono); font-size: 12px; color: var(--text-primary); font-weight: 700;">
       Click button above to execute parallel concurrency test...
     </div>
   </div>
@@ -191,10 +191,10 @@ function renderCatalog() {
   container.innerHTML = products.map(p => `
     <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; cursor: pointer; transition: transform 0.15s ease;" 
          onclick="addToCart('${p.barcode}')" onmouseover="this.style.borderColor='var(--primary-500)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
-      <div style="font-size: 11px; font-weight: 700; color: var(--primary-600); font-family: var(--font-mono);">${p.sku_code}</div>
+      <div style="font-size: 11px; font-weight: 700; color: var(--primary-500); font-family: var(--font-mono);">${p.sku_code}</div>
       <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 4px 0 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.product_name}">${p.product_name}</div>
       <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-        <span style="color: var(--teal-700); font-weight: 700;">৳${p.selling_price_bdt.toFixed(2)}</span>
+        <span style="color: var(--emerald-400); font-weight: 700;">৳${p.selling_price_bdt.toFixed(2)}</span>
         <span class="badge ${p.total_available_stock > 10 ? 'badge-success' : 'badge-danger'}">Stock: ${p.total_available_stock}</span>
       </div>
     </div>
@@ -305,7 +305,7 @@ function renderCart() {
           <button class="btn-sm btn-secondary" onclick="updateCartQty('${item.barcode}', -1)" style="padding: 2px 7px;">-</button>
           <span style="font-family: var(--font-mono); font-weight: 700; width: 20px; text-align: center;">${item.quantity}</span>
           <button class="btn-sm btn-secondary" onclick="updateCartQty('${item.barcode}', 1)" style="padding: 2px 7px;">+</button>
-          <span style="font-family: var(--font-mono); font-weight: 700; color: var(--teal-700); width: 65px; text-align: right;">৳${subtotal.toFixed(2)}</span>
+          <span style="font-family: var(--font-mono); font-weight: 700; color: var(--emerald-400); width: 65px; text-align: right;">৳${subtotal.toFixed(2)}</span>
         </div>
       </div>
     `;
@@ -374,14 +374,14 @@ function showReceiptModal(data) {
 
   const container = document.getElementById('receiptAllocatedItems');
   container.innerHTML = data.allocated_items.map(item => `
-    <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--border-subtle);">
+    <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px dashed var(--border-subtle); color: var(--text-primary);">
       <div>
         <div style="font-weight: 700; color: var(--text-primary);">${item.product_name}</div>
-        <div style="color: var(--primary-600); font-family: var(--font-mono); font-size: 10.5px;">FEFO Batch: ${item.lot_number} (Exp: ${item.expiry_date})</div>
+        <div style="color: var(--primary-500); font-family: var(--font-mono); font-size: 10.5px;">FEFO Batch: ${item.lot_number} (Exp: ${item.expiry_date})</div>
       </div>
       <div style="text-align: right; font-family: var(--font-mono);">
-        <div>${item.quantity} x ৳${item.unit_price_bdt.toFixed(2)}</div>
-        <div style="color: var(--teal-700); font-weight: 700;">৳${item.subtotal_bdt.toFixed(2)}</div>
+        <div style="color: var(--text-secondary);">${item.quantity} x ৳${item.unit_price_bdt.toFixed(2)}</div>
+        <div style="color: var(--emerald-400); font-weight: 700;">৳${item.subtotal_bdt.toFixed(2)}</div>
       </div>
     </div>
   `).join('');
@@ -403,28 +403,28 @@ function closeConcurrencyModal() {
 
 async function runConcurrencyTest(tills, qty) {
   const resBox = document.getElementById('concurrencyResults');
-  resBox.innerHTML = "<span style='color: var(--amber-500);'>Firing simultaneous transactions against database row locks...</span>";
+  resBox.innerHTML = "<span style='color: var(--amber-400);'>Firing simultaneous transactions against database row locks...</span>";
 
   try {
     const res = await fetch(`/api/v1/pos/simulate-concurrency?concurrent_requests=${tills}&quantity_per_request=${qty}`, { method: 'POST' });
     const data = await res.json();
     
-    let html = `<div style="color: var(--primary-600); font-weight: 700; margin-bottom: 8px;">● Concurrency Execution Summary:</div>`;
-    html += `<div>Tested SKU: <b>${data.product_name}</b> (${data.sku})</div>`;
-    html += `<div>Simultaneous Tills: <b>${data.concurrent_tills}</b> | Demand Each: <b>${data.quantity_demanded_each} units</b></div>`;
-    html += `<div style="margin: 6px 0;">Approved: <span style="color: var(--teal-700); font-weight: 700;">${data.approved_transactions}</span> | Stockout Blocked: <span style="color: var(--carmine-600); font-weight: 700;">${data.blocked_stockouts}</span> | Avg Latency: <span style="color: var(--primary-600); font-weight: 700;">${data.average_latency_ms} ms</span></div>`;
+    let html = `<div style="color: var(--primary-500); font-weight: 700; margin-bottom: 8px;">● Concurrency Execution Summary:</div>`;
+    html += `<div style="color: var(--text-primary); font-weight: 700;">Tested SKU: <b>${data.product_name}</b> (${data.sku})</div>`;
+    html += `<div style="color: var(--text-secondary); font-weight: 600;">Simultaneous Tills: <b>${data.concurrent_tills}</b> | Demand Each: <b>${data.quantity_demanded_each} units</b></div>`;
+    html += `<div style="margin: 6px 0; color: var(--text-secondary);">Approved: <span style="color: var(--emerald-400); font-weight: 700;">${data.approved_transactions}</span> | Stockout Blocked: <span style="color: var(--rose-400); font-weight: 700;">${data.blocked_stockouts}</span> | Avg Latency: <span style="color: var(--primary-500); font-weight: 700;">${data.average_latency_ms} ms</span></div>`;
     html += `<div style="margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">`;
     
     data.results.forEach(r => {
-      const color = r.status === 'APPROVED' ? 'var(--teal-700)' : 'var(--carmine-600)';
-      html += `<div style="padding: 3px 0;"><span style="color: var(--text-primary); font-weight: 700;">[${r.register}]</span> <span style="color:${color}; font-weight:700;">${r.status}</span> - ${r.latency_ms}ms ${r.allocated_batches ? '(' + r.allocated_batches.join(', ') + ')' : ''}</div>`;
+      const color = r.status === 'APPROVED' ? 'var(--emerald-400)' : 'var(--rose-400)';
+      html += `<div style="padding: 3px 0; color: var(--text-primary); font-weight: 700;"><span style="color: var(--text-primary); font-weight: 700;">[${r.register}]</span> <span style="color:${color}; font-weight:700;">${r.status}</span> - ${r.latency_ms}ms ${r.allocated_batches ? '(' + r.allocated_batches.join(', ') + ')' : ''}</div>`;
     });
     html += `</div>`;
     resBox.innerHTML = html;
     loadProducts(); // refresh catalog stock
     showToast("Multi-till race condition simulation finished", "info", "Concurrency Run");
   } catch (e) {
-    resBox.innerHTML = `<span style="color: var(--carmine-600);">Error executing concurrency test: ${e.message}</span>`;
+    resBox.innerHTML = `<span style="color: var(--rose-400);">Error executing concurrency test: ${e.message}</span>`;
     showToast("Concurrency test encountered an error", "error", "Simulation Error");
   }
 }
