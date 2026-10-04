@@ -230,6 +230,20 @@ def technical_guide_download():
         )
     return HTMLResponse("<h1>Technical Guide Not Found</h1>", status_code=404)
 
+# --- 7. Complete Team Sharing Dossier Archive (ZIP) ---
+@app.get("/team-pack", response_class=FileResponse)
+@app.get("/team-pack.zip", response_class=FileResponse)
+@app.get("/RetailSync_Team_Sharing_Pack.zip", response_class=FileResponse)
+def team_pack_download():
+    zip_path = os.path.join(root_dir, "RetailSync_Team_Sharing_Pack.zip")
+    if os.path.exists(zip_path):
+        return FileResponse(
+            zip_path,
+            filename="RetailSync_Team_Sharing_Pack.zip",
+            media_type="application/zip"
+        )
+    return HTMLResponse("<h1>Team Sharing Pack Not Found</h1>", status_code=404)
+
 @app.get("/api")
 def api_root():
     return {
@@ -254,7 +268,8 @@ def api_root():
             "proposal_docx": "/proposal/docx",
             "master_engineering_suite_pdf": "/engineering-suite/pdf",
             "master_engineering_suite_docx": "/engineering-suite/docx",
-            "technical_defense_guide": "/technical-guide"
+            "technical_defense_guide": "/technical-guide",
+            "team_pack_zip": "/team-pack.zip"
         }
     }
 

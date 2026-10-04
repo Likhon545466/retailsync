@@ -137,3 +137,19 @@ def test_dashboard_deliverables_bento_card():
     assert 'href="/proposal/pdf"' in html
     assert 'href="/proposal/docx"' in html
     assert 'href="/deck"' in html
+    assert 'href="/team-pack.zip"' in html
+
+
+def test_team_pack_zip_endpoints():
+    """Verify all routes pointing to the complete team sharing pack (ZIP) return 200."""
+    zip_routes = [
+        "/team-pack",
+        "/team-pack.zip",
+        "/RetailSync_Team_Sharing_Pack.zip",
+    ]
+    for route in zip_routes:
+        res = client.get(route)
+        assert res.status_code == 200, f"Failed on {route}"
+        assert "zip" in res.headers.get("content-type")
+        assert len(res.content) > 2_000_000  # Should be ~4.6 MB
+

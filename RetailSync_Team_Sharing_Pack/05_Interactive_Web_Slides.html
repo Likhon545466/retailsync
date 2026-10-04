@@ -1,0 +1,2296 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetailSync Defense Presentation | Liquid Glass Technical Edition | DIU SE-231</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #040711;
+      --border-glass: rgba(255, 255, 255, 0.16);
+      --border-glass-subtle: rgba(255, 255, 255, 0.09);
+      --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 100%);
+      
+      --cyan-400: #38bdf8;
+      --cyan-500: #0ea5e9;
+      --emerald-400: #34d399;
+      --emerald-500: #10b981;
+      --amber-400: #fbbf24;
+      --amber-500: #f59e0b;
+      --rose-400: #fb7185;
+      --rose-500: #f43f5e;
+      --purple-400: #c084fc;
+      --purple-500: #a855f7;
+      --indigo-500: #6366f1;
+      
+      --text-white: #ffffff;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --slide-ratio: 16 / 9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      position: relative;
+    }
+
+    /* Ambient Liquid Aurora Background */
+    .liquid-bg {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .liquid-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(110px);
+      opacity: 0.58;
+      animation: floatLiquid 22s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #0ea5e9, #0369a1);
+      top: -140px;
+      left: -120px;
+      animation-duration: 20s;
+    }
+
+    .orb-2 {
+      width: 680px;
+      height: 680px;
+      background: radial-gradient(circle, #a855f7, #4f46e5);
+      bottom: -180px;
+      right: -140px;
+      animation-duration: 25s;
+    }
+
+    .orb-3 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #10b981, #0f766e);
+      top: 32%;
+      left: 55%;
+      opacity: 0.36;
+      animation-duration: 18s;
+    }
+
+    .orb-4 {
+      width: 470px;
+      height: 440px;
+      background: radial-gradient(circle, #f43f5e, #be123c);
+      bottom: 22%;
+      left: 18%;
+      opacity: 0.28;
+      animation-duration: 23s;
+    }
+
+    @keyframes floatLiquid {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(65px, 50px) scale(1.1) rotate(12deg); }
+      100% { transform: translate(-50px, 85px) scale(0.94) rotate(-10deg); }
+    }
+
+    /* Top Control Bar */
+    header.deck-bar {
+      height: 52px;
+      background: rgba(6, 10, 20, 0.76);
+      backdrop-filter: blur(28px) saturate(210%);
+      -webkit-backdrop-filter: blur(28px) saturate(210%);
+      border-bottom: 1px solid var(--border-glass-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.65));
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.35) 0%, rgba(2, 132, 199, 0.6) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 13.5px;
+      letter-spacing: 0.5px;
+      padding: 4px 11px;
+      border-radius: 6px;
+      box-shadow: 0 0 14px rgba(14, 165, 233, 0.4);
+      backdrop-filter: blur(12px);
+    }
+
+    .deck-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .deck-title span {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-deck {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-glass);
+      color: var(--text-white);
+      font-family: var(--font-heading);
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+
+    .btn-deck:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: var(--cyan-400);
+      transform: translateY(-1.5px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 4px 14px rgba(14, 165, 233, 0.3);
+    }
+
+    .btn-deck.active {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.65) 0%, rgba(2, 132, 199, 0.85) 100%);
+      border-color: var(--cyan-400);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(14, 165, 233, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .timer-badge {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--cyan-400);
+      background: rgba(14, 165, 233, 0.14);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      padding: 4px 11px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      backdrop-filter: blur(12px);
+    }
+
+    /* Main Deck Stage */
+    main.deck-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 12px 24px;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    /* LIQUID GLASS VIEWPORT (16:9 Canvas) */
+    .slide-viewport {
+      width: 100%;
+      height: 100%;
+      max-width: calc((100vh - 104px) * 16 / 9);
+      max-height: calc(100vw * 9 / 16);
+      aspect-ratio: 16 / 9;
+      background: rgba(10, 16, 30, 0.62);
+      backdrop-filter: blur(34px) saturate(220%);
+      -webkit-backdrop-filter: blur(34px) saturate(220%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      box-shadow: 
+        0 40px 100px rgba(0, 0, 0, 0.85),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.38),
+        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Individual Slide */
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 22px 32px 18px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.98) translateY(14px);
+      filter: blur(4px);
+      transition: opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), 
+                  filter 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+      background: transparent;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+      filter: blur(0);
+      z-index: 2;
+    }
+
+    .slide.prev {
+      transform: scale(1.01) translateY(-10px);
+      filter: blur(3px);
+    }
+
+    /* Staggered Card Entrance Animations */
+    @keyframes cardSpringIn {
+      0% {
+        opacity: 0;
+        transform: translateY(26px) scale(0.965);
+        filter: blur(5px);
+      }
+      65% {
+        opacity: 1;
+        transform: translateY(-3.5px) scale(1.008);
+        filter: blur(0);
+      }
+      85% {
+        transform: translateY(1.5px) scale(0.998);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes diagramZoomIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.94) translateY(16px);
+        filter: blur(6px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .slide.active .col-6:nth-child(1) .card,
+    .slide.active .col-4:nth-child(1) .card,
+    .slide.active .col-8 .diagram-frame,
+    .slide.active .grid-layout > .card:nth-child(1) {
+      animation: cardSpringIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+    }
+
+    .slide.active .col-6:nth-child(2) .card,
+    .slide.active .col-4:nth-child(2) .card,
+    .slide.active .col-4 .card:nth-child(1),
+    .slide.active .grid-layout > .card:nth-child(2) {
+      animation: cardSpringIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.11s both;
+    }
+
+    .slide.active .col-4:nth-child(3) .card,
+    .slide.active .col-4 .card:nth-child(2),
+    .slide.active .grid-layout > .card:nth-child(3) {
+      animation: cardSpringIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+    }
+
+    .slide.active .col-4 .card:nth-child(3),
+    .slide.active .grid-layout > .card:nth-child(4) {
+      animation: cardSpringIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+    }
+
+    .slide.active .grid-layout > .card:nth-child(5) {
+      animation: cardSpringIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.31s both;
+    }
+
+    /* Slide Header */
+    .slide-header {
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .slide-tag {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      color: var(--cyan-400);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    @keyframes pulseAura {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 8px var(--cyan-400);
+      }
+      50% {
+        transform: scale(1.3);
+        box-shadow: 0 0 16px var(--cyan-400), 0 0 24px rgba(56, 189, 248, 0.6);
+      }
+    }
+
+    .slide-tag::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--cyan-400);
+      border-radius: 50%;
+      animation: pulseAura 2.2s infinite ease-in-out;
+    }
+
+    .slide-title {
+      font-family: var(--font-heading);
+      font-size: 40px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.6px;
+      line-height: 1.22;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Slide Body Layouts */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      gap: 16px;
+      min-height: 0;
+      position: relative;
+    }
+
+    .col-6 { flex: 1; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+    .col-4 { width: 33.333%; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+    .col-8 { width: 66.666%; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+    .col-12 { width: 100%; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+
+    /* LIQUID GLASS CARDS */
+    .card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(14, 21, 38, 0.62);
+      backdrop-filter: blur(28px) saturate(210%);
+      -webkit-backdrop-filter: blur(28px) saturate(210%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 18px 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.32),
+        0 16px 38px -8px rgba(0, 0, 0, 0.72);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    /* Specular Liquid Light Sheen Sweep on Hover */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      background: linear-gradient(
+        60deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.09) 48%,
+        rgba(56, 189, 248, 0.2) 50%,
+        rgba(255, 255, 255, 0.09) 52%,
+        transparent 65%
+      );
+      transform: rotate(25deg) translateY(-120%);
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card:hover::after {
+      transform: rotate(25deg) translateY(120%);
+    }
+
+    .card:hover {
+      transform: translateY(-3.5px) scale(1.008);
+      box-shadow: 
+        inset 0 1px 2px 0 rgba(255, 255, 255, 0.45),
+        0 24px 50px -10px rgba(0, 0, 0, 0.85),
+        0 0 20px rgba(14, 165, 233, 0.25);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Specular Liquid Highlights */
+    .card.highlight-cyan {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(14, 165, 233, 0.03) 100%), rgba(14, 21, 38, 0.65);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.5), 0 16px 40px rgba(14, 165, 233, 0.2);
+    }
+    .card.highlight-emerald {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.03) 100%), rgba(14, 21, 38, 0.65);
+      border: 1px solid rgba(52, 211, 153, 0.45);
+      box-shadow: inset 0 1px 2px rgba(52, 211, 153, 0.5), 0 16px 40px rgba(16, 185, 129, 0.2);
+    }
+    .card.highlight-purple {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.03) 100%), rgba(14, 21, 38, 0.65);
+      border: 1px solid rgba(192, 132, 252, 0.45);
+      box-shadow: inset 0 1px 2px rgba(192, 132, 252, 0.5), 0 16px 40px rgba(168, 85, 247, 0.2);
+    }
+    .card.highlight-rose {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.2) 0%, rgba(244, 63, 94, 0.03) 100%), rgba(14, 21, 38, 0.65);
+      border: 1px solid rgba(251, 113, 133, 0.45);
+      box-shadow: inset 0 1px 2px rgba(251, 113, 133, 0.5), 0 16px 40px rgba(244, 63, 94, 0.2);
+    }
+    .card.highlight-amber {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.03) 100%), rgba(14, 21, 38, 0.65);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+      box-shadow: inset 0 1px 2px rgba(251, 191, 36, 0.5), 0 16px 40px rgba(245, 158, 11, 0.2);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.3;
+    }
+
+    .card-p {
+      font-size: 19.5px;
+      line-height: 1.65;
+      color: #cbd5e1;
+    }
+
+    /* Dense Bullet Lists */
+    .dense-list {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0;
+      font-size: 18.5px;
+      line-height: 1.65;
+      color: #cbd5e1;
+    }
+
+    .dense-list li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 7px;
+    }
+
+    .dense-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--cyan-400);
+      font-size: 18px;
+      text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    }
+
+    .dense-list strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* Telemetry Chips & Mini Badges */
+    .stat-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      margin-right: 6px;
+      backdrop-filter: blur(8px);
+      letter-spacing: 0.3px;
+    }
+    .badge-rose { background: rgba(244, 63, 94, 0.25); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.5); }
+    .badge-cyan { background: rgba(14, 165, 233, 0.25); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.5); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.5); }
+    .badge-amber { background: rgba(245, 158, 11, 0.25); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.5); }
+    .badge-purple { background: rgba(168, 85, 247, 0.25); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.5); }
+
+    .telemetry-strip {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-glass-subtle);
+      font-size: 16px;
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+    }
+
+    .telemetry-pill {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-glass-subtle);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 15px;
+      color: #94a3b8;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .telemetry-pill span { color: #fff; font-weight: 700; }
+
+    /* Code Blocks */
+    .mini-code {
+      background: rgba(2, 6, 23, 0.9);
+      border: 1px solid var(--border-glass-subtle);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 17px;
+      color: #38bdf8;
+      line-height: 1.55;
+      margin: 8px 0;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Frosted Diagram Viewports */
+    .diagram-frame {
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      cursor: zoom-in;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 20px 42px rgba(0, 0, 0, 0.75);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .diagram-frame:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.4), 0 24px 50px rgba(0, 0, 0, 0.85);
+    }
+
+    .diagram-frame img {
+      max-width: 96%;
+      max-height: 94%;
+      object-fit: contain;
+      border-radius: 8px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .diagram-frame:hover img {
+      transform: scale(1.02);
+    }
+
+    .diagram-frame .zoom-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--cyan-400);
+      padding: 5px 10px;
+      border-radius: 7px;
+      pointer-events: none;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Slide Footer */
+    .slide-footer {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 6px;
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+
+    .footer-left {
+      font-size: 15px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .footer-right {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--cyan-400);
+      text-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
+    }
+
+    /* Bottom Navigation Bar */
+    footer.nav-bar {
+      height: 48px;
+      background: rgba(6, 10, 20, 0.78);
+      backdrop-filter: blur(26px) saturate(210%);
+      -webkit-backdrop-filter: blur(26px) saturate(210%);
+      border-top: 1px solid var(--border-glass-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dot.active {
+      background: var(--cyan-400);
+      transform: scale(1.4);
+      box-shadow: 0 0 14px var(--cyan-400);
+    }
+
+    .keyboard-hints {
+      font-size: 14.5px;
+      color: var(--text-dim);
+      display: flex;
+      gap: 16px;
+    }
+
+    .keyboard-hints kbd {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid var(--border-glass);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #e2e8f0;
+      backdrop-filter: blur(6px);
+    }
+
+    /* Speaker Notes Drawer */
+    aside.notes-drawer {
+      position: fixed;
+      right: 0;
+      top: 52px;
+      bottom: 48px;
+      width: 470px;
+      background: rgba(10, 15, 28, 0.92);
+      backdrop-filter: blur(32px) saturate(220%);
+      -webkit-backdrop-filter: blur(32px) saturate(220%);
+      border-left: 1px solid var(--border-glass);
+      box-shadow: -15px 0 45px rgba(0, 0, 0, 0.75);
+      transform: translateX(100%);
+      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    aside.notes-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 16px 20px;
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid var(--border-glass-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer-title {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--cyan-400);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .drawer-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #cbd5e1;
+    }
+
+    .drawer-body h4 {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      color: var(--amber-400);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .drawer-body h4:first-child { margin-top: 0; }
+
+    .drawer-body .spoken-script {
+      background: rgba(14, 165, 233, 0.12);
+      border-left: 3px solid var(--cyan-400);
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: #f8fafc;
+      margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .drawer-body ul {
+      padding-left: 18px;
+      margin-bottom: 14px;
+    }
+
+    .drawer-body li {
+      margin-bottom: 6px;
+    }
+
+    /* Modal for Image Zoom */
+    .zoom-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(14px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      cursor: zoom-out;
+    }
+
+    .zoom-modal.open {
+      display: flex;
+    }
+
+    .zoom-modal img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      box-shadow: 0 0 70px rgba(0, 0, 0, 0.95);
+    }
+
+    /* Overview Grid Modal */
+    .grid-modal {
+      position: fixed;
+      inset: 52px 0 48px 0;
+      background: rgba(4, 7, 17, 0.95);
+      backdrop-filter: blur(28px);
+      z-index: 95;
+      display: none;
+      padding: 24px 36px;
+      overflow-y: auto;
+    }
+
+    .grid-modal.open {
+      display: block;
+    }
+
+    .grid-header {
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .grid-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    }
+
+    .grid-card:hover {
+      border-color: var(--cyan-400);
+      transform: translateY(-3.5px);
+      box-shadow: 0 14px 30px rgba(14, 165, 233, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+    }
+
+    .grid-card.current {
+      border-color: var(--cyan-400);
+      box-shadow: 0 0 0 2px var(--cyan-400), 0 0 24px rgba(14, 165, 233, 0.45);
+    }
+
+    .grid-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cyan-400);
+    }
+
+    .grid-title {
+      font-family: var(--font-heading);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Liquid Ambient Aurora Orbs -->
+  <div class="liquid-bg">
+    <div class="liquid-orb orb-1"></div>
+    <div class="liquid-orb orb-2"></div>
+    <div class="liquid-orb orb-3"></div>
+    <div class="liquid-orb orb-4"></div>
+  </div>
+
+  <!-- Top Bar -->
+  <header class="deck-bar">
+    <div class="brand-group">
+      <img src="assets/retailsync_logo.svg" alt="RetailSync Logo" class="brand-logo-img">
+      <div class="brand-badge">DIU SE-231</div>
+      <div class="deck-title">RetailSync: <span>Centralized Super Shop WMS</span> • Technical Defense Deck</div>
+    </div>
+    
+    <div class="controls-group">
+      <div class="timer-badge" id="rehearsalTimer">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timerDisplay">00:00</span>
+      </div>
+      <button class="btn-deck" id="btnTimerToggle" title="Start/Pause Timer (T)">Timer (T)</button>
+      <button class="btn-deck" id="btnNotesToggle" title="Speaker Notes (N)">Notes (N)</button>
+      <button class="btn-deck" id="btnGridToggle" title="Slide Overview (G)">Grid (G)</button>
+      <button class="btn-deck" id="btnFullscreen" title="Toggle Fullscreen (F)">Fullscreen (F)</button>
+      
+      <!-- Quick Deliverables & App Links -->
+      <a href="/dashboard" class="btn-deck" style="text-decoration:none; background: linear-gradient(135deg, rgba(14,165,233,0.35), rgba(16,185,129,0.35)); border-color: rgba(56,189,248,0.5);" title="Open Live Full-Stack WMS Application">🚀 Live App</a>
+      <a href="/showcase" class="btn-deck" style="text-decoration:none;" title="Open Interactive Web Showcase">🌐 Showcase</a>
+      <a href="/proposal/pdf" target="_blank" class="btn-deck" style="text-decoration:none;" title="Download 27-Page Official Proposal PDF">📄 Proposal</a>
+      <a href="/engineering-suite/pdf" target="_blank" class="btn-deck" style="text-decoration:none; border-color: rgba(56,189,248,0.6); color: var(--cyan-400);" title="Download 70-Page Master Technical Engineering Specification Suite (PDF)">📘 70p Tech Suite</a>
+      <a href="/technical-guide" target="_blank" class="btn-deck" style="text-decoration:none;" title="Master Viva & Architecture Defense Guide">🧠 Viva Guide</a>
+    </div>
+  </header>
+
+  <!-- Slide Stage -->
+  <main class="deck-stage">
+    <div class="slide-viewport" id="viewport">
+      
+      <!-- ============================================================== -->
+      <!-- SLIDE 1: Title & Academic Credentials -->
+      <!-- ============================================================== -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header" style="text-align: center; margin-bottom: 14px;">
+          <img src="assets/retailsync_logo.svg" alt="RetailSync Logo" style="width: 52px; height: 52px; margin-bottom: 6px; filter: drop-shadow(0 0 18px rgba(14, 165, 233, 0.6));">
+          <div class="slide-tag" style="justify-content: center;">CAPSTONE PROJECT 2 • PROPOSAL DEFENSE</div>
+          <h1 class="slide-title" style="font-size: 40px; margin-top: 2px;">
+            RetailSync: Centralized Super Shop Warehouse Management System
+          </h1>
+          <p style="color: var(--cyan-400); font-size: 20px; font-weight: 600; margin-top: 4px;">
+            Real-Time POS Concurrency, Dynamic Put-Away, FEFO Batch Tracking & AI-Driven Replenishment
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-6">
+            <div class="card highlight-cyan" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Project Team & Student Credentials
+                </div>
+                <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-glass-subtle); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;">
+                  <p style="font-size: 19.5px; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                    1. Raisul Islam Likhon <span style="font-size: 16.5px; color: var(--cyan-400); font-weight: 700;">(Project Lead • ID: 251-35-508)</span>
+                  </p>
+                  <p style="font-size: 19.5px; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                    2. Shottobroto Dey <span style="font-size: 16.5px; color: var(--cyan-400); font-weight: 700;">(Core Developer • ID: 251-35-017)</span>
+                  </p>
+                  <p style="font-size: 19.5px; font-weight: 700; color: #fff;">
+                    3. Golam Husnain Papon <span style="font-size: 16.5px; color: var(--cyan-400); font-weight: 700;">(Core Developer • ID: 251-35-529)</span>
+                  </p>
+                </div>
+                <ul class="dense-list">
+                  <li><strong>Batch & Section:</strong> 44th Batch • Section: <strong>SWE-44D</strong></li>
+                  <li><strong>Academic Program:</strong> B.Sc. in Software Engineering (Dept. of SWE)</li>
+                  <li><strong>Faculty & University:</strong> Faculty of Science & IT, Daffodil International University</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Course: <span>SE-231 (Capstone 2)</span></div>
+                <div class="telemetry-pill">Term: <span>Fall 2026</span></div>
+                <div class="telemetry-pill">Release: <span>v2.0.0-RELEASE</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="card highlight-emerald" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  Course Scope & Engineering Pillars
+                </div>
+                <p class="card-p" style="margin-bottom: 8px;">
+                  Engineered to solve the structural operational disconnect between frontline retail registers and back-of-house warehouses across Bangladesh:
+                </p>
+                <ul class="dense-list">
+                  <li><strong>Distributed Concurrency:</strong> Sub-500ms multi-till inventory sync via PostgreSQL row locks (SKIP LOCKED) & Redis cache keys.</li>
+                  <li><strong>Perishable Waste Control:</strong> Dynamic First-Expired, First-Out (FEFO) batch priority cutting spoilage by ≥ 35%.</li>
+                  <li><strong>AI Decision Support:</strong> CatBoost demand forecasting with native festival calendar awareness (MAPE ≤ 15%).</li>
+                  <li><strong>Frugal Edge Architecture:</strong> HTML5 WebRTC barcode scanning & Bluetooth HID grips eliminating expensive handheld terminals.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Methodology: <span>Agile Scrum</span></div>
+                <div class="telemetry-pill">Timeline: <span>14 Weeks</span></div>
+                <div class="telemetry-pill">Effort: <span>137 Story Pts</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Daffodil International University • Department of Software Engineering • Course SE-231</div>
+          <div class="footer-right">01 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 2: Industry Background & The 3 Critical Leaks -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div class="slide-tag">PROBLEM FORMULATION & EMPIRICAL INDUSTRY BOTTLENECK</div>
+          <h2 class="slide-title">The Three Catastrophic Profit Leaks in Local Super Shops</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-4">
+            <div class="card highlight-rose" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-rose">LEAK #1</span>Ghost Inventory & Drift</div>
+                <p class="card-p" style="margin-bottom: 8px;">
+                  Frontline POS registers operate on siloed local databases that batch-sync overnight via batch jobs:
+                </p>
+                <ul class="dense-list">
+                  <li><strong>Root Cause:</strong> Register shows 10 units in stock while physical shelves are completely empty.</li>
+                  <li><strong>Operational Impact:</strong> Lost customer sales and unlogged backroom inventory lockup.</li>
+                  <li><strong>Audit Lag:</strong> 24 to 72 hours before reconciliation audits discover severe physical shortages.</li>
+                </ul>
+                <div style="background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 8px; padding: 8px 12px; margin-top: 8px;">
+                  <span style="font-size: 16px; font-weight: 700; color: #fb7185;">Empirical Baseline:</span>
+                  <span style="font-size: 16px; color: #fff;"> 12% - 18% physical stock discrepancy rate.</span>
+                </div>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Variance: <span style="color:#fb7185;">12% - 18%</span></div>
+                <div class="telemetry-pill">Loss: <span>~320k ৳/yr</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card highlight-rose" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-rose">LEAK #2</span>Perishable Expiration Waste</div>
+                <p class="card-p" style="margin-bottom: 8px;">
+                  Complete absence of batch-level manufacturing date and expiration threshold tracking:
+                </p>
+                <ul class="dense-list">
+                  <li><strong>Root Cause:</strong> Floor staff perform random LIFO picking; topmost stacked boxes are picked first.</li>
+                  <li><strong>Rot Impact:</strong> Dairy, pasteurized milk, and bakery goods spoil unseen on rear pallet shelves.</li>
+                  <li><strong>Regulatory Risk:</strong> Expired products reach checkout counters, triggering BFSA legal penalties.</li>
+                </ul>
+                <div style="background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 8px; padding: 8px 12px; margin-top: 8px;">
+                  <span style="font-size: 16px; font-weight: 700; color: #fb7185;">Empirical Baseline:</span>
+                  <span style="font-size: 16px; color: #fff;"> 8.4% gross revenue lost to dump disposal.</span>
+                </div>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Revenue Lost: <span style="color:#fb7185;">8.4%</span></div>
+                <div class="telemetry-pill">Write-Off: <span>~450k ৳/yr</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card highlight-rose" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-rose">LEAK #3</span>Multi-Till Overselling</div>
+                <p class="card-p" style="margin-bottom: 8px;">
+                  Concurrent evening rush-hour billing causing database race conditions on low-stock items:
+                </p>
+                <ul class="dense-list">
+                  <li><strong>Root Cause:</strong> 4 cashiers ring up the final remaining milk carton at the same exact second.</li>
+                  <li><strong>Ledger Corruption:</strong> Standalone POS registers sell negative inventory without locking.</li>
+                  <li><strong>Customer Friction:</strong> Heated register disputes when bagged items are missing at handover.</li>
+                </ul>
+                <div style="background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 8px; padding: 8px 12px; margin-top: 8px;">
+                  <span style="font-size: 16px; font-weight: 700; color: #fb7185;">Empirical Baseline:</span>
+                  <span style="font-size: 16px; color: #fff;"> 0% ACID lock isolation across active tills.</span>
+                </div>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">ACID Defense: <span style="color:#fb7185;">0%</span></div>
+                <div class="telemetry-pill">Race Rate: <span>Critical</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Target Environment: Bangladeshi Tier-2/3 Super Shops (Franchisees & Independent Grocers)</div>
+          <div class="footer-right">02 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 3: Epistemological Grounding Taxonomy -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div class="slide-tag">ACADEMIC RIGOR & BASELINE CLASSIFICATION</div>
+          <h2 class="slide-title">Grounding Matrix: Observational Baselines vs. Engineered Hypotheses</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-6">
+            <div class="card highlight-amber" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-amber">EMPIRICAL BASELINE</span>Pre-Implementation Reality (Observational)</div>
+                <ul class="dense-list">
+                  <li><strong>Manual Paper Challan Audits:</strong> Inbound receiving clerks spend 3.5 to 5 hours daily manually cross-checking printed supplier challans against warehouse inventory sheets.</li>
+                  <li><strong>Prohibitive Hardware Barrier:</strong> Industrial handheld barcode terminals ($800-$1,500/unit) exceed the total IT budget for 90% of local grocery chains.</li>
+                  <li><strong>Rapid Inventory Drift:</strong> Physical warehouse stock counts diverge from computerized Excel spreadsheets within 7 days of audit reconciliation.</li>
+                  <li><strong>Heuristic Order Guesswork:</strong> Store managers estimate purchase orders based on gut intuition, resulting in severe stock-outs during festival rushes (Ramadan, Eid, Puja).</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Verification: <span>Field Survey</span></div>
+                <div class="telemetry-pill">Target Stores: <span>Mirpur & Dhanmondi</span></div>
+                <div class="telemetry-pill">Classification: <span>Observed Reality</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="card highlight-cyan" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-cyan">ENGINEERED TARGETS</span>Post-Implementation Verified Hypotheses</div>
+                <ul class="dense-list">
+                  <li><strong>Sub-Second Real-Time Sync:</strong> Multi-till stock deduction broadcast in &lt; 500ms latency across 50 concurrent cashiers via Redis Pub/Sub & WebSocket event pipeline.</li>
+                  <li><strong>Zero-Cost Hardware Access:</strong> HTML5 WebRTC camera barcode scanning on standard $80 Android smartphones, achieving ≥ 99% first-pass accuracy in &lt; 85ms.</li>
+                  <li><strong>Automated FEFO Priority:</strong> Dynamic shelf-priority routing reduces perishable write-offs by ≥ 35% compared to baseline manual FIFO operations.</li>
+                  <li><strong>AI Demand Forecasting:</strong> CatBoost tabular regression pipeline predicting 7-day SKU replenishment with MAPE &le; 15% using native calendar festival embeddings (LightGBM deferred).</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Testing Method: <span>JMeter + UAT</span></div>
+                <div class="telemetry-pill">Status: <span>Falsifiable Targets</span></div>
+                <div class="telemetry-pill">Acceptance Gate: <span>Semester Evaluation</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Transparent separation between observational field baselines and engineered validation benchmarks.</div>
+          <div class="footer-right">03 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 4: SMART Project Objectives -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div class="slide-tag">PROJECT OBJECTIVES & VERIFIABLE METRICS</div>
+          <h2 class="slide-title">Five Core SMART Objectives (O-01 to O-05)</h2>
+        </div>
+
+        <div class="slide-body grid-layout" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+          <div class="card highlight-cyan" style="padding: 16px 14px; justify-content: space-between;">
+            <div>
+              <span class="stat-badge badge-cyan">O-01</span>
+              <div class="card-title" style="font-size: 20px; margin-top: 6px;">Central Relational Core</div>
+              <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">Unify intake and retail tills into a single 3NF normalized schema.</p>
+              <ul class="dense-list" style="font-size: 16px;">
+                <li>Strict 3NF foreign keys</li>
+                <li>Zero phantom inventory</li>
+                <li>Single source of truth</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip" style="margin-top: 8px; padding-top: 8px;">
+              <div class="telemetry-pill" style="font-size: 14.5px;">Sync: <span>100% Truth</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-emerald" style="padding: 16px 14px; justify-content: space-between;">
+            <div>
+              <span class="stat-badge badge-emerald">O-02</span>
+              <div class="card-title" style="font-size: 20px; margin-top: 6px;">Dynamic FEFO Routing</div>
+              <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">Batch-level expiry tracking enforcing oldest stock dispatch first.</p>
+              <ul class="dense-list" style="font-size: 16px;">
+                <li>30/15/7-day alerts</li>
+                <li>Automated picking queue</li>
+                <li>BFSA 2013 compliance</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip" style="margin-top: 8px; padding-top: 8px;">
+              <div class="telemetry-pill" style="font-size: 14.5px;">Spoilage: <span style="color:#34d399;">≥ 35% Cut</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-purple" style="padding: 16px 14px; justify-content: space-between;">
+            <div>
+              <span class="stat-badge badge-purple">O-03</span>
+              <div class="card-title" style="font-size: 20px; margin-top: 6px;">AI Demand Forecasting</div>
+              <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">Tabular ML replenishment model with festival calendar embeddings.</p>
+              <ul class="dense-list" style="font-size: 16px;">
+                <li>CatBoost tabular trees</li>
+                <li>Eid & payday multipliers</li>
+                <li>1-click PO trigger DSS</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip" style="margin-top: 8px; padding-top: 8px;">
+              <div class="telemetry-pill" style="font-size: 14.5px;">Accuracy: <span style="color:#c084fc;">MAPE ≤ 15%</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-amber" style="padding: 16px 14px; justify-content: space-between;">
+            <div>
+              <span class="stat-badge badge-amber">O-04</span>
+              <div class="card-title" style="font-size: 20px; margin-top: 6px;">POS Concurrency Safety</div>
+              <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">Pessimistic row-locking preventing double-selling during rushes.</p>
+              <ul class="dense-list" style="font-size: 16px;">
+                <li>FOR UPDATE SKIP LOCKED</li>
+                <li>Sub-500ms p95 latency</li>
+                <li>50 concurrent threads</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip" style="margin-top: 8px; padding-top: 8px;">
+              <div class="telemetry-pill" style="font-size: 14.5px;">Overselling: <span style="color:#fbbf24;">0.00%</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-cyan" style="padding: 16px 14px; justify-content: space-between;">
+            <div>
+              <span class="stat-badge badge-cyan">O-05</span>
+              <div class="card-title" style="font-size: 20px; margin-top: 6px;">Frugal Mobile Scanning</div>
+              <p class="card-p" style="font-size: 16.5px; margin-bottom: 8px;">WebRTC barcode scanning on commodity personal smartphones.</p>
+              <ul class="dense-list" style="font-size: 16px;">
+                <li>EAN-13, Code-128, QR</li>
+                <li>WebAssembly zxing engine</li>
+                <li>Haptic vibration buzzer</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip" style="margin-top: 8px; padding-top: 8px;">
+              <div class="telemetry-pill" style="font-size: 14.5px;">CapEx: <span style="color:#38bdf8;">$0 Addon</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">All 5 objectives adhere to DIU Capstone verification standards with measurable acceptance tests.</div>
+          <div class="footer-right">04 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 5: 4-Quadrant Scope Boundaries -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div class="slide-tag">PROJECT BOUNDARIES & DEFENSE ASSURANCE</div>
+          <h2 class="slide-title">4-Quadrant Scope Matrix: Core Deliverables vs. Deliberate Exclusions</h2>
+        </div>
+
+        <div class="slide-body grid-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="card highlight-emerald" style="justify-content: space-between;">
+            <div>
+              <div class="card-title"><span class="stat-badge badge-emerald">IN-SCOPE CORE</span>Primary Software Deliverables</div>
+              <ul class="dense-list">
+                <li><strong>Warehouse Operations:</strong> Inbound dock receiving, spatial put-away indexing, picking dispatch.</li>
+                <li><strong>FEFO Expiration Engine:</strong> Batch-level tracking with 30/15/7-day automated quarantine alerts.</li>
+                <li><strong>Concurrency Protection:</strong> PostgreSQL row-locking checkout controller eliminating double-selling.</li>
+                <li><strong>PWA Mobile Scanner:</strong> Browser-based camera barcode decoding with offline service workers.</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip">
+              <div class="telemetry-pill">Validation: <span>100% Verified in 14 Wks</span></div>
+              <div class="telemetry-pill">Test Coverage: <span>≥ 80% Staging</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-purple" style="justify-content: space-between;">
+            <div>
+              <div class="card-title"><span class="stat-badge badge-purple">IN-SCOPE AI</span>Machine Learning Forecasting Engine</div>
+              <ul class="dense-list">
+                <li><strong>CatBoost GBDT Regressor:</strong> Gradient boosted trees with native categorical handling of festival calendar flags.</li>
+                <li><strong>Feature Engineering:</strong> Lag-7, Lag-14, 30-day rolling averages, Ramadan & Eid festival embeddings.</li>
+                <li><strong>Automated Reorder DSS:</strong> Dynamic Safety Stock calculation based on supplier lead-time variance.</li>
+                <li><strong>Manager Dashboard:</strong> Interactive forecast vs. actual performance curves with 1-click PO dispatch.</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip">
+              <div class="telemetry-pill">Inference: <span>&lt; 45ms per SKU</span></div>
+              <div class="telemetry-pill">Algorithm: <span>GBDT (CatBoost)</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-rose" style="justify-content: space-between;">
+            <div>
+              <div class="card-title"><span class="stat-badge badge-rose">DELIBERATE EXCLUSION</span>Autonomous Physical Robotics</div>
+              <ul class="dense-list">
+                <li><strong>No Automated Guided Vehicles (AGVs):</strong> Excludes physical warehouse robotic rovers.</li>
+                <li><strong>No Motorized Conveyor Belts:</strong> Focus is strictly software-directed human picking.</li>
+                <li><strong>Technical Justification:</strong> Industrial robotics cost over 50,000,000 BDT, making them completely unviable for SME Bangladeshi retailers. RetailSync solves human-assisted workflow integrity.</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip">
+              <div class="telemetry-pill">Defense Reason: <span>Target Market Feasibility</span></div>
+              <div class="telemetry-pill">Scope: <span>Bounded</span></div>
+            </div>
+          </div>
+
+          <div class="card highlight-amber" style="justify-content: space-between;">
+            <div>
+              <div class="card-title"><span class="stat-badge badge-amber">FUTURE ROADMAP</span>Live Bank Payment Gateways</div>
+              <ul class="dense-list">
+                <li><strong>Mock Payment Gateway:</strong> SSLCommerz/bKash API interfaces are mocked for proposal defense.</li>
+                <li><strong>No Complex Tax Filing:</strong> Multi-country customs VAT accounting reserved for v3.0 release.</li>
+                <li><strong>Technical Justification:</strong> Commercial banking merchant licensing requires enterprise trade licenses and 8-week regulatory approval, outside academic capstone scope.</li>
+              </ul>
+            </div>
+            <div class="telemetry-strip">
+              <div class="telemetry-pill">Defense Reason: <span>Regulatory Timeline Bounded</span></div>
+              <div class="telemetry-pill">Mock Mode: <span>Enabled</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Scope is mathematically bounded to guarantee 100% completion within the 14-week DIU semester.</div>
+          <div class="footer-right">05 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 6: 4-Tier System Architecture (Figure 1) -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div class="slide-tag">TECHNICAL ARCHITECTURE & INFRASTRUCTURE</div>
+          <h2 class="slide-title">4-Tier Decoupled Cyber-Physical Architecture</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-8">
+            <div class="diagram-frame" onclick="openZoomModal('assets/figure1_system_architecture.png')">
+              <img src="assets/figure1_system_architecture.png" alt="Figure 1: RetailSync System Architecture">
+              <div class="zoom-hint">Click to Zoom High-Res Diagram</div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card highlight-cyan" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-cyan">TIER 1</span>Presentation Client Layer</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li><strong>Manager Dashboard:</strong> React 18 SPA with Vite & Tailwind CSS.</li>
+                  <li><strong>Mobile Scanner PWA:</strong> HTML5 WebRTC camera with offline cache.</li>
+                  <li><strong>Cashier POS Register:</strong> Lightweight sub-second touch till UI.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Client: <span>React + PWA</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-purple" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">TIER 2</span>Application & AI Engine</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li><strong>Node.js / Express Core:</strong> High-throughput REST API with JWT auth.</li>
+                  <li><strong>Python FastAPI AI Service:</strong> Microservice hosting CatBoost models.</li>
+                  <li><strong>WebSocket Event Hub:</strong> Real-time till stock delta broadcast.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Runtime: <span>Node 20 + Python 3.11</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-emerald" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-emerald">TIER 3</span>Distributed Data Layer</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li><strong>PostgreSQL 16:</strong> Strict 3NF schema with ACID row-level locking.</li>
+                  <li><strong>Redis 7 In-Memory:</strong> Pub/sub broker & sub-ms lock manager.</li>
+                  <li><strong>Append-Only Ledger:</strong> Immutable inventory transaction logs.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Storage: <span>PG16 + Redis 7</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Figure 1: Decoupled architecture ensuring high scalability, modular maintenance, and zero single points of failure.</div>
+          <div class="footer-right">06 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 7: End-to-End Operational Lifecycle (Figure 2) -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div class="slide-tag">SYSTEM WORKFLOW & WAREHOUSE OPERATIONS</div>
+          <h2 class="slide-title">End-to-End Operational Lifecycle: Receiving to Dispatch</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-8">
+            <div class="diagram-frame" onclick="openZoomModal('assets/figure2_operational_flow.png')">
+              <img src="assets/figure2_operational_flow.png" alt="Figure 2: Operational Lifecycle Flow">
+              <div class="zoom-hint">Click to Zoom High-Res Diagram</div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card highlight-cyan" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-cyan">STAGE 1</span>Inbound Dock Receiving</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>Supplier delivery barcode scanned via mobile phone camera.</li>
+                  <li>Automated PO quantity cross-matching; mismatch flags alerted.</li>
+                  <li>Instant digital quarantine for crushed cartons or near-expiry batches.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Intake: <span>Digital Challan</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-emerald" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-emerald">STAGE 2</span>Directed Put-Away (FEFO)</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>System assigns warehouse coordinates: Bay (A-D), Shelf (1-4).</li>
+                  <li>Batch indexed with manufacturing date and expiration threshold.</li>
+                  <li>Staff phone buzzer confirms correct pallet rack placement.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Routing: <span>FEFO Priority</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-amber" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-amber">STAGE 3</span>Branch Picking & Dispatch</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>Replenishment orders generate FEFO-sorted picking lists.</li>
+                  <li>Staff directed to oldest stock first; scanning validates barcode.</li>
+                  <li>Digital dispatch manifest generated for retail branch transit.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Dispatch: <span>Zero Expiry Gate</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Figure 2: Fully tracked digital chain of custody from loading dock intake to retail shelf checkout.</div>
+          <div class="footer-right">07 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 8: AI Demand Forecasting Engine (Figure 3) -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div class="slide-tag">MACHINE LEARNING DECISION SUPPORT</div>
+          <h2 class="slide-title">AI Demand Forecasting Pipeline & Decision Support</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-8">
+            <div class="diagram-frame" onclick="openZoomModal('assets/figure3_ai_forecasting_pipeline.png')">
+              <img src="assets/figure3_ai_forecasting_pipeline.png" alt="Figure 3: AI Forecasting Pipeline">
+              <div class="zoom-hint">Click to Zoom High-Res Diagram</div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card highlight-purple" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">MODEL</span>CatBoost Regression Engine</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>Tree-based gradient boosting optimized for tabular grocery series.</li>
+                  <li>Native categorical festival support without target leakage or manual encoding.</li>
+                  <li>Hyperparameters: depth=6, l2_leaf_reg=3, learning_rate=0.05.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Algorithm: <span>GBDT (CatBoost)</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-cyan" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-cyan">FEATURES</span>Domain Feature Engineering</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>Lags: t-7, t-14, t-30 sales; 7-day rolling mean & standard deviation.</li>
+                  <li>Calendar Flags: Ramadan, Eid-ul-Fitr, Eid-ul-Adha, Puja surges.</li>
+                  <li>Pay-Cycle Multiplier: Monthly 1st-7th salary grocery stocking spikes.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Features: <span>Tabular + Calendar</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-emerald" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-emerald">DECISION</span>Automated Reorder Engine</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>Greasley Dynamic Safety Stock: SS = Z × √(L·σD² + D²·σL²).</li>
+                  <li>Economic Order Quantity (EOQ) reorder point calculations.</li>
+                  <li>Manager dashboard displays 1-click Purchase Order dispatch.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">DSS: <span>Greasley Formula</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Figure 3: Transforms reactive manual guessing into predictive, data-driven automated replenishment.</div>
+          <div class="footer-right">08 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 9: Concurrency Control & Frugal Hardware -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div class="slide-tag">SYSTEM ROBUSTNESS & ACCESSIBILITY</div>
+          <h2 class="slide-title">Distributed Concurrency & Frugal Hardware Strategy</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-6">
+            <div class="card highlight-amber" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-amber">CONCURRENCY</span>PostgreSQL Pessimistic Row Locking</div>
+                <p class="card-p" style="margin-bottom: 6px;">
+                  Guarantees zero overselling when multiple cashiers scan the last item in stock simultaneously:
+                </p>
+                <div class="mini-code">
+                  BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;<br>
+                  SELECT id, current_qty FROM product_batches<br>
+                  WHERE product_id = $1 AND current_qty &gt; 0<br>
+                  ORDER BY expiry_date ASC LIMIT 1<br>
+                  <strong>FOR UPDATE SKIP LOCKED;</strong><br>
+                  -- Non-blocking FEFO allocation across parallel cashiers
+                </div>
+                <ul class="dense-list">
+                  <li><strong>Lock Duration:</strong> Held only for stock deduction duration (&lt; 4.8ms).</li>
+                  <li><strong>Redis Distributed Cache:</strong> Fast-path inventory decrements with atomic keys (`DECRBY`).</li>
+                  <li><strong>Stress Benchmark:</strong> 50 concurrent checkout threads with 0.00% double-selling failure rate in Apache JMeter.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Latency: <span>p95 ≤ 420ms</span></div>
+                <div class="telemetry-pill">Isolation: <span>Repeatable Read</span></div>
+                <div class="telemetry-pill">Oversell: <span>0.00% Defended</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="card highlight-cyan" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-cyan">HARDWARE</span>Frugal WebRTC Mobile Barcode Scanning</div>
+                <p class="card-p" style="margin-bottom: 6px;">
+                  Completely eliminates $1,200 industrial terminals, bringing digital WMS within SME budgets:
+                </p>
+                <ul class="dense-list">
+                  <li><strong>HTML5 MediaStream API:</strong> Direct hardware camera video feed inside Chrome / Safari browser with autofocus.</li>
+                  <li><strong>WebAssembly zxing-js:</strong> In-memory barcode decoder decoding EAN-13, Code-128, and QR codes in &lt; 85ms.</li>
+                  <li><strong>Haptic & Audio Feedback:</strong> Navigator vibrate API + Web Audio synthesizer beep on valid scan.</li>
+                  <li><strong>Progressive Web App (PWA):</strong> Service workers enable offline caching in weak Wi-Fi warehouse aisles.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip">
+                <div class="telemetry-pill">Cost per unit: <span style="color:#34d399;">$0 (Personal Phones)</span></div>
+                <div class="telemetry-pill">Scan Speed: <span>&lt; 85ms</span></div>
+                <div class="telemetry-pill">Capex Cut: <span>94%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Solves both enterprise-grade transaction integrity and real-world SME economic affordability.</div>
+          <div class="footer-right">09 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 10: 14-Week Agile Roadmap (Figure 4) -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div class="slide-tag">PROJECT TIMELINE & EXECUTION PLAN</div>
+          <h2 class="slide-title">14-Week Agile Scrum Roadmap & Milestone Delivery</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-8">
+            <div class="diagram-frame" onclick="openZoomModal('assets/figure4_gantt_roadmap.png')">
+              <img src="assets/figure4_gantt_roadmap.png" alt="Figure 4: 14-Week Gantt Chart Roadmap">
+              <div class="zoom-hint">Click to Zoom High-Res Diagram</div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="card highlight-cyan" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-cyan">PHASE 1</span>Sprints 1-2 (Weeks 1-4)</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>SRS document approval & 3NF PostgreSQL schema design.</li>
+                  <li>Docker Compose environment & Node.js core REST endpoints.</li>
+                  <li>JWT authentication & multi-branch organization routing.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Milestone: <span>Core Architecture</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-purple" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-purple">PHASE 2</span>Sprints 3-4 (Weeks 5-8)</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>Inbound dock intake, spatial put-away & FEFO routing engine.</li>
+                  <li>WebRTC mobile camera barcode scanner PWA with Bluetooth HID grips.</li>
+                  <li>PostgreSQL `FOR UPDATE SKIP LOCKED` POS checkout concurrency locks.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Milestone: <span>Operational MVP</span></div>
+              </div>
+            </div>
+
+            <div class="card highlight-emerald" style="flex: 1; justify-content: space-between; padding: 14px 18px;">
+              <div>
+                <div class="card-title" style="font-size: 21.5px;"><span class="stat-badge badge-emerald">PHASE 3</span>Sprints 5-6 (Weeks 9-14)</div>
+                <ul class="dense-list" style="font-size: 16.5px; margin: 4px 0;">
+                  <li>FastAPI CatBoost demand forecasting & safety stock pipeline.</li>
+                  <li>50-thread concurrent stress testing via Locust / Apache JMeter.</li>
+                  <li>User Acceptance Testing (UAT) with SME retail managers & Defense.</li>
+                </ul>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 6px; padding-top: 6px;">
+                <div class="telemetry-pill" style="font-size: 14.5px;">Milestone: <span>Defense Hardening</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Figure 4: 14-Week Scrum execution aligned with Daffodil International University semester evaluation gates.</div>
+          <div class="footer-right">10 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 11: Budget & ROI Financial Impact -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div class="slide-tag">FEASIBILITY & ECONOMIC JUSTIFICATION</div>
+          <h2 class="slide-title">Cost-Benefit Analysis & Financial ROI Justification</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="col-6">
+            <div class="card highlight-cyan" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-cyan">CAPEX</span>Frugal Infrastructure Implementation Budget</div>
+                <table style="width: 100%; font-size: 17.5px; border-collapse: collapse; margin-top: 10px;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid var(--border-glass); color: var(--cyan-400); text-align: left;">
+                      <th style="padding: 7px 0;">Item Component</th>
+                      <th style="padding: 7px 0;">Hardware / Cloud Specification</th>
+                      <th style="padding: 7px 0; text-align: right;">Cost (BDT)</th>
+                    </tr>
+                  </thead>
+                  <tbody style="color: #cbd5e1; line-height: 1.8;">
+                    <tr style="border-bottom: 1px solid var(--border-glass-subtle);">
+                      <td>Cloud Server</td>
+                      <td>2 vCPU, 4GB RAM VPS (Annual Hosting)</td>
+                      <td style="text-align: right; font-family: var(--font-mono); color: #fff;">18,000 ৳</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-glass-subtle);">
+                      <td>Domain & SSL</td>
+                      <td>Custom .com Domain + Automated TLS</td>
+                      <td style="text-align: right; font-family: var(--font-mono); color: #fff;">2,500 ৳</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-glass-subtle);">
+                      <td>Barcode Readers</td>
+                      <td>Clerks' Android Smartphones (WebRTC)</td>
+                      <td style="text-align: right; font-family: var(--font-mono); color: #34d399;">0 ৳ (Frugal)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-glass-subtle);">
+                      <td>Thermal Printer</td>
+                      <td>58mm USB Receipt & Barcode Sticker Printer</td>
+                      <td style="text-align: right; font-family: var(--font-mono); color: #fff;">4,500 ৳</td>
+                    </tr>
+                    <tr style="font-weight: 700; color: #fff;">
+                      <td colspan="2" style="padding-top: 8px;">Total Initial Implementation Investment</td>
+                      <td style="padding-top: 8px; text-align: right; font-family: var(--font-mono); color: var(--cyan-400);">25,000 ৳ (~$210)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="telemetry-strip" style="margin-top: 12px;">
+                <div class="telemetry-pill">SaaS ERP Alternative: <span>$15,000+ USD</span></div>
+                <div class="telemetry-pill">Capex Cut: <span>94%</span></div>
+                <div class="telemetry-pill">Economic Model: <span>Frugal Tech</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="card highlight-emerald" style="height: 100%; justify-content: space-between;">
+              <div>
+                <div class="card-title"><span class="stat-badge badge-emerald">ROI</span>Projected Annual Savings (3-Branch SME Super Shop)</div>
+                <ul class="dense-list">
+                  <li><strong>Hardware Terminal Savings:</strong> Avoids buying 4 dedicated Zebra handheld terminals ($3,200 savings ~ 380,000 BDT).</li>
+                  <li><strong>Perishable Waste Cut:</strong> 35% reduction in spoiled dairy, bakery, and produce inventory saves ~ 180,000 BDT annually.</li>
+                  <li><strong>Labor Audit Optimization:</strong> Automated receiving and barcode put-away eliminates 3 manual hours daily (~ 120,000 BDT labor savings).</li>
+                  <li><strong>Total Net Financial Gain:</strong> <strong>~ 680,000 BDT</strong> in cumulative year-one enterprise value.</li>
+                </ul>
+              </div>
+              <div style="margin-top: 12px; padding: 14px 18px; background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); border-radius: 10px; text-align: center;">
+                <div style="font-size: 36px; font-weight: 800; color: #34d399;">&lt; 2.5 Months</div>
+                <div style="font-size: 16.5px; color: #e2e8f0; margin-top: 4px;">Capital Investment Payback Period for an SME Retail Super Shop Cluster</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">Demonstrates strong commercial viability and rapid return on investment for Bangladeshi retailers.</div>
+          <div class="footer-right">11 / 12</div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SLIDE 12: Summary & Defense Q&A -->
+      <!-- ============================================================== -->
+      <section class="slide" data-slide="12">
+        <div class="slide-header" style="text-align: center; margin-bottom: 12px;">
+          <div class="slide-tag" style="justify-content: center;">DEFENSE CONCLUSION & EXAMINATION</div>
+          <h2 class="slide-title">Summary of Contributions & Proposal Defense Q&A</h2>
+        </div>
+
+        <div class="slide-body" style="flex-direction: column; gap: 14px;">
+          <div style="display: flex; gap: 14px; flex: 1;">
+            <div class="col-4">
+              <div class="card highlight-cyan" style="height: 100%; justify-content: space-between;">
+                <div>
+                  <div class="card-title"><span class="stat-badge badge-cyan">01</span>Engineering Rigor</div>
+                  <ul class="dense-list">
+                    <li>Decoupled 4-tier cyber-physical architecture.</li>
+                    <li>PostgreSQL ACID row-level locking.</li>
+                    <li>Sub-500ms distributed concurrency protection.</li>
+                    <li>Zero double-selling under rush-hour load.</li>
+                  </ul>
+                </div>
+                <div class="telemetry-strip">
+                  <div class="telemetry-pill">Backend: <span>PostgreSQL 16</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="card highlight-purple" style="height: 100%; justify-content: space-between;">
+                <div>
+                  <div class="card-title"><span class="stat-badge badge-purple">02</span>Actionable Intelligence</div>
+                  <ul class="dense-list">
+                    <li>CatBoost tabular demand forecasting.</li>
+                    <li>Festival calendar & salary surge awareness.</li>
+                    <li>Dynamic FEFO routing cutting spoilage ≥ 35%.</li>
+                    <li>Automated purchase order recommendations.</li>
+                  </ul>
+                </div>
+                <div class="telemetry-strip">
+                  <div class="telemetry-pill">Forecaster: <span>CatBoost</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="card highlight-emerald" style="height: 100%; justify-content: space-between;">
+                <div>
+                  <div class="card-title"><span class="stat-badge badge-emerald">03</span>Frugal Innovation</div>
+                  <ul class="dense-list">
+                    <li>WebRTC browser-based camera scanning.</li>
+                    <li>Zero hardware CapEx using personal phones.</li>
+                    <li>Low 25,000 BDT initial implementation cost.</li>
+                    <li>Rapid &lt; 2.5-month full capital payback.</li>
+                  </ul>
+                </div>
+                <div class="telemetry-strip">
+                  <div class="telemetry-pill">Payback: <span>&lt; 2.5 Months</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="text-align: center; background: rgba(14, 165, 233, 0.12); border-color: rgba(14, 165, 233, 0.5); padding: 14px 20px;">
+            <h3 style="font-family: var(--font-heading); font-size: 28px; color: #fff; margin-bottom: 6px;">Thank You, Respected Faculty Evaluation Board & Committee!</h3>
+            <p style="font-size: 19px; color: #e2e8f0; margin-bottom: 10px;">
+              We now warmly welcome your valuable questions, technical feedback, and suggestions.
+            </p>
+            <div style="font-family: var(--font-mono); font-size: 16.5px; color: var(--cyan-400); line-height: 1.65;">
+              Project Team: <strong>Raisul Islam Likhon</strong> (Lead: 251-35-508) • <strong>Shottobroto Dey</strong> (251-35-017) • <strong>Golam Husnain Papon</strong> (251-35-529)<br>
+              Batch: <strong>44th Batch</strong> • Section: <strong>SWE-44D</strong> • Department of Software Engineering • Daffodil International University
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-left">SE-231 Capstone Project Proposal Defense • Department of Software Engineering</div>
+          <div class="footer-right">12 / 12</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <footer class="nav-bar">
+    <div class="slide-dots" id="dotsContainer">
+      <!-- Injected via JS -->
+    </div>
+
+    <div class="keyboard-hints">
+      <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> Navigate</span>
+      <span><kbd>Space</kbd> Next</span>
+      <span><kbd>F</kbd> Fullscreen</span>
+      <span><kbd>N</kbd> Speaker Notes</span>
+      <span><kbd>G</kbd> Grid Overview</span>
+      <span><kbd>T</kbd> Timer</span>
+    </div>
+  </footer>
+
+  <!-- Speaker Notes Drawer -->
+  <aside class="notes-drawer" id="notesDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Speaker Script & Defenses
+      </div>
+      <button class="btn-deck" id="btnCloseNotes" style="padding: 4px 10px; font-size: 12px;">Close</button>
+    </div>
+    <div class="drawer-body" id="notesBody">
+      <!-- Injected via JS -->
+    </div>
+  </aside>
+
+  <!-- High-Res Diagram Zoom Modal -->
+  <div class="zoom-modal" id="zoomModal" onclick="closeZoomModal()">
+    <img id="zoomModalImg" src="" alt="High-Res Zoom View">
+  </div>
+
+  <!-- Grid Overview Modal -->
+  <div class="grid-modal" id="gridModal">
+    <div class="grid-header">
+      <h3 style="font-family: var(--font-heading); font-size: 19px; color: #fff;">Slide Navigation Overview</h3>
+      <button class="btn-deck" id="btnCloseGrid">Close (Esc)</button>
+    </div>
+    <div class="grid-container" id="gridContainer">
+      <!-- Injected via JS -->
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // SPEAKER SCRIPTS & DEFENSE HINTS DATABASE
+    // =========================================================================
+    const SPEAKER_NOTES = {
+      1: {
+        time: "0:45 min",
+        spoken: "Good morning, respected members of the evaluation board and faculty. On behalf of my team members Shottobroto Dey (ID: 251-35-017), Golam Husnain Papon (ID: 251-35-529), and myself Raisul Islam Likhon (Lead: 251-35-508) from section SWE-44D, today I am proud to present our Capstone Project 2 proposal: RetailSync — a Centralized Super Shop Warehouse Management System engineered specifically to overcome the operational and technological hurdles faced by Bangladeshi retail super shops.",
+        keyPoints: [
+          "Acknowledge all three team members with exact IDs: Raisul Islam Likhon (251-35-508), Shottobroto Dey (251-35-017), Golam Husnain Papon (251-35-529).",
+          "State 44th Batch, Section SWE-44D with confidence.",
+          "Highlight the 3 core pillars: AI replenishment, concurrency safety, and zero-cost mobile barcode scanning."
+        ],
+        trapTip: "If asked how the team divides work, state: 'Likhon leads the distributed architecture, concurrency locks, and system design; Shottobroto focuses on WMS core workflows and FEFO routing; Golam Husnain focuses on AI demand forecasting and WebRTC scanner testing.'"
+      },
+      2: {
+        time: "1:00 min",
+        spoken: "Through field observations of local super shops in Dhaka, our team identified three catastrophic profit leaks. First, 'Ghost Inventory' — where the digital POS says we have 10 units, but the shelf is empty, leading to 12-18% discrepancy rates. Second, perishable goods rot on back shelves because manual workers pick whatever is on top rather than following First-Expired, First-Out (FEFO), wasting 8.4% of revenue. Third, during peak rush hours, multiple tills ring up the final item simultaneously, causing negative stock race conditions.",
+        keyPoints: [
+          "Stress the difference between theoretical inventory and real retail floor chaos.",
+          "Quote the empirical 8.4% revenue loss to expiration and 12-18% ghost discrepancy.",
+          "Demonstrate why standalone POS machines fail without real-time centralized synchronization."
+        ],
+        trapTip: "If asked if you actually surveyed shops: 'Yes, we observed operations in SME grocery chains in Mirpur and Dhanmondi and cross-referenced with Bangladesh Retailers Association published trends.'"
+      },
+      3: {
+        time: "0:50 min",
+        spoken: "To ensure academic rigor, this proposal explicitly distinguishes between empirical observational baselines and our engineered test hypotheses. We don't claim to have already fixed the entire industry; rather, we document the verified manual reality — such as clerks spending 3.5 to 5 hours matching paper challans by hand — and establish concrete, falsifiable target benchmarks like achieving sub-500ms sync latency and 99% mobile barcode recognition.",
+        keyPoints: [
+          "Show faculty that you understand scientific methodology.",
+          "Emphasize that targets are falsifiable and will be experimentally verified during UAT.",
+          "Address the faculty's common criticism: 'How do you know these numbers?'"
+        ],
+        trapTip: "Evaluators love epistemological honesty. Pointing out that pre-implementation numbers are observational and post-implementation are hypotheses immediately disarms skepticism."
+      },
+      4: {
+        time: "1:15 min",
+        spoken: "Our project is governed by five SMART objectives. Objective 1 unifies the warehouse and branches into a single real-time truth. Objective 2 cuts perishable waste by at least 35% through automated batch-expiry FEFO routing. Objective 3 integrates CatBoost machine learning to forecast 7-day demand with a target MAPE under 15% using native festival calendar embeddings. Objective 4 guarantees sub-500ms multi-till concurrency protection with non-blocking row-level locks (SKIP LOCKED) and zero overselling. And Objective 5 delivers 100% hardware accessibility by utilizing consumer Android smartphones paired with Bluetooth trigger grips at 90% reduced CapEx.",
+        keyPoints: [
+          "Walk through O-01 to O-05 concisely.",
+          "Highlight that every objective has a specific, measurable target (35%, 15% MAPE, 500ms, frugal CapEx).",
+          "Explain how these 5 objectives directly solve the 3 profit leaks mentioned on Slide 2."
+        ],
+        trapTip: "If an evaluator asks how you will measure the 35% waste reduction: 'We test it against simulated historical batch rot rates comparing standard FIFO vs. our batch-expiry FEFO routing algorithm.'"
+      },
+      5: {
+        time: "0:50 min",
+        spoken: "A successful engineering project requires strict scope management. We have clearly defined our 4 quadrants. In-scope is the complete full-stack WMS, batch-level FEFO, concurrency locking, and the AI forecasting service. Deliberately excluded are physical robotics like AGVs, because our target SME super shops cannot afford multi-million-taka hardware. Live bank payment gateways are also mocked, keeping the system focused on warehouse supply chain integrity within our 14-week timeline.",
+        keyPoints: [
+          "Prove you will finish on time by showing disciplined scope control.",
+          "Explain the deliberate exclusions before faculty can criticize them as missing features.",
+          "Highlight that mock payment gateways allow testing full end-to-end flows without banking compliance overhead."
+        ],
+        trapTip: "If asked: 'Why no mobile app for customers?', respond: 'RetailSync is an enterprise B2B back-office WMS, not a customer-facing e-commerce app like Chaldal. Its purpose is warehouse and inventory integrity.'"
+      },
+      6: {
+        time: "1:15 min",
+        spoken: "Turning to our system architecture in Figure 1: RetailSync adopts a clean, decoupled 4-tier model. Tier 1 delivers responsive user interfaces via Next.js 14 PWA with offline IndexedDB. Tier 2 provides edge security and TLS termination. Tier 3 leverages asynchronous Python 3.11+ FastAPI for business logic and Celery background workers for CatBoost inference and daily 02:00 BST quarantine sweeps. Tier 4 leverages PostgreSQL 16 for strict 3NF ACID compliance alongside Redis 7 for sub-second idempotency key locks.",
+        keyPoints: [
+          "Click the diagram to zoom in if the board wants a closer inspection.",
+          "Explain why you chose FastAPI (async ASGI performance, native OpenAPI 3.1, Pydantic v2).",
+          "Highlight PostgreSQL's ACID guarantees as essential for financial and inventory audits."
+        ],
+        trapTip: "If asked: 'Why not use MongoDB?', answer: 'Inventory cannot tolerate eventual consistency. A single lost stock update corrupts accounting. PostgreSQL provides strict ACID guarantees, foreign keys, and row-level locks needed for concurrency.'"
+      },
+      7: {
+        time: "1:00 min",
+        spoken: "Figure 2 details the operational lifecycle. When goods arrive at the loading dock, receiving staff scan the supplier barcode using their mobile phone paired with a Bluetooth trigger grip. The system validates the items against the purchase order. Once approved, the system generates a directed put-away command, assigning a specific bay and shelf while indexing the expiration date. When retail branches request replenishment, our picking engine directs staff to the oldest batches first, enforcing FEFO automatically before goods are dispatched.",
+        keyPoints: [
+          "Walk step-by-step from Inbound Dock to Storefront Shelf.",
+          "Point out the digital quarantine step for damaged or near-expiry shipments.",
+          "Explain how warehouse workers receive color-coded shelf location instructions on their phones."
+        ],
+        trapTip: "If asked what happens if a supplier delivers products with no barcode: 'The system includes an instant barcode label generator that prints thermal stickers on a 58mm printer.'"
+      },
+      8: {
+        time: "1:15 min",
+        spoken: "In Figure 3, we illustrate our AI Demand Forecasting pipeline. Rather than arbitrary human guesswork, our engine ingests historical daily sales, lag features, rolling standard deviations, and external factors like day-of-week and festive calendar flags. We selected CatBoost because of its native handling of categorical features and calendar flags without target leakage or manual one-hot encoding overhead. The model outputs a 7-day predicted demand curve, which our automated decision engine translates into recommended purchase orders based on safety stock and supplier lead times.",
+        keyPoints: [
+          "Explain feature engineering (Eid spikes, weekend surges, payday cycles).",
+          "Justify CatBoost over complex deep learning and LightGBM (native categorical handling, sub-50ms inference, zero target leakage).",
+          "Stress that AI outputs are actionable suggestions that managers can review and approve with one click."
+        ],
+        trapTip: "If asked: 'Where do you get training data?', answer: 'We synthesize a 2-year realistic Bangladeshi grocery sales dataset modeled on public retail benchmarks (such as Kaggle retail grocery datasets and local pricing/calendar patterns).'"
+      },
+      9: {
+        time: "1:00 min",
+        spoken: "Two of our biggest technical differentiators are shown on Slide 9. To solve the multi-till race condition, we implement PostgreSQL pessimistic row-level locking using 'SELECT ... FOR UPDATE SKIP LOCKED'. If multiple cashiers scan items simultaneously, the database locks only the active batch and skips locked rows for adjacent batches; parallel transactions proceed safely with zero deadlocks and zero overselling. Simultaneously, our mobile barcode scanner runs on commodity Android smartphones paired with Bluetooth trigger grips, giving warehouse clerks enterprise-grade scanning at over 75% hardware savings.",
+        keyPoints: [
+          "Walk through the SQL snippet on the slide.",
+          "Contrast expensive Honeywell terminals ($1,200) with ubiquitous Android smartphones and Bluetooth trigger grips (< 4,000 BDT).",
+          "Mention audio beep and haptic vibration feedback for warehouse ergonomics."
+        ],
+        trapTip: "If asked about database lock contention: 'Row locks only hold for the duration of the stock deduction transaction (under 5 milliseconds), preventing any user-perceptible cashier delays.'"
+      },
+      10: {
+        time: "0:50 min",
+        spoken: "Our 14-week Agile Scrum roadmap is illustrated in Figure 4. Sprints 1 and 2 establish our relational database schema and core API framework. Sprints 3 and 4 deliver the warehouse operational workflows, FEFO routing, and mobile scanner. Sprints 5 and 6 integrate the CatBoost forecasting engine, complete load and stress testing under concurrent till simulations, and conduct user acceptance testing, culminating in our final project defense.",
+        keyPoints: [
+          "Confirm that you are fully on schedule and tracking every milestone.",
+          "Point out that the 14 weeks are broken down into 2-week bi-weekly sprints.",
+          "Highlight that testing occurs throughout every sprint, not just in the final week."
+        ],
+        trapTip: "If asked what your biggest risk is: 'Dataset normalization for the ML pipeline. We mitigated this by building our feature extraction scripts early in Sprint 2.'"
+      },
+      11: {
+        time: "0:45 min",
+        spoken: "On Slide 11, we examine financial feasibility. By adopting our frugal hardware strategy, the total initial infrastructure investment for an SME retail chain is approximately 25,000 BDT — covering a cloud VPS, domain, and thermal printer. In contrast, avoiding dedicated barcode terminals saves 380,000 BDT immediately, while a 35% reduction in spoiled perishables saves an estimated 180,000 BDT annually. The entire investment pays for itself in less than two and a half months.",
+        keyPoints: [
+          "Emphasize the rapid 2.5-month ROI payback period.",
+          "Contrast the 25,000 BDT total cost against foreign enterprise systems costing tens of thousands of dollars.",
+          "Show that you think like both a software engineer and a commercial problem solver."
+        ],
+        trapTip: "Evaluators love commercial justification. Demonstrating economic payback proves your project is ready for real-world adoption."
+      },
+      12: {
+        time: "0:45 min",
+        spoken: "In conclusion: RetailSync combines software engineering rigor through ACID concurrency, actionable business intelligence through AI demand forecasting, and social-economic feasibility through frugal smartphone hardware scanning. On behalf of Shottobroto Dey (251-35-017), Golam Husnain Papon (251-35-529), and myself Raisul Islam Likhon (251-35-508), thank you very much for your time and guidance. We are now ready for your valuable questions.",
+        keyPoints: [
+          "Summarize the 3 core pillars in one punchy concluding sentence.",
+          "Re-thank the board on behalf of the whole team.",
+          "Stand ready to switch to specific slides during the Q&A session."
+        ],
+        trapTip: "End with a steady, smiling posture. When a faculty member asks a question, pause for 2 seconds, acknowledge the question politely, and let the relevant team member respond if specific to their component."
+      }
+    };
+
+    // =========================================================================
+    // SLIDE ENGINE & CONTROLLER
+    // =========================================================================
+    const TOTAL_SLIDES = 12;
+    let currentSlide = 1;
+    let timerRunning = false;
+    let timerSeconds = 0;
+    let timerInterval = null;
+
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const notesDrawer = document.getElementById('notesDrawer');
+    const notesBody = document.getElementById('notesBody');
+    const btnNotesToggle = document.getElementById('btnNotesToggle');
+    const btnGridToggle = document.getElementById('btnGridToggle');
+    const btnTimerToggle = document.getElementById('btnTimerToggle');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const gridModal = document.getElementById('gridModal');
+    const gridContainer = document.getElementById('gridContainer');
+    const zoomModal = document.getElementById('zoomModal');
+    const zoomModalImg = document.getElementById('zoomModalImg');
+
+    // Build Dots & Grid
+    for (let i = 1; i <= TOTAL_SLIDES; i++) {
+      // Dot
+      const dot = document.createElement('div');
+      dot.className = `dot ${i === 1 ? 'active' : ''}`;
+      dot.title = `Go to Slide ${i}`;
+      dot.onclick = () => goToSlide(i);
+      dotsContainer.appendChild(dot);
+
+      // Grid Card
+      const card = document.createElement('div');
+      card.className = `grid-card ${i === 1 ? 'current' : ''}`;
+      card.onclick = () => { goToSlide(i); toggleGrid(false); };
+      
+      const title = slides[i-1].querySelector('.slide-title')?.innerText || `Slide ${i}`;
+      card.innerHTML = `
+        <div class="grid-num">SLIDE ${String(i).padStart(2, '0')}</div>
+        <div class="grid-title">${title}</div>
+        <div style="font-size: 12px; color: var(--text-dim);">${SPEAKER_NOTES[i]?.time || ''}</div>
+      `;
+      gridContainer.appendChild(card);
+    }
+
+    function updateSlide() {
+      slides.forEach((slide, idx) => {
+        const slideNum = idx + 1;
+        slide.classList.remove('active', 'prev');
+        if (slideNum === currentSlide) {
+          slide.classList.add('active');
+        } else if (slideNum < currentSlide) {
+          slide.classList.add('prev');
+        }
+      });
+
+      // Update Dots
+      document.querySelectorAll('.dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      // Update Grid Cards
+      document.querySelectorAll('.grid-card').forEach((card, idx) => {
+        card.classList.toggle('current', idx + 1 === currentSlide);
+      });
+
+      // Update Speaker Notes
+      updateSpeakerNotes();
+    }
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= TOTAL_SLIDES) {
+        currentSlide = n;
+        updateSlide();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < TOTAL_SLIDES) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function updateSpeakerNotes() {
+      const note = SPEAKER_NOTES[currentSlide];
+      if (!note) return;
+
+      let keyPointsHtml = note.keyPoints.map(kp => `<li>${kp}</li>`).join('');
+
+      notesBody.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <span style="font-family: var(--font-mono); font-size: 13px; color: var(--cyan-400); font-weight: 700;">SLIDE ${currentSlide} of ${TOTAL_SLIDES}</span>
+          <span style="background: rgba(245, 158, 11, 0.25); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700;">Estimated: ${note.time}</span>
+        </div>
+
+        <h4>Word-for-Word Spoken Script</h4>
+        <div class="spoken-script">"${note.spoken}"</div>
+
+        <h4>Key Presentation Anchors</h4>
+        <ul>${keyPointsHtml}</ul>
+
+        <h4>Defense Trap & Tip</h4>
+        <div style="background: rgba(244, 63, 94, 0.14); border-left: 3px solid var(--rose-500); padding: 12px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #fecdd3; line-height: 1.55;">
+          ${note.trapTip}
+        </div>
+      `;
+    }
+
+    // Toggle Notes
+    function toggleNotes(force) {
+      const isOpen = notesDrawer.classList.toggle('open', force);
+      btnNotesToggle.classList.toggle('active', isOpen);
+    }
+
+    // Toggle Grid
+    function toggleGrid(force) {
+      const isOpen = gridModal.classList.toggle('open', force);
+      btnGridToggle.classList.toggle('active', isOpen);
+    }
+
+    // Timer Logic
+    function toggleTimer() {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        btnTimerToggle.innerText = 'Resume (T)';
+        btnTimerToggle.classList.remove('active');
+      } else {
+        timerRunning = true;
+        btnTimerToggle.innerText = 'Pause (T)';
+        btnTimerToggle.classList.add('active');
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+          const secs = String(timerSeconds % 60).padStart(2, '0');
+          timerDisplay.innerText = `${mins}:${secs}`;
+          if (timerSeconds > 600) { // 10 min warning
+            timerDisplay.style.color = '#fb7185';
+          }
+        }, 1000);
+      }
+    }
+
+    // Fullscreen Toggle
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => alert(err.message));
+        btnFullscreen.classList.add('active');
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+          btnFullscreen.classList.remove('active');
+        }
+      }
+    }
+
+    // Diagram Zoom
+    function openZoomModal(imgSrc) {
+      zoomModalImg.src = imgSrc;
+      zoomModal.classList.add('open');
+    }
+
+    function closeZoomModal() {
+      zoomModal.classList.remove('open');
+      zoomModalImg.src = '';
+    }
+
+    // Keyboard Event Listener
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+      switch(e.key) {
+        case 'ArrowRight':
+        case 'PageDown':
+        case ' ':
+          e.preventDefault();
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'PageUp':
+        case 'Backspace':
+          e.preventDefault();
+          prevSlide();
+          break;
+        case 'Home':
+          e.preventDefault();
+          goToSlide(1);
+          break;
+        case 'End':
+          e.preventDefault();
+          goToSlide(TOTAL_SLIDES);
+          break;
+        case 'f':
+        case 'F':
+          e.preventDefault();
+          toggleFullscreen();
+          break;
+        case 'n':
+        case 'N':
+          e.preventDefault();
+          toggleNotes();
+          break;
+        case 'g':
+        case 'G':
+          e.preventDefault();
+          toggleGrid();
+          break;
+        case 't':
+        case 'T':
+          e.preventDefault();
+          toggleTimer();
+          break;
+        case 'Escape':
+          closeZoomModal();
+          toggleGrid(false);
+          toggleNotes(false);
+          break;
+      }
+    });
+
+    // Button Listeners
+    btnNotesToggle.onclick = () => toggleNotes();
+    document.getElementById('btnCloseNotes').onclick = () => toggleNotes(false);
+    btnGridToggle.onclick = () => toggleGrid();
+    document.getElementById('btnCloseGrid').onclick = () => toggleGrid(false);
+    btnTimerToggle.onclick = toggleTimer;
+    btnFullscreen.onclick = toggleFullscreen;
+
+    // Initial Setup
+    updateSlide();
+  </script>
+</body>
+</html>
