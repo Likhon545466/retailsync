@@ -130,13 +130,51 @@ def showcase_view():
 
 @app.get("/slides", response_class=HTMLResponse)
 @app.get("/presentation", response_class=HTMLResponse)
+@app.get("/presentation_deck.html", response_class=HTMLResponse)
 def slides_view():
     slides_path = os.path.join(root_dir, "proposal", "presentation_deck.html")
     if os.path.exists(slides_path):
         return FileResponse(slides_path)
     return HTMLResponse("<h1>Defense Slides</h1><p>File not found.</p>", status_code=404)
 
-@app.get("/deck")
+# ==============================================================================
+# Official Document Downloads & View Endpoints
+# ==============================================================================
+
+# --- 1. Capstone Project Proposal (PDF) ---
+@app.get("/proposal", response_class=FileResponse)
+@app.get("/proposal/pdf", response_class=FileResponse)
+@app.get("/proposal.pdf", response_class=FileResponse)
+@app.get("/RetailSync_WMS_Project_Proposal.pdf", response_class=FileResponse)
+def proposal_pdf_download():
+    pdf_path = os.path.join(root_dir, "proposal", "RetailSync_WMS_Project_Proposal.pdf")
+    if os.path.exists(pdf_path):
+        return FileResponse(
+            pdf_path,
+            filename="RetailSync_WMS_Project_Proposal.pdf",
+            media_type="application/pdf"
+        )
+    return HTMLResponse("<h1>Proposal PDF Not Found</h1>", status_code=404)
+
+# --- 2. Capstone Project Proposal (Word .docx) ---
+@app.get("/proposal/docx", response_class=FileResponse)
+@app.get("/proposal.docx", response_class=FileResponse)
+@app.get("/RetailSync_WMS_Project_Proposal.docx", response_class=FileResponse)
+def proposal_docx_download():
+    docx_path = os.path.join(root_dir, "proposal", "RetailSync_WMS_Project_Proposal.docx")
+    if os.path.exists(docx_path):
+        return FileResponse(
+            docx_path,
+            filename="RetailSync_WMS_Project_Proposal.docx",
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+    return HTMLResponse("<h1>Proposal DOCX Not Found</h1>", status_code=404)
+
+# --- 3. PowerPoint Slide Deck (.pptx) ---
+@app.get("/deck", response_class=FileResponse)
+@app.get("/deck/pptx", response_class=FileResponse)
+@app.get("/slides/pptx", response_class=FileResponse)
+@app.get("/RetailSync_Capstone_Proposal_Defense_Deck.pptx", response_class=FileResponse)
 def deck_download():
     deck_path = os.path.join(root_dir, "proposal", "RetailSync_Capstone_Proposal_Defense_Deck.pptx")
     if os.path.exists(deck_path):
@@ -147,16 +185,50 @@ def deck_download():
         )
     return HTMLResponse("<h1>Deck Not Found</h1>", status_code=404)
 
-@app.get("/proposal")
-def proposal_download():
-    pdf_path = os.path.join(root_dir, "proposal", "RetailSync_WMS_Project_Proposal.pdf")
+# --- 4. 70-Page Master Technical Engineering Specification Suite (PDF) ---
+@app.get("/engineering-suite", response_class=FileResponse)
+@app.get("/engineering-suite/pdf", response_class=FileResponse)
+@app.get("/engineering-suite.pdf", response_class=FileResponse)
+@app.get("/docs/master-suite.pdf", response_class=FileResponse)
+@app.get("/RetailSync_Master_Engineering_Suite.pdf", response_class=FileResponse)
+def engineering_suite_pdf_download():
+    pdf_path = os.path.join(root_dir, "docs", "RetailSync_Master_Engineering_Suite.pdf")
     if os.path.exists(pdf_path):
         return FileResponse(
             pdf_path,
-            filename="RetailSync_WMS_Project_Proposal.pdf",
+            filename="RetailSync_Master_Engineering_Suite.pdf",
             media_type="application/pdf"
         )
-    return HTMLResponse("<h1>Proposal PDF Not Found</h1>", status_code=404)
+    return HTMLResponse("<h1>Master Engineering Suite PDF Not Found</h1>", status_code=404)
+
+# --- 5. 70-Page Master Technical Engineering Specification Suite (Word .docx) ---
+@app.get("/engineering-suite/docx", response_class=FileResponse)
+@app.get("/engineering-suite.docx", response_class=FileResponse)
+@app.get("/docs/master-suite.docx", response_class=FileResponse)
+@app.get("/RetailSync_Master_Engineering_Suite.docx", response_class=FileResponse)
+def engineering_suite_docx_download():
+    docx_path = os.path.join(root_dir, "docs", "RetailSync_Master_Engineering_Suite.docx")
+    if os.path.exists(docx_path):
+        return FileResponse(
+            docx_path,
+            filename="RetailSync_Master_Engineering_Suite.docx",
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+    return HTMLResponse("<h1>Master Engineering Suite DOCX Not Found</h1>", status_code=404)
+
+# --- 6. Master Technical Stack, Architecture Decisions & Viva Defense Guide ---
+@app.get("/technical-guide", response_class=FileResponse)
+@app.get("/tech-guide", response_class=FileResponse)
+@app.get("/TECHNICAL_STACK_AND_DEFENSE_GUIDE.md", response_class=FileResponse)
+def technical_guide_download():
+    guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
+    if os.path.exists(guide_path):
+        return FileResponse(
+            guide_path,
+            filename="TECHNICAL_STACK_AND_DEFENSE_GUIDE.md",
+            media_type="text/markdown; charset=utf-8"
+        )
+    return HTMLResponse("<h1>Technical Guide Not Found</h1>", status_code=404)
 
 @app.get("/api")
 def api_root():
@@ -177,8 +249,12 @@ def api_root():
             "audits": "/audits",
             "showcase": "/showcase",
             "slides": "/slides",
-            "deck": "/deck",
-            "proposal": "/proposal"
+            "deck_pptx": "/deck",
+            "proposal_pdf": "/proposal/pdf",
+            "proposal_docx": "/proposal/docx",
+            "master_engineering_suite_pdf": "/engineering-suite/pdf",
+            "master_engineering_suite_docx": "/engineering-suite/docx",
+            "technical_defense_guide": "/technical-guide"
         }
     }
 
