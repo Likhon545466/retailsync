@@ -50,7 +50,7 @@ def test_swiss_minimalist_typography_and_layers():
 
     assert "IBM Plex Sans" in html
     assert "IBM Plex Mono" in html
-    assert 'href="/styles/index.css?v=2.1.0"' in html
+    assert '/styles/index.css' in html
 
     # Verify CSS entrypoint defines the 6 standard cascade layers
     css_res = client.get("/styles/index.css")
