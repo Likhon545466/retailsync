@@ -216,11 +216,33 @@ def engineering_suite_docx_download():
         )
     return HTMLResponse("<h1>Master Engineering Suite DOCX Not Found</h1>", status_code=404)
 
-# --- 6. Master Technical Stack, Architecture Decisions & Viva Defense Guide ---
-@app.get("/technical-guide", response_class=FileResponse)
-@app.get("/tech-guide", response_class=FileResponse)
+# --- 6. Master Technical Stack, Architecture Decisions & Viva Defense Guide (Interactive Web Page) ---
+@app.get("/technical-guide", response_class=HTMLResponse)
+@app.get("/tech-guide", response_class=HTMLResponse)
+@app.get("/viva", response_class=HTMLResponse)
+@app.get("/viva-guide", response_class=HTMLResponse)
+def technical_guide_view(request: Request, user: models.User = Depends(auth.get_current_user_optional)):
+    guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
+    content = ""
+    if os.path.exists(guide_path):
+        with open(guide_path, "r", encoding="utf-8") as f:
+            content = f.read()
+    return templates.TemplateResponse(
+        request=request,
+        name="technical_guide.html",
+        context={
+            "active_page": "technical_guide",
+            "current_user": user,
+            "markdown_content": content
+        }
+    )
+
+# --- 6b. Raw Markdown File Download for Offline/Editors ---
+@app.get("/technical-guide/raw", response_class=FileResponse)
+@app.get("/technical-guide/download", response_class=FileResponse)
+@app.get("/technical-guide.md", response_class=FileResponse)
 @app.get("/TECHNICAL_STACK_AND_DEFENSE_GUIDE.md", response_class=FileResponse)
-def technical_guide_download():
+def technical_guide_raw_download():
     guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
     if os.path.exists(guide_path):
         return FileResponse(

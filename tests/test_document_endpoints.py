@@ -82,13 +82,22 @@ def test_master_engineering_suite_docx_endpoints():
 
 
 def test_technical_defense_guide_endpoints():
-    """Verify all routes pointing to the Viva Defense & Technical Stack Guide return 200."""
-    guide_routes = [
-        "/technical-guide",
-        "/tech-guide",
+    """Verify web view returns rich HTML and raw download routes return markdown."""
+    web_routes = ["/technical-guide", "/tech-guide", "/viva", "/viva-guide"]
+    for route in web_routes:
+        res = client.get(route)
+        assert res.status_code == 200, f"Failed on {route}"
+        assert "text/html" in res.headers.get("content-type")
+        assert "Master Technical Stack & Viva Defense Manual" in res.text
+        assert "30 Viva Voce Q&As" in res.text
+
+    raw_routes = [
+        "/technical-guide/raw",
+        "/technical-guide/download",
+        "/technical-guide.md",
         "/TECHNICAL_STACK_AND_DEFENSE_GUIDE.md",
     ]
-    for route in guide_routes:
+    for route in raw_routes:
         res = client.get(route)
         assert res.status_code == 200, f"Failed on {route}"
         assert "markdown" in res.headers.get("content-type")
