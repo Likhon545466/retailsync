@@ -325,7 +325,9 @@ def engineering_suite_docx_download():
 @app.get("/viva", response_class=HTMLResponse)
 @app.get("/viva-guide", response_class=HTMLResponse)
 def technical_guide_view(request: Request, user: models.User = Depends(auth.get_current_user_optional)):
-    guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
+    guide_path = os.path.join(root_dir, "docs", "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
+    if not os.path.exists(guide_path):
+        guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
     content = ""
     if os.path.exists(guide_path):
         with open(guide_path, "r", encoding="utf-8") as f:
@@ -346,7 +348,9 @@ def technical_guide_view(request: Request, user: models.User = Depends(auth.get_
 @app.get("/technical-guide.md", response_class=FileResponse)
 @app.get("/TECHNICAL_STACK_AND_DEFENSE_GUIDE.md", response_class=FileResponse)
 def technical_guide_raw_download():
-    guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
+    guide_path = os.path.join(root_dir, "docs", "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
+    if not os.path.exists(guide_path):
+        guide_path = os.path.join(root_dir, "TECHNICAL_STACK_AND_DEFENSE_GUIDE.md")
     if os.path.exists(guide_path):
         return FileResponse(
             guide_path,
@@ -361,6 +365,10 @@ def technical_guide_raw_download():
 @app.get("/RetailSync_Team_Sharing_Pack.zip", response_class=FileResponse)
 def team_pack_download():
     zip_path = os.path.join(root_dir, "RetailSync_Team_Sharing_Pack.zip")
+    if not os.path.exists(zip_path):
+        zip_path = os.path.join(root_dir, "proposal", "RetailSync_Team_Sharing_Pack.zip")
+    if not os.path.exists(zip_path):
+        zip_path = os.path.join(root_dir, "docs", "RetailSync_Team_Sharing_Pack.zip")
     if os.path.exists(zip_path):
         return FileResponse(
             zip_path,
