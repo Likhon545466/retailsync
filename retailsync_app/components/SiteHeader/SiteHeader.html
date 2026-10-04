@@ -1,0 +1,28 @@
+<header class="header" role="banner">
+  <div class="header__inner">
+    <div class="header__brand">
+      <a href="/dashboard" class="header__wordmark" aria-label="Retail Sync Operations Overview">
+        RETAIL SYNC
+      </a>
+      <span class="header__version tabular" aria-label="Release Version">2.0</span>
+    </div>
+
+    <!-- Center Navigation with Secondary Overflow Dropdown -->
+    {% include "components/NavMenu/NavMenu.html" ignore missing %}
+
+    <!-- Right Utility Controls -->
+    <div class="header__actions">
+      {% include "components/RoleSwitcher/RoleSwitcher.html" ignore missing %}
+      {% include "components/ThemeToggle/ThemeToggle.html" ignore missing %}
+      
+      <!-- Mobile Drawer Trigger Button -->
+      <button type="button" class="header__menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Toggle navigation menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>

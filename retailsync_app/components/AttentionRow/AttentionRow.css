@@ -1,0 +1,104 @@
+/* AttentionRow Component Styles */
+.attention-row {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: var(--hairline-w) solid var(--border-hairline);
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.attention-row:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.attention-row:hover .action-link__arrow {
+  transform: translateX(4px);
+}
+
+.attention-row__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* 6px Status Dots */
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot--success { background-color: var(--color-success); }
+.status-dot--warning { background-color: var(--color-warning); }
+.status-dot--danger  { background-color: var(--color-danger); }
+.status-dot--info    { background-color: var(--color-accent); }
+
+.attention-row__tag {
+  font-family: var(--font-mono);
+  font-size: var(--type-0);
+  color: var(--color-text-low);
+}
+
+.attention-row__content {
+  min-width: 0;
+}
+
+.attention-row__title {
+  font-family: var(--font-ui);
+  font-size: var(--type-1);
+  font-weight: 500;
+  color: var(--color-text-high);
+  margin: 0 0 2px 0;
+}
+
+.attention-row__detail {
+  font-family: var(--font-ui);
+  font-size: var(--type-0);
+  color: var(--color-text-mid);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attention-row__action {
+  white-space: nowrap;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-ui);
+  font-size: var(--type-1);
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+.action-link__arrow {
+  display: inline-block;
+  transition: transform var(--motion-fast) var(--ease-standard);
+}
+
+@media (max-width: 640px) {
+  .attention-row {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--space-1);
+    padding: var(--space-2) 0;
+  }
+  .attention-row__meta {
+    grid-column: span 2;
+  }
+  .attention-row__content {
+    grid-column: span 1;
+  }
+  .attention-row__detail {
+    white-space: normal;
+  }
+}

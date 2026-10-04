@@ -1,0 +1,125 @@
+@layer tokens {
+  :root {
+    /* 1. Typography Fonts & Numeric Features */
+    --font-sans: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --font-numeric-tabular: tabular-nums;
+
+    /* 2. Type Scale (1.25 Modular Ratio) */
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-md: 20px;
+    --text-lg: 25px;
+    --text-xl: 31px;
+    --text-display: 39px;
+
+    /* 3. Line Heights & Weights (400, 500, 600 only) */
+    --leading-tight: 1.15;
+    --leading-normal: 1.5;
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+
+    /* 4. Spacing Scale on 8px Base */
+    --space-0-5: 4px;
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+    --space-6: 48px;
+    --space-8: 64px;
+    --space-12: 96px;
+
+    /* 5. Radius: 2px Maximum */
+    --radius-max: 2px;
+    --radius: 2px;
+
+    /* 6. Motion (120-180ms ease-out, transform and opacity only) */
+    --motion-duration: 150ms;
+    --motion-timing: ease-out;
+    --motion-transition: 150ms ease-out;
+
+    /* 7. Dark Theme Palette (Default) */
+    --neutral-0: #0b0f17; /* Canvas background */
+    --neutral-1: #111827; /* Surface low */
+    --neutral-2: #1f2937; /* Interactive row hover */
+    --neutral-3: rgba(255, 255, 255, 0.08); /* 1px hairline divider */
+    --neutral-4: rgba(255, 255, 255, 0.16); /* Border emphasis */
+    --neutral-5: #64748b; /* Micro labels & index numbers */
+    --neutral-6: #94a3b8; /* Muted descriptions & subtitles */
+    --neutral-7: #cbd5e1; /* Body secondary */
+    --neutral-8: #f1f5f9; /* Headings */
+    --neutral-9: #f9fafb; /* Primary high-contrast text */
+
+    /* Semantic mappings */
+    --color-bg-canvas: var(--neutral-0);
+    --color-bg-surface: var(--neutral-1);
+    --color-bg-hover: var(--neutral-2);
+    --color-border: var(--neutral-3);
+    --color-border-hover: var(--neutral-4);
+    --color-text-primary: var(--neutral-9);
+    --color-text-secondary: var(--neutral-6);
+    --color-text-muted: var(--neutral-5);
+
+    /* Single Accent Color (Dark) */
+    --color-accent: #38bdf8;
+    --color-accent-subtle: rgba(56, 189, 248, 0.12);
+
+    /* Semantic Status (6px dots and status text only) */
+    --color-status-success: #10b981;
+    --color-status-warning: #f59e0b;
+    --color-status-danger: #ef4444;
+
+    /* Hairlines */
+    --border-hairline: 1px solid var(--color-border);
+    --border-hairline-top: 1px solid var(--color-border);
+    --border-hairline-bottom: 1px solid var(--color-border);
+
+    /* Focus ring (WCAG 2.2 AA visible focus) */
+    --focus-ring: 2px solid var(--color-accent);
+    --focus-offset: 2px;
+  }
+
+  /* Light Theme Palette Overrides */
+  [data-theme="light"] {
+    --neutral-0: #ffffff; /* Canvas background */
+    --neutral-1: #f8fafc; /* Surface low */
+    --neutral-2: #f1f5f9; /* Interactive row hover */
+    --neutral-3: rgba(15, 23, 42, 0.08); /* 1px hairline divider */
+    --neutral-4: rgba(15, 23, 42, 0.16); /* Border emphasis */
+    --neutral-5: #64748b; /* Micro labels & index numbers */
+    --neutral-6: #475569; /* Muted descriptions & subtitles */
+    --neutral-7: #334155; /* Body secondary */
+    --neutral-8: #1e293b; /* Headings */
+    --neutral-9: #0f172a; /* Primary high-contrast text */
+
+    --color-bg-canvas: var(--neutral-0);
+    --color-bg-surface: var(--neutral-1);
+    --color-bg-hover: var(--neutral-2);
+    --color-border: var(--neutral-3);
+    --color-border-hover: var(--neutral-4);
+    --color-text-primary: var(--neutral-9);
+    --color-text-secondary: var(--neutral-6);
+    --color-text-muted: var(--neutral-5);
+
+    /* Single Accent Color (Light) */
+    --color-accent: #0369a1;
+    --color-accent-subtle: rgba(3, 105, 161, 0.08);
+
+    /* Semantic Status */
+    --color-status-success: #059669;
+    --color-status-warning: #d97706;
+    --color-status-danger: #dc2626;
+
+    --border-hairline: 1px solid var(--color-border);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --motion-duration: 0.01ms;
+      --motion-transition: none;
+    }
+  }
+}

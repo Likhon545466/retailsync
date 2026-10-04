@@ -1,0 +1,11 @@
+<a href="{{ row.href }}" class="workspace-row {% if row.is_primary %}workspace-row--primary{% endif %}" data-module="{{ row.module }}" data-priority-role="{{ row.role }}">
+  <div class="workspace-row__num tabular">{{ row.num }}</div>
+  <div class="workspace-row__body">
+    <div class="workspace-row__head">
+      <h3 class="workspace-row__title">{{ row.title }}</h3>
+      <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">{{ row.shortcut }}</span>
+    </div>
+    <p class="workspace-row__desc">{{ row.desc }}</p>
+  </div>
+  <span class="workspace-row__arrow" aria-hidden="true">→</span>
+</a>

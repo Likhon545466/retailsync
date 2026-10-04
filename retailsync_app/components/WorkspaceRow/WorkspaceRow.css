@@ -1,0 +1,76 @@
+/* WorkspaceRow Component Styles */
+.workspace-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-1);
+  border-bottom: var(--hairline-w) solid var(--border-hairline);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.workspace-row:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.workspace-row:hover .workspace-row__arrow {
+  transform: translateX(4px);
+  color: var(--color-accent);
+}
+
+.workspace-row__num {
+  font-family: var(--font-mono);
+  font-size: var(--type-1);
+  color: var(--color-text-low);
+}
+
+.workspace-row__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.workspace-row__title {
+  font-family: var(--font-ui);
+  font-size: var(--type-2);
+  font-weight: 500;
+  color: var(--color-text-high);
+  margin: 0;
+}
+
+.workspace-row--primary .workspace-row__title {
+  font-size: var(--type-3);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.workspace-row__shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-low);
+  padding: 1px 5px;
+  border: var(--hairline-w) solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.workspace-row__desc {
+  font-family: var(--font-ui);
+  font-size: var(--type-0);
+  color: var(--color-text-mid);
+  margin: 2px 0 0 0;
+  line-height: var(--leading-normal);
+}
+
+.workspace-row__arrow {
+  font-family: var(--font-ui);
+  font-size: var(--type-2);
+  color: var(--color-text-low);
+  transition: transform var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+  padding-left: var(--space-1);
+}

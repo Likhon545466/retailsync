@@ -1,0 +1,60 @@
+<section class="attention-section" aria-labelledby="attentionHeading">
+  <div class="attention-section__header">
+    <div class="attention-section__title-wrap">
+      <h2 id="attentionHeading" class="attention-section__title">Needs attention</h2>
+      <span class="attention-section__count tabular" id="attentionCount">({{ attention_items|length if attention_items else '3' }})</span>
+    </div>
+    <span class="attention-section__subtitle">Exceptions requiring human triage before next sweep</span>
+  </div>
+
+  <div class="attention-list" id="attentionList" role="feed" aria-busy="false">
+    {% if attention_items %}
+      {% for item in attention_items %}
+        {% include "components/AttentionRow/AttentionRow.html" %}
+      {% endfor %}
+    {% else %}
+      <!-- Default operational items for Swiss Minimalist demonstration -->
+      <article class="attention-row" data-role="clerk" data-severity="danger">
+        <div class="attention-row__meta">
+          <span class="status-dot status-dot--danger" aria-hidden="true"></span>
+          <span class="attention-row__tag tabular">BATCH-402</span>
+        </div>
+        <div class="attention-row__content">
+          <h3 class="attention-row__title">Quarantine inspection required</h3>
+          <p class="attention-row__detail">Milk carton damage reported at Dock 2 during receiving sweep.</p>
+        </div>
+        <div class="attention-row__action">
+          <a href="/inbound" class="action-link">Inspect dock <span class="action-link__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <article class="attention-row" data-role="operator" data-severity="warning">
+        <div class="attention-row__meta">
+          <span class="status-dot status-dot--warning" aria-hidden="true"></span>
+          <span class="attention-row__tag tabular">SKU-7701</span>
+        </div>
+        <div class="attention-row__content">
+          <h3 class="attention-row__title">Stock reached safety threshold</h3>
+          <p class="attention-row__detail">Aarong Butter 200g reserve at 14 units. Below 20 units threshold.</p>
+        </div>
+        <div class="attention-row__action">
+          <a href="/procurement" class="action-link">Review stock <span class="action-link__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <article class="attention-row" data-role="procurement" data-severity="warning">
+        <div class="attention-row__meta">
+          <span class="status-dot status-dot--warning" aria-hidden="true"></span>
+          <span class="attention-row__tag tabular">PO-9021</span>
+        </div>
+        <div class="attention-row__content">
+          <h3 class="attention-row__title">Dock arrival pending</h3>
+          <p class="attention-row__detail">Issued purchase order pending receipt from PRAN Foods Ltd.</p>
+        </div>
+        <div class="attention-row__action">
+          <a href="/inbound" class="action-link">Open receiving <span class="action-link__arrow" aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    {% endif %}
+  </div>
+</section>

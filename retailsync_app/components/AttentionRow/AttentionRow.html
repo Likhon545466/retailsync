@@ -1,0 +1,16 @@
+<article class="attention-row" data-role="{{ item.role if item and item.role else 'admin' }}" data-severity="{{ item.status_type if item and item.status_type else 'warning' }}">
+  <div class="attention-row__meta">
+    <span class="status-dot status-dot--{{ item.status_type if item and item.status_type else 'warning' }}" aria-hidden="true"></span>
+    <span class="attention-row__tag tabular">{{ item.tag if item and item.tag else 'SYS-101' }}</span>
+  </div>
+  <div class="attention-row__content">
+    <h3 class="attention-row__title">{{ item.title if item and item.title else 'Pending system check' }}</h3>
+    <p class="attention-row__detail">{{ item.detail if item and item.detail else 'Action required.' }}</p>
+  </div>
+  <div class="attention-row__action">
+    <a href="{{ item.action_url if item and item.action_url else '/dashboard' }}" class="action-link">
+      {{ item.action_label if item and item.action_label else 'View' }}
+      <span class="action-link__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

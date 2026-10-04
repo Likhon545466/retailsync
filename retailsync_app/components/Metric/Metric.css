@@ -1,0 +1,35 @@
+/* Metric Component Styles */
+.metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric__label {
+  font-family: var(--font-ui);
+  font-size: var(--type-0);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--color-text-low);
+  margin-bottom: var(--space-1);
+}
+
+.metric__value {
+  font-family: var(--font-mono);
+  font-size: var(--type-3);
+  font-weight: 600;
+  color: var(--color-text-high);
+  line-height: var(--leading-tight);
+}
+
+.metric--primary .metric__value {
+  font-size: var(--type-5);
+  color: var(--color-accent);
+}
+
+.metric__subtext {
+  font-family: var(--font-ui);
+  font-size: var(--type-0);
+  color: var(--color-text-low);
+  margin-top: 4px;
+}

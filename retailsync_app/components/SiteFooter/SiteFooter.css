@@ -1,0 +1,112 @@
+/* SiteFooter Component Styles */
+.footer {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: var(--hairline-w) solid var(--border-hairline);
+}
+
+.footer__deliverables {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--hairline-w) solid var(--border-hairline);
+}
+
+.footer__deliverables-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.footer__deliverables-title {
+  font-family: var(--font-ui);
+  font-size: var(--type-1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--color-text-high);
+}
+
+.footer__deliverables-sub {
+  font-family: var(--font-mono);
+  font-size: var(--type-0);
+  color: var(--color-text-low);
+}
+
+.footer__deliverables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.footer__doc-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: var(--type-0);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--color-text-low);
+  margin-bottom: var(--space-1);
+}
+
+.footer__doc-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+}
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-family: var(--font-ui);
+  font-size: var(--type-0);
+  color: var(--color-text-low);
+  padding-bottom: var(--space-4);
+}
+
+.footer__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.footer__status-text {
+  color: var(--color-text-mid);
+}
+
+.footer__sep {
+  opacity: 0.4;
+  margin: 0 4px;
+}
+
+.footer__time {
+  font-family: var(--font-mono);
+}
+
+.footer__colophon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer__link {
+  color: var(--color-text-mid);
+  text-decoration: none;
+  transition: color var(--motion-fast) var(--ease-standard);
+}
+
+.footer__link:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  .footer__deliverables-grid {
+    grid-template-columns: 1fr;
+  }
+}

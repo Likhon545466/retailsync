@@ -10,8 +10,15 @@ client = TestClient(app)
 
 def test_routes_status_and_theme():
     """Verify all 7 main HTML web routes return 200 and include dual theme support."""
+    # Overview (/dashboard) follows the Swiss Minimalist design system
+    dash_res = client.get("/dashboard")
+    assert dash_res.status_code == 200
+    dash_html = dash_res.text
+    assert 'data-theme="light"' in dash_html or 'data-theme' in dash_html
+    assert 'id="themeToggleBtn"' in dash_html
+    assert 'v2.0-RELEASE' in dash_html
+
     routes = [
-        "/dashboard",
         "/pos",
         "/inbound",
         "/putaway",
@@ -35,7 +42,7 @@ def test_routes_status_and_theme():
         assert 'Showcase ↗' in html
         assert 'Slides ↗' in html
 
-        # 3. Heartbeat moved to footer
+        # 3. Heartbeat in footer
         assert "footer-telemetry" in html
         assert "PG16 3NF ACTIVE" in html
 
@@ -96,13 +103,21 @@ def test_pos_critical_fixes():
 
 
 def test_dashboard_guardrail_and_heartbeat():
-    """Verify dashboard.html Card 1 text and heartbeat pill."""
+    """Verify Swiss Minimalist Overview page: no developer jargon, IBM Plex fonts, clean telemetry."""
     res = client.get("/dashboard")
     assert res.status_code == 200
     html = res.text
 
-    assert "SELECT ... FOR UPDATE SKIP LOCKED" in html
-    assert "PG16 3NF ACTIVE" in html
+    # Verify absence of developer jargon from user-facing copy
+    assert "SELECT ... FOR UPDATE SKIP LOCKED" not in html
+    assert "PG16 3NF ACTIVE" not in html
+
+    # Verify Swiss Minimalist architecture & typography
+    assert "IBM Plex Sans" in html
+    assert "IBM Plex Mono" in html
+    assert "status-strip" in html
+    assert "attention-section" in html
+    assert "workspaces-index" in html
 
 
 def test_inbound_shelflife_indicator():

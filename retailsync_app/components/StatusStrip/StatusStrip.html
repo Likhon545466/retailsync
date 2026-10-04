@@ -1,0 +1,35 @@
+<section class="status-strip" aria-label="System Operational Telemetry">
+  <!-- Primary Metric: Valuation -->
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Inventory Valuation</span>
+    <div class="status-strip__val tabular" id="metricValuation" data-target="{{ stats.total_inventory_valuation_bdt }}">
+      <span class="status-strip__currency">৳</span>{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}
+    </div>
+    <span class="status-strip__sub">Asset ledger synced</span>
+  </div>
+
+  <!-- Secondary Metrics using Metric component pattern -->
+  <div class="status-strip__item">
+    <span class="status-strip__label">Active SKUs</span>
+    <div class="status-strip__val tabular">{{ stats.total_active_skus }}</div>
+    <span class="status-strip__sub">Products active</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Active Batches</span>
+    <div class="status-strip__val tabular">{{ stats.active_inventory_batches }}</div>
+    <span class="status-strip__sub">FEFO tracked</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Open Orders</span>
+    <div class="status-strip__val tabular">{{ stats.open_purchase_orders }}</div>
+    <span class="status-strip__sub">Awaiting dock</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Checkout Latency</span>
+    <div class="status-strip__val tabular">{{ stats.avg_pos_latency_ms|round|int }} ms</div>
+    <span class="status-strip__sub">Target &lt; 2000 ms</span>
+  </div>
+</section>

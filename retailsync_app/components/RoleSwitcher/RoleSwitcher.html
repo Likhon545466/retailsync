@@ -1,0 +1,17 @@
+<div class="role-switcher">
+  <label for="roleSwitcherSelect" class="sr-only">Switch Operational Role</label>
+  <div class="role-switcher__control">
+    <span class="role-switcher__indicator" aria-hidden="true">ROLE</span>
+    <select id="roleSwitcherSelect" class="role-switcher__select" onchange="switchRole(this.value)" aria-label="Select system persona to reorder workspaces">
+      <option value="admin" {% if not current_user or current_user.username == 'admin' %}selected{% endif %}>Director (All)</option>
+      <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Cashier</option>
+      <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Dock Clerk</option>
+      <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Floor Operator</option>
+      <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Supervisor</option>
+      <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>SCM Officer</option>
+    </select>
+    <svg class="role-switcher__chevron" width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
+      <path d="M1 2.5L4 5.5L7 2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path>
+    </svg>
+  </div>
+</div>

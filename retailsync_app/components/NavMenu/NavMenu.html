@@ -1,0 +1,49 @@
+<nav class="nav" aria-label="Primary Application Navigation">
+  <ul class="nav__list">
+    <li class="nav__item">
+      <a href="/dashboard" class="nav__link {% if active_page == 'dashboard' %}nav__link--active{% endif %}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>Overview</a>
+    </li>
+    <li class="nav__item">
+      <a href="/pos" class="nav__link {% if active_page == 'pos' %}nav__link--active{% endif %}" {% if active_page == 'pos' %}aria-current="page"{% endif %}>Checkout</a>
+    </li>
+    <li class="nav__item">
+      <a href="/inbound" class="nav__link {% if active_page == 'inbound' %}nav__link--active{% endif %}" {% if active_page == 'inbound' %}aria-current="page"{% endif %}>Inbound</a>
+    </li>
+    <li class="nav__item">
+      <a href="/putaway" class="nav__link {% if active_page == 'putaway' %}nav__link--active{% endif %}" {% if active_page == 'putaway' %}aria-current="page"{% endif %}>Putaway</a>
+    </li>
+
+    <!-- More Workspaces Dropdown -->
+    <li class="nav__item dropdown">
+      <button type="button" class="nav__link dropdown__trigger" id="moreNavBtn" aria-haspopup="true" aria-expanded="false">
+        <span>More</span>
+        <svg class="dropdown__chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+          <polyline points="2,3 5,7 8,3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></polyline>
+        </svg>
+      </button>
+      <div class="dropdown__menu" id="moreNavMenu" role="menu" aria-labelledby="moreNavBtn">
+        <a href="/warehouse" class="dropdown__item" role="menuitem">
+          <span class="dropdown__label">Warehouse Map</span>
+          <span class="dropdown__shortcut">Spatial Twin</span>
+        </a>
+        <a href="/procurement" class="dropdown__item" role="menuitem">
+          <span class="dropdown__label">Procurement DSS</span>
+          <span class="dropdown__shortcut">Stock Models</span>
+        </a>
+        <a href="/audits" class="dropdown__item" role="menuitem">
+          <span class="dropdown__label">Stock Ledger</span>
+          <span class="dropdown__shortcut">Audit Trail</span>
+        </a>
+        <div class="dropdown__divider" role="separator"></div>
+        <a href="/showcase" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+          <span class="dropdown__label">Project Showcase</span>
+          <span class="dropdown__shortcut">External ↗</span>
+        </a>
+        <a href="/slides" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+          <span class="dropdown__label">Defense Slides</span>
+          <span class="dropdown__shortcut">External ↗</span>
+        </a>
+      </div>
+    </li>
+  </ul>
+</nav>

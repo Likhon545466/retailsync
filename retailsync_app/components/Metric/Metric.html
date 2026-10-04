@@ -1,0 +1,7 @@
+<div class="metric {% if is_primary %}metric--primary{% endif %}">
+  <span class="metric__label">{{ label }}</span>
+  <span class="metric__value tabular">{{ value }}</span>
+  {% if subtext %}
+    <span class="metric__subtext">{{ subtext }}</span>
+  {% endif %}
+</div>

@@ -1,0 +1,84 @@
+<section class="workspaces-section" aria-labelledby="workspacesHeading">
+  <div class="workspaces-section__header">
+    <div>
+      <h2 id="workspacesHeading" class="workspaces-section__title">Operational Workspaces</h2>
+      <span class="workspaces-section__subtitle">Core warehouse and retail terminals sorted by operational priority</span>
+    </div>
+    <span class="workspaces-section__role-tag" id="activeRoleIndicator">Role: Director</span>
+  </div>
+
+  <div class="workspaces-index" id="workspacesGrid">
+    <!-- Workspaces rendered via WorkspaceRow items with role ordering -->
+    <a href="/pos" class="workspace-row workspace-row--primary" data-module="pos" data-priority-role="cashier" id="ws-pos">
+      <div class="workspace-row__num tabular">01</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Checkout POS</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">P</span>
+        </div>
+        <p class="workspace-row__desc">Fast barcode checkout terminal with real-time stock allocation and cash tender.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/inbound" class="workspace-row" data-module="inbound" data-priority-role="clerk" id="ws-inbound">
+      <div class="workspace-row__num tabular">02</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Inbound Receiving</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">I</span>
+        </div>
+        <p class="workspace-row__desc">Dock delivery manifest verification against purchase orders and quality triage.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/putaway" class="workspace-row" data-module="putaway" data-priority-role="operator" id="ws-putaway">
+      <div class="workspace-row__num tabular">03</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Directed Putaway</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">U</span>
+        </div>
+        <p class="workspace-row__desc">Algorithmic bin routing matching product temperature zone and shortest travel path.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/warehouse" class="workspace-row" data-module="warehouse" data-priority-role="supervisor" id="ws-warehouse">
+      <div class="workspace-row__num tabular">04</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Spatial Twin</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">W</span>
+        </div>
+        <p class="workspace-row__desc">Visual warehouse map displaying bays, racks, temperature zones, and capacity.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/procurement" class="workspace-row" data-module="procurement" data-priority-role="procurement" id="ws-procurement">
+      <div class="workspace-row__num tabular">05</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Replenishment DSS</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">R</span>
+        </div>
+        <p class="workspace-row__desc">Dual-variance safety stock forecasting and one-click purchase order issuance.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/audits" class="workspace-row" data-module="audits" data-priority-role="admin" id="ws-audits">
+      <div class="workspace-row__num tabular">06</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Stock Ledger</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut">L</span>
+        </div>
+        <p class="workspace-row__desc">Immutable audit log of all inventory receipts, transfers, and retail sales.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
