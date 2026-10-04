@@ -3,7 +3,7 @@
 {% block title %}Replenishment DSS - RetailSync WMS{% endblock %}
 
 {% block content %}
-<div class="page-header" style="margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
+<div class="page-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
   <div>
     <div style="display: flex; align-items: center; gap: 10px;">
       <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Algorithmic Replenishment &amp; Decision Support System (DSS)</h1>
@@ -16,21 +16,53 @@
   </div>
 </div>
 
+<!-- Replenishment DSS KPI Telemetry Strip -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
+    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Monitored Fast-Movers</div>
+    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums;">5 FMCG SKUs</div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Daily sales &amp; stock velocity tracked</div>
+  </div>
+
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
+    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Safety Stock Formulation</div>
+    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--color-accent, var(--primary));">Greasley Stochastic</div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">σd &amp; σL covariance modeled</div>
+  </div>
+
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
+    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Lot Sizing Strategy</div>
+    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--emerald-400);">Wilson EOQ</div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Minimizes ordering &amp; holding costs</div>
+  </div>
+
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
+    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Stockout Risk Index</div>
+    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--rose-400); font-variant-numeric: tabular-nums;" id="topBreachCount">0 Critical Breaches</div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Dynamic ROP thresholds evaluated</div>
+  </div>
+</div>
+
 <!-- Interactive DSS Parameter Controls -->
-<div class="glass-panel" style="margin-bottom: 24px;">
+<div class="glass-panel" style="margin-bottom: 20px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 18px;">
   <!-- One-Click Preset Scenario Buttons -->
   <div style="margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle);">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-family: var(--font-mono);">
-      Quick Scenario Presets:
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.05em;">
+        Quick Scenario Presets:
+      </div>
+      <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+        One-click demand surge stress simulation
+      </div>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="scenarioPresets">
-      <button type="button" class="btn-sm btn-primary" id="presetNormal" onclick="applyPreset('NORMAL')" style="font-size: 12px; padding: 6px 14px;">
+      <button type="button" class="btn-sm btn-primary" id="presetNormal" onclick="applyPreset('NORMAL')" style="font-size: 12px; padding: 6px 14px; border-radius: var(--radius-sm, 4px);">
         Normal Operations (1.0x)
       </button>
-      <button type="button" class="btn-sm btn-secondary" id="presetFriday" onclick="applyPreset('FRIDAY')" style="font-size: 12px; padding: 6px 14px;">
+      <button type="button" class="btn-sm btn-secondary" id="presetFriday" onclick="applyPreset('FRIDAY')" style="font-size: 12px; padding: 6px 14px; border-radius: var(--radius-sm, 4px);">
         Friday Rush (1.4x)
       </button>
-      <button type="button" class="btn-sm btn-secondary" id="presetRamadan" onclick="applyPreset('RAMADAN')" style="font-size: 12px; padding: 6px 14px;">
+      <button type="button" class="btn-sm btn-secondary" id="presetRamadan" onclick="applyPreset('RAMADAN')" style="font-size: 12px; padding: 6px 14px; border-radius: var(--radius-sm, 4px);">
         🌙 Ramadan Surge (2.5x)
       </button>
     </div>
@@ -39,44 +71,55 @@
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; align-items: center;">
     <div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 6px;">
-        <span style="color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Service Level (Z-Score):</span>
-        <span id="zScoreVal" style="color: var(--color-accent, var(--primary-500)); font-family: var(--font-mono); font-weight: 600;">97.5% (Z = 1.96)</span>
+        <span style="color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); font-size: 11px;">Service Level (Z-Score):</span>
+        <span id="zScoreVal" style="color: var(--color-accent, var(--primary)); font-family: var(--font-mono); font-weight: 600;">97.5% (Z = 1.96)</span>
       </div>
-      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%;" oninput="clearPresetActive(); updateCalculations();">
+      <input type="range" id="zScoreSlider" min="1.28" max="2.58" step="0.05" value="1.96" style="width: 100%; accent-color: var(--color-accent, var(--primary)); cursor: pointer;" oninput="clearPresetActive(); updateCalculations();">
+      <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 4px;">
+        <span>90% (Z=1.28)</span>
+        <span>97.5% (Z=1.96)</span>
+        <span>99% (Z=2.33)</span>
+      </div>
     </div>
 
     <div>
       <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 6px;">
-        <span style="color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Festival Demand Multiplier:</span>
+        <span style="color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); font-size: 11px;">Festival Demand Multiplier:</span>
         <span id="multVal" style="color: var(--amber-400); font-family: var(--font-mono); font-weight: 600;">1.0x (Normal Operations)</span>
       </div>
-      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%;" oninput="clearPresetActive(); updateCalculations();">
+      <input type="range" id="multiplierSlider" min="1.0" max="2.5" step="0.1" value="1.0" style="width: 100%; accent-color: var(--amber-400); cursor: pointer;" oninput="clearPresetActive(); updateCalculations();">
+      <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 4px;">
+        <span>1.0x Baseline</span>
+        <span>1.4x Weekend</span>
+        <span>2.5x Peak Eid/Ramadan</span>
+      </div>
     </div>
 
-    <div style="background: var(--color-bg-hover, var(--bg-surface-elevated)); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 12px; text-align: center;">
-      <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; font-family: var(--font-mono);">Reorder Point Breaches</div>
-      <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 600; color: var(--rose-400);" id="breachCount">0 SKUs</div>
+    <div style="background: var(--color-bg-hover, var(--bg-surface-elevated)); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 12px 16px; text-align: center;">
+      <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; font-family: var(--font-mono); letter-spacing: 0.05em;">Reorder Point Breaches</div>
+      <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 600; color: var(--rose-400); margin: 2px 0;" id="breachCount">0 SKUs</div>
+      <div style="font-size: 10.5px; color: var(--text-muted);">Stock below Greasley ROP</div>
     </div>
   </div>
 </div>
 
 <!-- Replenishment Recommendations Table -->
-<div class="glass-panel">
-  <div class="table-toolbar">
+<div class="glass-panel" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 18px;">
+  <div class="table-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-      <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">Statistical Replenishment Recommendations</h3>
-      <span id="replenishCountBadge" class="badge badge-info">0 recommendations</span>
+      <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0; font-family: var(--font-sans);">Statistical Replenishment Recommendations</h3>
+      <span id="replenishCountBadge" class="badge badge-info" style="font-family: var(--font-mono); font-size: 11px;">0 recommendations</span>
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
       <div class="table-search-wrapper">
-        <input type="text" id="replenishSearchInput" class="form-input table-search-input" placeholder="🔍 Search SKU, product name, or status...">
+        <input type="text" id="replenishSearchInput" class="form-input table-search-input" placeholder="Search SKU, product name, or status..." style="max-width: 320px; font-size: 12px;">
       </div>
-      <button class="btn-sm btn-secondary" onclick="exportTableToCSV('replenishTable', 'retailsync_replenishment_orders.csv')" title="Export recommendations to CSV">
-        📥 Export CSV
+      <button class="btn-sm btn-secondary" onclick="exportTableToCSV('replenishTable', 'retailsync_replenishment_orders.csv')" title="Export recommendations to CSV" style="font-size: 12px;">
+        Export CSV
       </button>
-      <button class="btn-sm btn-secondary" onclick="updateCalculations()" title="Recalculate DSS parameters">
-        ↻ Recalculate
+      <button class="btn-sm btn-secondary" onclick="updateCalculations()" title="Recalculate DSS parameters" style="font-size: 12px;">
+        Recalculate
       </button>
     </div>
   </div>
@@ -110,7 +153,7 @@ let dssData = null;
 function clearPresetActive() {
   document.querySelectorAll('#scenarioPresets button').forEach(btn => {
     btn.className = 'btn-sm btn-secondary';
-    btn.style.borderRadius = '9999px';
+    btn.style.borderRadius = 'var(--radius-sm, 4px)';
   });
 }
 
@@ -163,7 +206,11 @@ async function updateCalculations() {
 function renderTable() {
   if (!dssData) return;
 
-  document.getElementById('breachCount').innerText = `${dssData.breached_skus_count} SKUs`;
+  const breachCountEl = document.getElementById('breachCount');
+  if (breachCountEl) breachCountEl.innerText = `${dssData.breached_skus_count} SKUs`;
+  const topBreachEl = document.getElementById('topBreachCount');
+  if (topBreachEl) topBreachEl.innerText = `${dssData.breached_skus_count} Critical Breaches`;
+
   const countBadge = document.getElementById('replenishCountBadge');
   if (countBadge) countBadge.innerText = `${dssData.items.length} recommendations`;
 

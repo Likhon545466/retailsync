@@ -3,22 +3,43 @@
 {% block title %}Inbound Receiving Dock - RetailSync WMS{% endblock %}
 
 {% block content %}
-<div class="page-header" style="margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
+<div class="page-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
   <div>
-    <div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
       <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Inbound Receiving Dock &amp; Quality Gate</h1>
       <span class="telemetry-item" style="font-size: 11px; font-family: var(--font-mono); color: var(--emerald-400); display: inline-flex; align-items: center; gap: 4px;">
         <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> BAY #02 ACTIVE
       </span>
-      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">DOCK GATE</span>
+      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">DOCK GATE #02</span>
+      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-500); background: rgba(56, 189, 248, 0.08); padding: 1px 6px; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 2px;">GRN ISSUANCE</span>
     </div>
     <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Digital PO receipt verification, automated shelf-life threshold validation (&gt; 65%), and Goods Receipt Note (GRN) generation.</p>
   </div>
 </div>
 
+<!-- Inbound Dock KPI Telemetry Strip -->
+<div class="metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
+  <div class="glass-panel" style="padding: 14px 18px;">
+    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Inbound POs in Queue</div>
+    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--text-primary);" id="metricInboundPOs">3 Orders</div>
+  </div>
+  <div class="glass-panel" style="padding: 14px 18px;">
+    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Units Delivered Today</div>
+    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--emerald-400);">450 Units</div>
+  </div>
+  <div class="glass-panel" style="padding: 14px 18px;">
+    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Quality Gate Pass Rate</div>
+    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--primary-500);">94.2%</div>
+  </div>
+  <div class="glass-panel" style="padding: 14px 18px;">
+    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Gate Threshold</div>
+    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--amber-400);">≥ 65% Freshness</div>
+  </div>
+</div>
+
 <div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
   <!-- Left: Open Purchase Orders List -->
-  <div class="glass-panel">
+  <div class="glass-panel" style="padding: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
       <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0; font-family: var(--font-sans);">Open Purchase Orders Awaiting Delivery</h3>
       <span class="badge badge-info" style="font-family: var(--font-mono);">INSPECTION QUEUE</span>
@@ -31,7 +52,7 @@
   </div>
 
   <!-- Right: Inbound Receiving Inspector Form -->
-  <div class="glass-panel" id="receivingFormPanel" style="display: flex; flex-direction: column;">
+  <div class="glass-panel" id="receivingFormPanel" style="display: flex; flex-direction: column; padding: 20px;">
     <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-family: var(--font-sans);">Dock Quality Inspection</h3>
     <div style="font-size: 12px; color: var(--color-accent, var(--cyan-400)); font-family: var(--font-mono); margin-bottom: 16px;" id="selectedPoHeader">
       Select a PO from the left to start inspection
@@ -39,36 +60,36 @@
 
     <div id="receivingFormBody" style="display: none; flex-direction: column; gap: 14px;">
       <div>
-        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Product / SKU:</label>
-        <select id="recvProductSelect" class="form-input" style="margin-top: 4px;" onchange="updateProductContext()">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Product / SKU:</label>
+        <select id="recvProductSelect" class="form-input" style="margin-top: 4px; font-size: 12.5px;" onchange="updateProductContext()">
           <!-- Populated from selected PO -->
         </select>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manufacturer Lot #:</label>
-          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 4px;">
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Manufacturer Lot #:</label>
+          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px;">
         </div>
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Quantity Delivered:</label>
-          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 4px;">
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Quantity Delivered:</label>
+          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px;">
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Mfg Date:</label>
-          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 4px;">
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Mfg Date:</label>
+          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 4px; font-size: 12.5px;">
         </div>
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Expiry Date:</label>
-          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 4px;" onchange="validateShelfLife()">
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Expiry Date:</label>
+          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 4px; font-size: 12.5px;" onchange="validateShelfLife()">
         </div>
       </div>
 
       <!-- Segmented Shelf-Life Quality Check Indicator -->
-      <div id="shelfLifeIndicator" class="shelflife-tracker">
+      <div id="shelfLifeIndicator" class="shelflife-tracker" style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 12px; background: var(--color-bg-hover);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
           <span style="font-weight: 600; font-size: 13px; color: var(--text-primary); font-family: var(--font-sans);">Remaining Shelf Life:</span>
           <span id="shelfLifePct" style="font-weight: 600; font-size: 13px; color: var(--color-accent, var(--primary-500)); font-family: var(--font-mono);">Select expiry date</span>
@@ -85,7 +106,7 @@
           <div class="shelflife-marker-label">65% QUALITY GATE</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px;">
+        <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; font-family: var(--font-mono);">
           <span>0% Expired</span>
           <span style="color: var(--rose-400); font-weight: 600;">Quarantine &lt; 65%</span>
           <span style="color: var(--emerald-400); font-weight: 600;">Approved ≥ 65%</span>
@@ -98,16 +119,16 @@
       </div>
 
       <div>
-        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Damaged / Crushed Cartons:</label>
-        <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 4px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Damaged / Crushed Cartons:</label>
+        <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px;">
       </div>
 
       <div>
-        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Receiving Manifest Notes:</label>
-        <textarea id="recvNotes" class="form-input" style="margin-top: 4px; height: 60px;" placeholder="Dock delivery notes, seal number..."></textarea>
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Receiving Manifest Notes:</label>
+        <textarea id="recvNotes" class="form-input" style="margin-top: 4px; height: 60px; font-size: 12.5px;" placeholder="Dock delivery notes, seal number..."></textarea>
       </div>
 
-      <button class="btn-sm btn-primary" onclick="submitGoodsReceipt()" style="padding: 10px 16px; font-size: 13px; font-weight: 600; margin-top: 8px; width: 100%;">
+      <button class="btn-sm btn-primary" onclick="submitGoodsReceipt()" style="padding: 10px 16px; font-size: 13px; font-weight: 600; margin-top: 8px; width: 100%; height: 42px;">
         Accept Shipment &amp; Issue GRN
       </button>
     </div>
