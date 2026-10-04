@@ -3,17 +3,25 @@
 {% block title %}Directed Putaway - RetailSync WMS{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Directed Putaway & Spatial Routing</h1>
-  <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Algorithmic bin allocation matching product temperature zones with lowest walking distance across Aisles A01–D01.</p>
+<div class="page-header" style="margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
+  <div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Directed Putaway &amp; Spatial Routing</h1>
+      <span class="telemetry-item" style="font-size: 11px; font-family: var(--font-mono); color: var(--emerald-400); display: inline-flex; align-items: center; gap: 4px;">
+        <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> ROUTING ENGINE ACTIVE
+      </span>
+      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">SPATIAL ENGINE</span>
+    </div>
+    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Algorithmic bin allocation matching product temperature zones with lowest walking distance across Aisles A01–D01.</p>
+  </div>
 </div>
 
 <div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
   <!-- Left: Unallocated Batches Queue -->
   <div class="glass-panel">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Batches Awaiting Putaway (Dock Staging)</h3>
-      <span class="badge badge-warning" id="pendingBatchCount">0 pending</span>
+      <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0; font-family: var(--font-sans);">Batches Awaiting Putaway (Dock Staging)</h3>
+      <span class="badge badge-warning" id="pendingBatchCount" style="font-family: var(--font-mono);">0 pending</span>
     </div>
 
     <div id="unallocatedList">
@@ -23,7 +31,7 @@
 
   <!-- Right: Directed Routing Prompt -->
   <div class="glass-panel" style="display: flex; flex-direction: column;">
-    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Operator Putaway Directive</h3>
+    <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-family: var(--font-sans);">Operator Putaway Directive</h3>
     <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
       Follow physical floor routing to scan destination bin barcode.
     </div>
@@ -35,18 +43,18 @@
     <div id="directiveActive" style="display: none; flex-direction: column; gap: 16px;">
       <div class="spatial-breadcrumb-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-size: 11px; text-transform: uppercase; color: var(--primary-500); font-weight: 800; letter-spacing: 0.5px;">Recommended Bin Location:</div>
+          <div style="font-size: 11px; text-transform: uppercase; color: var(--color-accent, var(--primary-500)); font-weight: 600; font-family: var(--font-mono); letter-spacing: 0.05em;">Recommended Bin Location:</div>
           <span class="badge badge-info" id="sugZone">Ambient</span>
         </div>
         
-        <div style="font-family: var(--font-heading); font-size: 30px; font-weight: 800; color: var(--text-primary); margin: 6px 0;" id="suggestedBinCode">
+        <div style="font-family: var(--font-mono); font-size: 26px; font-weight: 600; color: var(--text-primary); margin: 8px 0;" id="suggestedBinCode">
           A01-R01-S1-B1
         </div>
 
         <!-- 4-Step Spatial Breadcrumb Directive -->
         <div class="breadcrumb-trail">
           <div class="breadcrumb-step">
-            <span>📦 Dock Area</span>
+            <span>Dock Area</span>
           </div>
           <span class="breadcrumb-arrow">➔</span>
           <div class="breadcrumb-step">
@@ -62,24 +70,24 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 10px;">
-          <div>Aisle: <b id="sugAisle">A01</b></div>
-          <div>Rack: <b id="sugRack">R01</b></div>
-          <div>Shelf: <b id="sugShelf">Tier 1</b></div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 10px; font-family: var(--font-mono);">
+          <div>Aisle: <b id="sugAisle" style="color: var(--text-primary);">A01</b></div>
+          <div>Rack: <b id="sugRack" style="color: var(--text-primary);">R01</b></div>
+          <div>Shelf: <b id="sugShelf" style="color: var(--text-primary);">Tier 1</b></div>
         </div>
       </div>
 
-      <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; font-size: 12.5px; color: var(--text-secondary);" id="sugReason">
+      <div style="background: var(--color-bg-hover, var(--bg-surface-elevated)); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 12px; font-size: 12.5px; color: var(--text-secondary); font-family: var(--font-sans);" id="sugReason">
         Matching temperature zone with empty capacity.
       </div>
 
-      <div style="margin-top: 6px;">
-        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Scan Bin Barcode to Confirm Placement:</label>
-        <input type="text" id="confirmBinScan" class="form-input" placeholder="Scan bin barcode on physical rack..." style="margin-top: 4px;">
+      <div style="margin-top: 4px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Scan Bin Barcode to Confirm Placement:</label>
+        <input type="text" id="confirmBinScan" class="form-input" placeholder="Scan bin barcode on physical rack..." style="margin-top: 4px; font-family: var(--font-mono);">
       </div>
 
-      <button class="btn-sm btn-primary" onclick="confirmPlacement()" style="padding: 14px; font-size: 14px; font-weight: 700; border-radius: var(--radius-full);">
-        Confirm Physical Bin Placement ✓
+      <button class="btn-sm btn-primary" onclick="confirmPlacement()" style="padding: 10px 16px; font-size: 13px; font-weight: 600; width: 100%;">
+        Confirm Physical Bin Placement
       </button>
     </div>
   </div>
@@ -109,21 +117,21 @@ function renderUnallocated() {
   countEl.innerText = `${unallocated.length} pending`;
 
   if (unallocated.length === 0) {
-    container.innerHTML = `<div style="text-align: center; color: var(--emerald-400); padding: 40px; font-weight: 600;">✓ Staging dock is clear! All batches have been placed into warehouse bins.</div>`;
+    container.innerHTML = `<div style="text-align: center; color: var(--emerald-400); padding: 40px; font-weight: 500; font-family: var(--font-sans);">Staging dock is clear. All batches have been placed into warehouse bins.</div>`;
     return;
   }
 
   container.innerHTML = unallocated.map(b => `
-    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s ease;"
-         onclick="requestSuggestion(${b.batch_id})" onmouseover="this.style.borderColor='var(--primary-500)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+    <div style="background: var(--color-bg-surface, var(--bg-surface)); border: 1px solid var(--color-border, var(--border-subtle)); border-radius: var(--radius-sm, 4px); padding: 14px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.15s ease;"
+         onclick="requestSuggestion(${b.batch_id})" onmouseover="this.style.borderColor='var(--color-accent, var(--primary-500))'" onmouseout="this.style.borderColor='var(--color-border, var(--border-subtle))'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-500); font-size: 12px;">${b.lot_number}</span>
+        <span style="font-family: var(--font-mono); font-weight: 600; color: var(--color-accent, var(--primary-500)); font-size: 12px;">${b.lot_number}</span>
         <span class="badge badge-info">${b.temp_required}</span>
       </div>
-      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">${b.product_name}</div>
-      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px;">
-        <span>Quantity: <b>${b.current_quantity} PCS</b></span>
-        <span>Expiry: <b>${b.expiry_date}</b></span>
+      <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); font-family: var(--font-sans);">${b.product_name}</div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px; font-family: var(--font-sans);">
+        <span>Quantity: <b style="font-family: var(--font-mono); color: var(--text-primary);">${b.current_quantity} PCS</b></span>
+        <span>Expiry: <b style="font-family: var(--font-mono); color: var(--text-primary);">${b.expiry_date}</b></span>
       </div>
     </div>
   `).join('');

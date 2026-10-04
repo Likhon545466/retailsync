@@ -3,10 +3,16 @@
 {% block title %}POS Register Terminal - RetailSync WMS{% endblock %}
 
 {% block content %}
-<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+<div class="page-header" style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
   <div>
-    <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Frontline POS Checkout Register</h1>
-    <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">High-speed barcode deduction with sub-2.0s transactional FEFO row-locking.</p>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Frontline POS Checkout Register</h1>
+      <span class="telemetry-item" style="font-size: 11px; font-family: var(--font-mono); color: var(--emerald-400); display: inline-flex; align-items: center; gap: 4px;">
+        <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> SCANNER READY
+      </span>
+      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">TILL #01</span>
+    </div>
+    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">High-speed barcode deduction with sub-2.0s transactional FEFO row-locking.</p>
   </div>
   <div style="display: flex; gap: 10px;">
     <button class="btn-sm btn-secondary" onclick="openConcurrencyModal()">⚡ Test Multi-Till Race Condition</button>
@@ -67,13 +73,13 @@
         
         <!-- Tactile Quick Cash Tender Chips -->
         <div id="cashTenderSection" style="margin-top: 8px;">
-          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">Quick Cash Tender:</div>
+          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; font-family: var(--font-mono);">Quick Cash Tender:</div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-            <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender('EXACT')" style="border-radius: 9999px; font-size: 11.5px; padding: 4px 12px;">Exact Cash</button>
-            <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender(500)" style="border-radius: 9999px; font-size: 11.5px; padding: 4px 12px;">৳500</button>
-            <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender(1000)" style="border-radius: 9999px; font-size: 11.5px; padding: 4px 12px;">৳1000</button>
+            <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender('EXACT')" style="font-size: 11.5px; padding: 4px 10px;">Exact Cash</button>
+            <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender(500)" style="font-size: 11.5px; padding: 4px 10px;">৳500</button>
+            <button type="button" class="btn-sm btn-secondary" onclick="quickCashTender(1000)" style="font-size: 11.5px; padding: 4px 10px;">৳1000</button>
           </div>
-          <div id="changeReturnRow" style="display: none; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-top: 8px; padding: 6px 12px; background: var(--bg-surface-elevated); border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div id="changeReturnRow" style="display: none; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-top: 8px; padding: 6px 12px; background: var(--color-bg-hover); border-radius: var(--radius-sm, 4px); border: 1px solid var(--border-subtle); font-family: var(--font-mono);">
             <span>Tendered: <b id="tenderedAmount" style="color: var(--text-primary);">৳0.00</b></span>
             <span>Change Return: <b id="changeReturnAmount" style="color: var(--emerald-400);">৳0.00</b></span>
           </div>
@@ -189,13 +195,15 @@ async function loadProducts() {
 function renderCatalog() {
   const container = document.getElementById('productCatalog');
   container.innerHTML = products.map(p => `
-    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; cursor: pointer; transition: transform 0.15s ease;" 
-         onclick="addToCart('${p.barcode}')" onmouseover="this.style.borderColor='var(--primary-500)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
-      <div style="font-size: 11px; font-weight: 700; color: var(--primary-500); font-family: var(--font-mono);">${p.sku_code}</div>
-      <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 4px 0 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.product_name}">${p.product_name}</div>
-      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+    <div class="pos-catalog-card" onclick="addToCart('${p.barcode}')">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 10.5px; font-weight: 600; color: var(--color-accent, var(--primary-500)); font-family: var(--font-mono);">${p.sku_code}</span>
+        <span class="badge ${p.total_available_stock > 10 ? 'badge-success' : 'badge-danger'}" style="font-size: 10px; padding: 1px 6px;">Stock: ${p.total_available_stock}</span>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin: 6px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.product_name}">${p.product_name}</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-family: var(--font-mono);">
         <span style="color: var(--emerald-400); font-weight: 700;">৳${p.selling_price_bdt.toFixed(2)}</span>
-        <span class="badge ${p.total_available_stock > 10 ? 'badge-success' : 'badge-danger'}">Stock: ${p.total_available_stock}</span>
+        <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-sans);">+ Add</span>
       </div>
     </div>
   `).join('');
@@ -296,16 +304,16 @@ function renderCart() {
     total += subtotal;
     count += item.quantity;
     return `
-      <div class="cart-row">
+      <div class="cart-row" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-subtle);">
         <div>
-          <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">${item.name}</div>
-          <div style="font-size: 11px; color: var(--text-muted);">৳${item.price.toFixed(2)} each</div>
+          <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); font-family: var(--font-sans);">${item.name}</div>
+          <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">৳${item.price.toFixed(2)} each</div>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-          <button class="btn-sm btn-secondary" onclick="updateCartQty('${item.barcode}', -1)" style="padding: 2px 7px;">-</button>
-          <span style="font-family: var(--font-mono); font-weight: 700; width: 20px; text-align: center;">${item.quantity}</span>
-          <button class="btn-sm btn-secondary" onclick="updateCartQty('${item.barcode}', 1)" style="padding: 2px 7px;">+</button>
-          <span style="font-family: var(--font-mono); font-weight: 700; color: var(--emerald-400); width: 65px; text-align: right;">৳${subtotal.toFixed(2)}</span>
+          <button class="btn-sm btn-secondary" onclick="updateCartQty('${item.barcode}', -1)" style="padding: 2px 8px; min-height: 26px;">-</button>
+          <span style="font-family: var(--font-mono); font-weight: 600; font-size: 12px; width: 22px; text-align: center;">${item.quantity}</span>
+          <button class="btn-sm btn-secondary" onclick="updateCartQty('${item.barcode}', 1)" style="padding: 2px 8px; min-height: 26px;">+</button>
+          <span style="font-family: var(--font-mono); font-weight: 600; color: var(--emerald-400); width: 68px; text-align: right;">৳${subtotal.toFixed(2)}</span>
         </div>
       </div>
     `;

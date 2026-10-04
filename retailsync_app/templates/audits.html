@@ -3,12 +3,20 @@
 {% block title %}Stock Ledger & Audits - RetailSync WMS{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 24px;">
-  <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary);">Immutable Stock Ledger &amp; Inventory Audits</h1>
-  <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Tamper-proof chronological transaction ledger tracking physical inventory deltas across all retail channels.</p>
+<div class="page-header" style="margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
+  <div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Immutable Stock Ledger &amp; Inventory Audits</h1>
+      <span class="telemetry-item" style="font-size: 11px; font-family: var(--font-mono); color: var(--emerald-400); display: inline-flex; align-items: center; gap: 4px;">
+        <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> CRYPTOGRAPHIC LEDGER ACTIVE
+      </span>
+      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">APPEND ONLY</span>
+    </div>
+    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Tamper-proof chronological transaction ledger tracking physical inventory deltas across all retail channels.</p>
+  </div>
 </div>
 
-<div class="bento-card glass-panel" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 24px; box-shadow: var(--shadow-bento);">
+<div class="glass-panel" style="padding: 20px;">
   <!-- Search & Export Toolbar -->
   <div class="table-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;">
@@ -29,11 +37,13 @@
       <span id="ledgerCountBadge" class="badge badge-info" style="font-family: var(--font-mono); font-variant-numeric: tabular-nums;">0 records</span>
     </div>
 
-    <!-- Export CSV button -->
-    <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()" style="margin-left: auto;">⬇ Export CSV</button>
+    <div style="display: flex; gap: 8px;">
+      <!-- Export CSV button -->
+      <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()">⬇ Export CSV</button>
 
-    <!-- Refresh button -->
-    <button class="btn-sm btn-secondary" onclick="loadLedger()" title="Refresh transaction ledger">↻ Refresh</button>
+      <!-- Refresh button -->
+      <button class="btn-sm btn-secondary" onclick="loadLedger()" title="Refresh transaction ledger">↻ Refresh</button>
+    </div>
   </div>
 
   <div class="table-responsive">
@@ -115,30 +125,30 @@ function renderLedger(entries) {
 
   tbody.innerHTML = entries.map(e => {
     const isDeduction = e.quantity_change < 0;
-    const deltaColor = isDeduction ? 'var(--rose)' : 'var(--emerald)';
-    const deltaBg = isDeduction ? 'var(--rose-soft)' : 'var(--emerald-soft)';
+    const deltaColor = isDeduction ? 'var(--rose-400)' : 'var(--emerald-400)';
+    const deltaBg = isDeduction ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)';
     const deltaSign = e.quantity_change > 0 ? `+${e.quantity_change}` : `${e.quantity_change}`;
 
     return `
       <tr>
         <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 11.5px; color: var(--text-muted); white-space: nowrap;">${e.timestamp}</td>
-        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; color: var(--primary); white-space: nowrap;">${e.reference_number || 'N/A'}</td>
+        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--color-accent, var(--primary)); white-space: nowrap;">${e.reference_number || 'N/A'}</td>
         <td>
-          <div style="font-weight: 700; color: var(--text-primary);">${e.product_name}</div>
+          <div style="font-weight: 600; color: var(--text-primary); font-family: var(--font-sans);">${e.product_name}</div>
           <div style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 11px; color: var(--text-muted);">${e.sku_code}</div>
         </td>
         <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap;">${e.lot_number}</td>
         <td><span class="badge badge-info">${e.transaction_type}</span></td>
         <td style="white-space: nowrap;">
-          <span style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 800; font-size: 12.5px; padding: 3px 9px; border-radius: var(--radius-full); background: ${deltaBg}; color: ${deltaColor}; border: 1px solid var(--border-subtle); display: inline-block;">
+          <span style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; font-size: 12px; padding: 2px 7px; border-radius: var(--radius-sm, 4px); background: ${deltaBg}; color: ${deltaColor}; border: 1px solid var(--border-subtle); display: inline-block;">
             ${deltaSign} PCS
           </span>
         </td>
-        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12.5px; white-space: nowrap;">
+        <td style="font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; white-space: nowrap;">
           ${e.previous_balance} → <b style="color: var(--text-primary);">${e.new_balance} PCS</b>
         </td>
         <td style="white-space: nowrap;">
-          <span style="font-weight: 600; color: var(--text-secondary);">${e.user_name}</span>
+          <span style="font-weight: 500; color: var(--text-secondary); font-family: var(--font-sans);">${e.user_name}</span>
         </td>
       </tr>
     `;
