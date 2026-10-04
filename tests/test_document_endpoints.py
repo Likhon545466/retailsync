@@ -90,6 +90,10 @@ def test_technical_defense_guide_endpoints():
         assert "text/html" in res.headers.get("content-type")
         assert "Master Technical Stack & Viva Defense Manual" in res.text
         assert "30 Viva Voce Q&As" in res.text
+        assert "scrollToChapter" in res.text
+        assert "postProcessHeadings" in res.text
+        for ch in range(1, 12):
+            assert f"scrollToChapter({ch}, event)" in res.text
 
     raw_routes = [
         "/technical-guide/raw",
