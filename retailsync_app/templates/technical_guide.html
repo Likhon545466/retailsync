@@ -55,7 +55,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 7px 10px;
+    padding: 8px 12px;
     font-size: 12.5px;
     font-weight: 500;
     color: var(--text-secondary);
@@ -63,6 +63,7 @@
     border-radius: 8px;
     transition: all 0.15s ease;
     line-height: 1.3;
+    cursor: pointer;
   }
 
   .guide-toc-link:hover {
@@ -130,6 +131,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    scroll-margin-top: 85px;
+    transition: background-color 0.4s ease, padding 0.3s ease;
   }
 
   .markdown-body h3 {
@@ -137,12 +140,39 @@
     margin-top: 26px;
     margin-bottom: 12px;
     color: var(--text-primary);
+    scroll-margin-top: 85px;
   }
 
   .markdown-body h4 {
     font-size: 15px;
     margin-top: 20px;
     margin-bottom: 8px;
+    scroll-margin-top: 85px;
+  }
+
+  /* Viva Question Special Styling */
+  .viva-question-heading {
+    background: var(--bg-surface-elevated);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    margin-top: 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    scroll-margin-top: 85px;
+  }
+
+  .q-badge {
+    background: linear-gradient(135deg, #0284c7, #0d9488);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
   }
 
   .markdown-body p {
@@ -300,6 +330,14 @@
     background-color: #ca8a04;
     color: #fff;
   }
+
+  /* Anchor aliases */
+  .heading-anchor-alias {
+    display: block;
+    position: relative;
+    top: -85px;
+    visibility: hidden;
+  }
 </style>
 {% endblock %}
 
@@ -366,37 +404,37 @@
       <span style="font-size: 10px; background: var(--bg-surface-elevated); padding: 2px 6px; border-radius: 4px;">11 Sections</span>
     </div>
     <nav class="guide-toc-nav" id="tocNav">
-      <a href="#1-executive-summary--problem-motivation" class="guide-toc-link">
+      <a href="#chapter-1" class="guide-toc-link" data-chapter="1" onclick="scrollToChapter(1, event)">
         <span>01.</span> Executive Summary
       </a>
-      <a href="#2-complete-technology-stack-matrix--justification" class="guide-toc-link">
+      <a href="#chapter-2" class="guide-toc-link" data-chapter="2" onclick="scrollToChapter(2, event)">
         <span>02.</span> Tech Stack Matrix
       </a>
-      <a href="#3-architecture-decision-records-adr-01-to-adr-10" class="guide-toc-link">
+      <a href="#chapter-3" class="guide-toc-link" data-chapter="3" onclick="scrollToChapter(3, event)">
         <span>03.</span> 10 ADR Records
       </a>
-      <a href="#4-4-tier-cyber-physical-system-architecture" class="guide-toc-link">
+      <a href="#chapter-4" class="guide-toc-link" data-chapter="4" onclick="scrollToChapter(4, event)">
         <span>04.</span> 4-Tier Architecture
       </a>
-      <a href="#5-relational-database-design--3nf-normalization-proof" class="guide-toc-link">
+      <a href="#chapter-5" class="guide-toc-link" data-chapter="5" onclick="scrollToChapter(5, event)">
         <span>05.</span> 3NF Database Proof
       </a>
-      <a href="#6-algorithmic-deep-dives--mathematical-formulations" class="guide-toc-link">
+      <a href="#chapter-6" class="guide-toc-link" data-chapter="6" onclick="scrollToChapter(6, event)">
         <span>06.</span> Math & Algorithms
       </a>
-      <a href="#7-high-concurrency-engine--deadlock-prevention" class="guide-toc-link">
+      <a href="#chapter-7" class="guide-toc-link" data-chapter="7" onclick="scrollToChapter(7, event)">
         <span>07.</span> POS Concurrency
       </a>
-      <a href="#8-uiux-engineering-the-apple-bento-clean-design-system" class="guide-toc-link">
+      <a href="#chapter-8" class="guide-toc-link" data-chapter="8" onclick="scrollToChapter(8, event)">
         <span>08.</span> Apple Bento UI/UX
       </a>
-      <a href="#9-financial-feasibility--280-month-payback-proof" class="guide-toc-link">
+      <a href="#chapter-9" class="guide-toc-link" data-chapter="9" onclick="scrollToChapter(9, event)">
         <span>09.</span> ROI & Financial Math
       </a>
-      <a href="#10-comprehensive-viva-voce-qa-master-cheatsheet-30-questions" class="guide-toc-link" style="color: var(--primary-500); font-weight: 700;">
+      <a href="#chapter-10" class="guide-toc-link" data-chapter="10" onclick="scrollToChapter(10, event)" style="color: var(--primary-500); font-weight: 700;">
         <span>10.</span> 30 Viva Voce Q&As
       </a>
-      <a href="#11-live-demonstration-script--examiner-presentation-walkthrough" class="guide-toc-link">
+      <a href="#chapter-11" class="guide-toc-link" data-chapter="11" onclick="scrollToChapter(11, event)">
         <span>11.</span> 15-Min Demo Script
       </a>
     </nav>
@@ -426,6 +464,89 @@
 <!-- Marked.js Local & CDN Fallback -->
 <script src="/static/js/marked.min.js"></script>
 <script>
+  // Chapter Scroll Handler with Smooth Animation and Navbar Offset
+  function scrollToChapter(chapterNum, e) {
+    if (e) e.preventDefault();
+    scrollToTarget('chapter-' + chapterNum);
+  }
+
+  // Universal Target Scroller
+  function scrollToTarget(targetId) {
+    if (!targetId) return;
+
+    let target = document.getElementById(targetId);
+
+    // If target not directly found by ID, search by chapter number
+    if (!target) {
+      const chMatch = targetId.match(/^(\d+)-/);
+      if (chMatch) {
+        target = document.getElementById('chapter-' + chMatch[1]);
+      }
+    }
+
+    // Try finding by question ID (e.g. q5)
+    if (!target) {
+      const qMatch = targetId.match(/^q(?:uestion)?[-_]?(\d+)/i);
+      if (qMatch) {
+        target = document.getElementById('q' + qMatch[1]);
+      }
+    }
+
+    // Try fuzzy match
+    if (!target) {
+      const allHeadings = document.querySelectorAll('.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4');
+      for (const h of allHeadings) {
+        if (h.id && (h.id.toLowerCase().includes(targetId.toLowerCase()) || targetId.toLowerCase().includes(h.id.toLowerCase()))) {
+          target = h;
+          break;
+        }
+      }
+    }
+
+    if (target) {
+      const navbarHeight = 85;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      // Highlight flash animation
+      target.style.transition = 'all 0.3s ease';
+      target.style.backgroundColor = 'rgba(14, 165, 233, 0.15)';
+      target.style.paddingLeft = '10px';
+      target.style.borderRadius = '8px';
+      setTimeout(() => {
+        target.style.backgroundColor = 'transparent';
+        target.style.paddingLeft = '0';
+      }, 1500);
+
+      // Update sidebar active link
+      const chNum = target.getAttribute('data-chapter');
+      if (chNum) {
+        updateSidebarActiveLink(chNum);
+      }
+
+      // Update URL hash without harsh jump
+      try {
+        history.pushState(null, null, '#' + target.id);
+      } catch (err) {}
+    }
+  }
+
+  function updateSidebarActiveLink(chapterNum) {
+    const tocLinks = document.querySelectorAll('.guide-toc-link');
+    tocLinks.forEach((link) => {
+      if (link.getAttribute('data-chapter') === String(chapterNum)) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
   // Ensure Marked is available, fallback to CDN if needed
   function initMarkdownRenderer() {
     if (typeof marked === 'undefined') {
@@ -443,22 +564,67 @@
     const outputContainer = document.getElementById('markdownOutput');
 
     try {
-      // Configure Marked
-      marked.setOptions({
-        gfm: true,
-        breaks: true,
-        headerIds: true,
-        mangle: false
-      });
+      // Configure Custom Heading Renderer in Marked
+      const renderer = {
+        heading(arg1, arg2) {
+          let text = '';
+          let depth = 2;
+          if (typeof arg1 === 'object' && arg1 !== null) {
+            depth = arg1.depth || 2;
+            text = this.parser ? this.parser.parseInline(arg1.tokens) : (arg1.text || '');
+          } else {
+            text = arg1 || '';
+            depth = arg2 || 2;
+          }
+
+          const cleanText = text.replace(/<[^>]*>/g, '');
+          let slug = cleanText
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-');
+
+          // Check if Chapter Heading (e.g. "1. Executive Summary")
+          const chapterMatch = cleanText.match(/^(\d+)\.\s+/);
+          if (chapterMatch && depth === 2) {
+            slug = 'chapter-' + chapterMatch[1];
+            return `<h${depth} id="${slug}" data-chapter="${chapterMatch[1]}">${text}</h${depth}>\n`;
+          }
+
+          // Check if Viva Question Heading (e.g. "Q1: ...")
+          const qMatch = cleanText.match(/^Q(\d+):/i);
+          if (qMatch && depth === 4) {
+            slug = 'q' + qMatch[1];
+            return `<h${depth} id="${slug}" class="viva-question-heading" data-question="${qMatch[1]}"><span class="q-badge">Q${qMatch[1]}</span> ${text}</h${depth}>\n`;
+          }
+
+          return `<h${depth} id="${slug}">${text}</h${depth}>\n`;
+        }
+      };
+
+      marked.use({ renderer });
 
       // Parse and display
       outputContainer.innerHTML = marked.parse(rawMd);
 
+      // Post-Processing Pass on Headings (Enforces IDs & Aliases)
+      postProcessHeadings(outputContainer);
+
       // Enhance Code Blocks with Copy Buttons
       enhanceCodeBlocks();
 
+      // Intercept In-Page Anchor Links (Table of Contents inside Markdown)
+      setupInPageLinkInterception(outputContainer);
+
       // Enable ScrollSpy on headings
       setupScrollSpy();
+
+      // Check if URL already has a hash (e.g. #chapter-10 or #chapter-5)
+      if (window.location.hash) {
+        setTimeout(() => {
+          const initialHash = window.location.hash.substring(1);
+          scrollToTarget(initialHash);
+        }, 150);
+      }
 
     } catch (e) {
       console.error("Markdown render error:", e);
@@ -466,10 +632,64 @@
     }
   }
 
+  // Post-Processing Pass to guarantee all headings have proper IDs and aliases
+  function postProcessHeadings(container) {
+    const headings = container.querySelectorAll('h1, h2, h3, h4');
+    headings.forEach((h) => {
+      const text = h.textContent.trim();
+      
+      // Match Chapter 1..11
+      const chMatch = text.match(/^(\d+)\.\s+/);
+      if (chMatch) {
+        const num = chMatch[1];
+        h.id = 'chapter-' + num;
+        h.setAttribute('data-chapter', num);
+
+        // Also create GitHub-style anchor aliases so markdown links like #1-executive-summary--problem-motivation work
+        const ghSlug1 = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+        const ghSlug2 = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s/g, '-');
+        
+        [ghSlug1, ghSlug2].forEach(slug => {
+          if (slug && !document.getElementById(slug)) {
+            const alias = document.createElement('a');
+            alias.id = slug;
+            alias.className = 'heading-anchor-alias';
+            h.parentNode.insertBefore(alias, h);
+          }
+        });
+      }
+
+      // Match Q1..Q30
+      const qMatch = text.match(/^Q(\d+):/i);
+      if (qMatch) {
+        const qNum = qMatch[1];
+        h.id = 'q' + qNum;
+        h.setAttribute('data-question', qNum);
+        h.classList.add('viva-question-heading');
+      }
+    });
+  }
+
+  // Intercept any in-page markdown link like #chapter-1 or #1-executive-summary--problem-motivation
+  function setupInPageLinkInterception(container) {
+    container.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href^="#"]');
+      if (link) {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const targetId = href.substring(1);
+          scrollToTarget(targetId);
+        }
+      }
+    });
+  }
+
   // Add Copy Code Buttons to all code snippets
   function enhanceCodeBlocks() {
     const preBlocks = document.querySelectorAll('.markdown-body pre');
     preBlocks.forEach((pre) => {
+      if (pre.querySelector('.code-copy-btn')) return; // Avoid duplicate
       const copyBtn = document.createElement('button');
       copyBtn.className = 'code-copy-btn';
       copyBtn.innerText = 'Copy';
@@ -486,36 +706,35 @@
 
   // ScrollSpy to highlight active chapter in sidebar
   function setupScrollSpy() {
-    const headings = document.querySelectorAll('.markdown-body h2[id]');
+    const chapterHeadings = document.querySelectorAll('.markdown-body h2[data-chapter]');
     const tocLinks = document.querySelectorAll('.guide-toc-link');
 
     window.addEventListener('scroll', () => {
-      let currentId = '';
+      let activeChapter = '';
       const scrollPos = window.scrollY + 120;
 
-      headings.forEach((heading) => {
+      chapterHeadings.forEach((heading) => {
         if (heading.offsetTop <= scrollPos) {
-          currentId = heading.id;
+          activeChapter = heading.getAttribute('data-chapter');
         }
       });
 
-      tocLinks.forEach((link) => {
-        const href = link.getAttribute('href');
-        if (href === '#' + currentId) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
+      if (activeChapter) {
+        tocLinks.forEach((link) => {
+          if (link.getAttribute('data-chapter') === activeChapter) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
 
       // Back to top visibility
       const btn = document.getElementById('btnBackToTop');
-      if (window.scrollY > 400) {
-        btn.style.display = 'flex';
-      } else {
-        btn.style.display = 'none';
+      if (btn) {
+        btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
       }
-    });
+    }, { passive: true });
   }
 
   // Quick In-Page Text Search
@@ -532,6 +751,8 @@
       outputContainer.innerHTML = originalHtml;
       countBadge.innerText = '';
       enhanceCodeBlocks();
+      postProcessHeadings(outputContainer);
+      setupInPageLinkInterception(outputContainer);
       return;
     }
 
@@ -556,8 +777,18 @@
     // Scroll to the first match
     const firstMark = outputContainer.querySelector('mark');
     if (firstMark) {
-      firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const navbarHeight = 85;
+      const elementPosition = firstMark.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
+
+    enhanceCodeBlocks();
+    postProcessHeadings(outputContainer);
+    setupInPageLinkInterception(outputContainer);
   }
 
   document.addEventListener('DOMContentLoaded', initMarkdownRenderer);
