@@ -1013,4 +1013,380 @@
     align-items: center;
     gap: 6px;
   }
+
+  /* ============================================================================
+     7. Calm Mission Studio Cockpit (Master Synthesis Direction)
+     ============================================================================ */
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .telemetry-ribbon {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    padding: 4px 10px;
+    border-radius: var(--radius);
+    background: var(--neutral-1);
+    border: 1px solid var(--neutral-3);
+  }
+
+  .telemetry-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .telemetry-dot--pulsing {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-status-success);
+    box-shadow: 0 0 6px var(--color-status-success);
+    animation: pulseDot 2s infinite ease-in-out;
+  }
+
+  .telemetry-val--highlight {
+    color: var(--color-accent);
+    font-weight: var(--font-medium);
+  }
+
+  .store-select-pill {
+    background: var(--neutral-1);
+    border: 1px solid var(--neutral-3);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    outline: none;
+    transition: border-color var(--motion-duration) var(--motion-timing);
+  }
+
+  .store-select-pill:focus,
+  .store-select-pill:hover {
+    border-color: var(--color-accent);
+  }
+
+  /* 4-Pane Mission Cockpit Grid */
+  .mission-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    margin-block-end: var(--space-6);
+  }
+
+  @media (max-width: 1024px) {
+    .mission-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mission-pane {
+    background: var(--neutral-1);
+    border: 1px solid var(--neutral-3);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: border-color var(--motion-duration) var(--motion-timing);
+  }
+
+  .mission-pane:hover {
+    border-color: var(--neutral-4);
+  }
+
+  .mission-pane__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: var(--space-2);
+    padding-block-end: var(--space-1);
+    border-block-end: 1px solid var(--neutral-3);
+  }
+
+  .mission-pane__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .mission-pane__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  /* Sparkline Pane */
+  .sparkline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sparkline-stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sparkline-primary-val {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .sparkline-delta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-status-success);
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .sparkline-svg-box {
+    width: 100%;
+    height: 140px;
+    position: relative;
+  }
+
+  .sparkline-svg-box svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .sparkline-legend {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    border-top: 1px dashed var(--neutral-3);
+    padding-top: 8px;
+  }
+
+  /* 2D Warehouse Floorplan Heatmap */
+  .warehouse-floorplan-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .warehouse-racks-visual {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 4px;
+    background: var(--neutral-0);
+    border: 1px solid var(--neutral-3);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .warehouse-rack-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .warehouse-rack-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .warehouse-rack-bins {
+    display: grid;
+    grid-template-columns: repeat(2, 14px);
+    gap: 3px;
+  }
+
+  .warehouse-bin-cell {
+    width: 14px;
+    height: 12px;
+    border-radius: 1px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .warehouse-bin-cell:hover {
+    transform: scale(1.3);
+    z-index: 5;
+    outline: 1px solid var(--color-accent);
+  }
+
+  .warehouse-bin-cell--green {
+    background-color: var(--color-status-success);
+    opacity: 0.85;
+  }
+
+  .warehouse-bin-cell--amber {
+    background-color: var(--color-status-warning);
+    opacity: 0.9;
+  }
+
+  .warehouse-bin-cell--red {
+    background-color: var(--color-status-danger);
+    opacity: 0.95;
+  }
+
+  .warehouse-route-svg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  .warehouse-dock-strip {
+    display: flex;
+    justify-content: space-around;
+    padding: 6px;
+    background: var(--neutral-2);
+    border: 1px solid var(--neutral-3);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-secondary);
+  }
+
+  .dock-berth {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Mission Tables & Badges */
+  .mission-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: var(--font-sans);
+  }
+
+  .mission-table th {
+    text-align: left;
+    padding: 6px 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: var(--font-medium);
+    border-bottom: 1px solid var(--neutral-3);
+    text-transform: uppercase;
+  }
+
+  .mission-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--neutral-3);
+    color: var(--color-text-primary);
+    vertical-align: middle;
+  }
+
+  .mission-table tr:hover td {
+    background-color: var(--neutral-2);
+  }
+
+  .fefo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: var(--font-medium);
+  }
+
+  .fefo-badge--critical {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--color-status-danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .fefo-badge--amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-status-warning);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .fefo-badge--fresh {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-status-success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  /* Cryptographic Audit Stream Box */
+  .audit-stream-box {
+    max-height: 190px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .audit-stream-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    background: var(--neutral-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--neutral-3);
+    transition: border-color var(--motion-duration) var(--motion-timing);
+  }
+
+  .audit-stream-row:hover {
+    border-color: var(--color-accent);
+  }
+
+  .audit-stream-hash {
+    color: var(--color-accent);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .audit-stream-hash:hover {
+    text-decoration: underline;
+  }
+
+  .audit-stream-time {
+    color: var(--color-text-muted);
+  }
+
+  .audit-action-chip {
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    background: var(--neutral-3);
+    color: var(--color-text-secondary);
+  }
 }
+

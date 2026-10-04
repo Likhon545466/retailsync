@@ -231,12 +231,86 @@
     });
   }
 
+  // 7. Calm Mission Studio Cockpit Interactivity
+  window.copyHashText = function (hash) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(hash).then(function () {
+        if (typeof showToast === 'function') {
+          showToast('Copied cryptographic hash: ' + hash, 'success', 'Audit Verified');
+        }
+      }).catch(function () {});
+    }
+  };
+
+  window.switchStoreLocation = function (store) {
+    const storeNames = {
+      uttara: 'Uttara Central Super Shop',
+      dhanmondi: 'Dhanmondi Express Hub',
+      gulshan: 'Gulshan Mega Mart'
+    };
+    const name = storeNames[store] || store;
+    try {
+      localStorage.setItem('retailsync-active-store', store);
+    } catch (e) {}
+    if (typeof showToast === 'function') {
+      showToast('Switched active telemetry node to ' + name, 'info', 'Store Synchronized');
+    }
+  };
+
+  // Live Cryptographic Audit Stream Simulated Ingestion
+  function initLiveAuditStream() {
+    const container = document.getElementById('auditStreamContainer');
+    if (!container) return;
+
+    const sampleActions = ['POS_SALE', 'FEFO_SWEEP', 'DOCK_RECV', 'PUTAWAY'];
+    const sampleHashes = [
+      'd3f82b79a10c4f81b',
+      'e89a31bc40ef1a72d',
+      'c518be92376b757e3',
+      'f47a192b83a379b32',
+      'b817729363e4967ae'
+    ];
+
+    setInterval(function () {
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' +
+                      String(now.getMinutes()).padStart(2, '0') + ':' +
+                      String(now.getSeconds()).padStart(2, '0') + '.' +
+                      String(now.getMilliseconds()).padStart(3, '0');
+
+      const action = sampleActions[Math.floor(Math.random() * sampleActions.length)];
+      const hashPart = sampleHashes[Math.floor(Math.random() * sampleHashes.length)];
+      const fullHash = hashPart + Math.random().toString(16).substring(2, 10);
+
+      const row = document.createElement('div');
+      row.className = 'audit-stream-row';
+      row.style.opacity = '0';
+      row.style.transition = 'opacity 0.4s ease';
+
+      row.innerHTML = '<div>' +
+        '<span class="audit-action-chip">' + action + '</span> ' +
+        '<span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText(\'' + fullHash + '\')">hash:' + hashPart.substring(0, 6) + '...</span>' +
+      '</div>' +
+      '<span class="tabular audit-stream-time">' + timeStr + '</span>';
+
+      container.insertBefore(row, container.firstChild);
+      requestAnimationFrame(function () {
+        row.style.opacity = '1';
+      });
+
+      if (container.children.length > 8) {
+        container.removeChild(container.lastChild);
+      }
+    }, 7000);
+  }
+
   // Initialization on DOMContentLoaded
   document.addEventListener('DOMContentLoaded', function () {
     initValuationCountUp();
     initDropdown();
     initMobileDrawer();
     initKeyboardShortcuts();
+    initLiveAuditStream();
 
     // Restore saved role
     try {
@@ -245,5 +319,15 @@
         window.switchRole(savedRole);
       }
     } catch (e) {}
+
+    // Restore saved store
+    try {
+      const savedStore = localStorage.getItem('retailsync-active-store');
+      const storeSelect = document.getElementById('activeStoreSelect');
+      if (savedStore && storeSelect) {
+        storeSelect.value = savedStore;
+      }
+    } catch (e) {}
   });
 })();
+

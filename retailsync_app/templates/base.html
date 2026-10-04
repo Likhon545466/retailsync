@@ -45,6 +45,26 @@
         <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">Stock Ledger</a>
       </nav>
 
+      <!-- Calm Mission Studio Live Telemetry Ribbon -->
+      <div class="telemetry-ribbon" role="status" aria-label="System Telemetry" style="margin-left: 8px; margin-right: 8px; display: inline-flex; align-items: center; gap: 8px; font-size: 11px;">
+        <div class="telemetry-item" style="display: flex; align-items: center; gap: 4px;">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--emerald-400, #10b981); display: inline-block;"></span>
+          <span style="font-family: monospace; font-size: 11px;">SYS: <span style="color: var(--primary-500, #38bdf8); font-weight: 600;">NOMINAL</span></span>
+        </div>
+        <span style="opacity: 0.4;">•</span>
+        <div class="telemetry-item" style="display: flex; align-items: center; gap: 4px;">
+          <span style="font-family: monospace; font-size: 11px;">FEFO: <span style="color: var(--emerald-400, #10b981); font-weight: 600;">ACTIVE</span></span>
+        </div>
+        <span style="opacity: 0.4;">•</span>
+        <div class="telemetry-item">
+          <select id="activeStoreSelectGlobal" onchange="switchDemoStore(this.value)" class="store-select-pill" style="font-size: 11px; font-family: monospace; background: var(--bg-surface, #1e293b); border: 1px solid var(--border-subtle, rgba(255,255,255,0.12)); border-radius: 6px; padding: 2px 6px; color: var(--text-main, #f1f5f9);">
+            <option value="uttara">Store: Uttara Central</option>
+            <option value="dhanmondi">Store: Dhanmondi Express</option>
+            <option value="gulshan">Store: Gulshan Mega Mart</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Zone 3 (Right - Compact Utility Dock) -->
       <div class="nav-zone-right user-controls">
         <!-- Theme Toggle Button -->
@@ -149,6 +169,11 @@
       document.documentElement.setAttribute('data-theme', saved);
       const btn = document.getElementById('themeToggleBtn');
       if (btn) btn.innerText = saved === 'light' ? '🌙' : '☀️';
+      try {
+        const savedStore = localStorage.getItem('retailsync-active-store');
+        const storeSelect = document.getElementById('activeStoreSelectGlobal');
+        if (savedStore && storeSelect) storeSelect.value = savedStore;
+      } catch (e) {}
     }
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
@@ -220,6 +245,19 @@
       } catch (e) {
         showToast("Role switch error: " + e.message, 'error', 'Authentication Failed');
       }
+    }
+
+    function switchDemoStore(store) {
+      const storeNames = {
+        uttara: 'Uttara Central Super Shop',
+        dhanmondi: 'Dhanmondi Express Hub',
+        gulshan: 'Gulshan Mega Mart'
+      };
+      const name = storeNames[store] || store;
+      try {
+        localStorage.setItem('retailsync-active-store', store);
+      } catch (e) {}
+      showToast(`Switched active store node to ${name}`, 'info', 'Store Synchronized');
     }
 
     // Universal Table Search & CSV Export Utilities

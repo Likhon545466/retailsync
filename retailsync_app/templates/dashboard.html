@@ -95,6 +95,32 @@
         </ul>
       </nav>
 
+      <!-- Real-Time Telemetry Ribbon & Store Selector (Calm Mission Studio) -->
+      <div class="telemetry-ribbon" role="status" aria-label="System Operational Telemetry">
+        <div class="telemetry-item">
+          <span class="telemetry-dot--pulsing" aria-hidden="true"></span>
+          <span>SYSTEM: <span class="telemetry-val--highlight">NOMINAL</span></span>
+        </div>
+        <span class="footer-sep" aria-hidden="true">•</span>
+        <div class="telemetry-item">
+          <span class="status-dot status-dot--success" aria-hidden="true"></span>
+          <span>FEFO SWEEP: <span class="telemetry-val--highlight">ACTIVE</span></span>
+        </div>
+        <span class="footer-sep" aria-hidden="true">•</span>
+        <div class="telemetry-item">
+          <span>POS LATENCY: <span class="telemetry-val--highlight">{{ stats.avg_pos_latency_ms|round|int }}ms</span></span>
+        </div>
+        <span class="footer-sep" aria-hidden="true">•</span>
+        <div class="telemetry-item">
+          <label for="activeStoreSelect" class="sr-only">Active Store Location</label>
+          <select id="activeStoreSelect" class="store-select-pill" onchange="switchStoreLocation(this.value)" aria-label="Active Store Location">
+            <option value="uttara" selected>Store: Uttara Central</option>
+            <option value="dhanmondi">Store: Dhanmondi Express</option>
+            <option value="gulshan">Store: Gulshan Mega Mart</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Right Utility Controls -->
       <div class="header__actions">
         <!-- Role Switcher -->
@@ -222,6 +248,269 @@
         <div class="status-strip__val tabular">{{ stats.avg_pos_latency_ms|round|int }} ms</div>
         <span class="status-strip__sub">Target &lt; 2000 ms</span>
       </div>
+    </section>
+
+    <!-- 4. Calm Mission Studio Cockpit Grid (4 Mission-Critical Panes) -->
+    <section class="mission-grid" aria-label="Calm Mission Studio Operations Cockpit">
+      
+      <!-- Pane 1: Financial Valuation Sparkline & Revenue Dynamics -->
+      <article class="mission-pane" aria-labelledby="sparklinePaneTitle">
+        <header class="mission-pane__header">
+          <h2 id="sparklinePaneTitle" class="mission-pane__title">
+            <span class="status-dot status-dot--info" aria-hidden="true"></span>
+            Inventory Valuation Dynamics
+          </h2>
+          <div class="mission-pane__actions">
+            <span class="tabular">30-Day Trend</span>
+          </div>
+        </header>
+
+        <div class="sparkline-container">
+          <div class="sparkline-stats-row">
+            <div>
+              <span class="status-strip__label">Ledger Asset Value</span>
+              <div class="sparkline-primary-val tabular">৳{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}</div>
+            </div>
+            <div class="sparkline-delta tabular">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="2,8 6,4 10,8"></polyline>
+              </svg>
+              <span>+4.3% vs Prev Month</span>
+            </div>
+          </div>
+
+          <!-- Interactive SVG Sparkline with Dynamic Curve -->
+          <div class="sparkline-svg-box">
+            <svg viewBox="0 0 460 140" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="sparklineGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.3"></stop>
+                  <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.0"></stop>
+                </linearGradient>
+              </defs>
+              <!-- Grid Lines -->
+              <line x1="0" y1="20" x2="460" y2="20" stroke="var(--neutral-3)" stroke-dasharray="2,2"></line>
+              <line x1="0" y1="60" x2="460" y2="60" stroke="var(--neutral-3)" stroke-dasharray="2,2"></line>
+              <line x1="0" y1="100" x2="460" y2="100" stroke="var(--neutral-3)" stroke-dasharray="2,2"></line>
+              <!-- Area Fill -->
+              <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20 L 460,140 L 0,140 Z" fill="url(#sparklineGradient)"></path>
+              <!-- Sparkline Stroke -->
+              <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"></path>
+              <!-- Live Data Markers -->
+              <circle cx="160" cy="80" r="3" fill="var(--color-accent)"></circle>
+              <circle cx="320" cy="50" r="3" fill="var(--color-accent)"></circle>
+              <circle cx="460" cy="20" r="4" fill="var(--color-status-success)"></circle>
+            </svg>
+          </div>
+
+          <div class="sparkline-legend">
+            <span>Jan • ৳5.2M</span>
+            <span>Apr • ৳6.1M</span>
+            <span>Jul • ৳7.4M</span>
+            <span class="telemetry-val--highlight">Oct • ৳8.9M Peak</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pane 2: Live 2D Warehouse Floorplan Heatmap -->
+      <article class="mission-pane" aria-labelledby="floorplanPaneTitle">
+        <header class="mission-pane__header">
+          <h2 id="floorplanPaneTitle" class="mission-pane__title">
+            <span class="status-dot status-dot--success" aria-hidden="true"></span>
+            2D Spatial Warehouse Floorplan
+          </h2>
+          <div class="mission-pane__actions">
+            <span class="dock-berth"><span class="status-dot status-dot--success"></span> 42/50 Bins Active</span>
+          </div>
+        </header>
+
+        <div class="warehouse-floorplan-box">
+          <div class="warehouse-racks-visual" id="warehouseVisualGrid">
+            <!-- Dynamic SVG Picker Route connecting dock to Aisles -->
+            <svg class="warehouse-route-svg" viewBox="0 0 440 120" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M 40,110 L 40,70 L 130,70 L 130,20 L 220,20 L 220,50" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"></path>
+              <circle cx="220" cy="50" r="3" fill="var(--color-accent)"></circle>
+            </svg>
+
+            <!-- Aisle A (Dry FMCG) -->
+            <div class="warehouse-rack-col">
+              <span class="warehouse-rack-label">Bay A</span>
+              <div class="warehouse-rack-bins">
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-01: Rice (Available)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-02: Lentils (Available)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-03: Flour (Available)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-04: Sugar (Available)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-05: Salt (Available)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin A-06: Spices (High Occupancy)"></div>
+              </div>
+            </div>
+
+            <!-- Aisle B (Oils & Condiments) -->
+            <div class="warehouse-rack-col">
+              <span class="warehouse-rack-label">Bay B</span>
+              <div class="warehouse-rack-bins">
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-01: Mustard Oil"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-02: Soybean Oil"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin B-03: Ghee (Near Expiry)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-04: Vinegar"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-05: Sauce"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-06: Tea Bags"></div>
+              </div>
+            </div>
+
+            <!-- Aisle C (Dairy & Chill - 4°C) -->
+            <div class="warehouse-rack-col">
+              <span class="warehouse-rack-label">Bay C (Cold)</span>
+              <div class="warehouse-rack-bins">
+                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-01: Fresh Milk (Exp: 2d)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--red" title="Bin C-02: Yogurt (Exp: 1d Critical)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-03: Butter (Safe)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-04: Cheese (Safe)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-05: Paneer (Exp: 5d)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-06: Ice Cream"></div>
+              </div>
+            </div>
+
+            <!-- Aisle D (Snacks & Beverages) -->
+            <div class="warehouse-rack-col">
+              <span class="warehouse-rack-label">Bay D</span>
+              <div class="warehouse-rack-bins">
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-01: Biscuits"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-02: Chips"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin D-03: Juice (Exp: 14d)"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-04: Mineral Water"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-05: Soda"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-06: Confectionery"></div>
+              </div>
+            </div>
+
+            <!-- Aisle E (Household & Personal Care) -->
+            <div class="warehouse-rack-col">
+              <span class="warehouse-rack-label">Bay E</span>
+              <div class="warehouse-rack-bins">
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-01: Detergent"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-02: Soap"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-03: Toothpaste"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-04: Shampoo"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin E-05: Disinfectant"></div>
+                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-06: Paper Towels"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Receiving Berths Strip -->
+          <div class="warehouse-dock-strip">
+            <span class="dock-berth"><span class="status-dot status-dot--success"></span> Dock #1: Inbound Receiving</span>
+            <span class="dock-berth"><span class="status-dot status-dot--warning"></span> Dock #2: Putaway Unloading</span>
+            <span class="dock-berth"><span class="status-dot status-dot--info"></span> Dock #3: Dispatched</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pane 3: Active FEFO Batch Expiration Table -->
+      <article class="mission-pane" aria-labelledby="fefoTablePaneTitle">
+        <header class="mission-pane__header">
+          <h2 id="fefoTablePaneTitle" class="mission-pane__title">
+            <span class="status-dot status-dot--warning" aria-hidden="true"></span>
+            Active FEFO Batch Expiration Matrix
+          </h2>
+          <div class="mission-pane__actions">
+            <a href="/pos" class="action-link" style="font-size: 11px;">Prioritize at Checkout →</a>
+          </div>
+        </header>
+
+        <div style="overflow-x: auto;">
+          <table class="mission-table" aria-label="Active FEFO Batches">
+            <thead>
+              <tr>
+                <th>Batch / SKU</th>
+                <th>Brand / Product</th>
+                <th>Units</th>
+                <th>Shelf-Life</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tabular"><code>B-094182</code></td>
+                <td>Aarong Dairy Full Cream Milk 1L</td>
+                <td class="tabular">120</td>
+                <td><span class="fefo-badge fefo-badge--critical">2 Days Left</span></td>
+                <td><a href="/pos" class="action-link" style="font-size: 11px;">Allocate POS</a></td>
+              </tr>
+              <tr>
+                <td class="tabular"><code>B-094183</code></td>
+                <td>Pran Mustard Oil 500ml</td>
+                <td class="tabular">350</td>
+                <td><span class="fefo-badge fefo-badge--amber">14 Days Left</span></td>
+                <td><a href="/putaway" class="action-link" style="font-size: 11px;">Zone Bay B</a></td>
+              </tr>
+              <tr>
+                <td class="tabular"><code>B-094184</code></td>
+                <td>Fresh Premium Miniket Rice 5kg</td>
+                <td class="tabular">480</td>
+                <td><span class="fefo-badge fefo-badge--fresh">85 Days Left</span></td>
+                <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay A</a></td>
+              </tr>
+              <tr>
+                <td class="tabular"><code>B-094185</code></td>
+                <td>Olympic Energy Plus Biscuits</td>
+                <td class="tabular">210</td>
+                <td><span class="fefo-badge fefo-badge--fresh">120 Days Left</span></td>
+                <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay D</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- Pane 4: Live Tamper-Evident Cryptographic Stock Audit Ledger Stream -->
+      <article class="mission-pane" aria-labelledby="auditStreamPaneTitle">
+        <header class="mission-pane__header">
+          <h2 id="auditStreamPaneTitle" class="mission-pane__title">
+            <span class="status-dot status-dot--success" aria-hidden="true"></span>
+            Cryptographic Stock Audit Stream
+          </h2>
+          <div class="mission-pane__actions">
+            <a href="/audits" class="action-link" style="font-size: 11px;">Full Ledger →</a>
+          </div>
+        </header>
+
+        <div class="audit-stream-box" id="auditStreamContainer" role="log" aria-live="polite">
+          <div class="audit-stream-row">
+            <div>
+              <span class="audit-action-chip">POS_SALE</span>
+              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('aa75ce7e3014b29bca30')">hash:aa75ce...</span>
+            </div>
+            <span class="tabular audit-stream-time">00:14:18.420</span>
+          </div>
+
+          <div class="audit-stream-row">
+            <div>
+              <span class="audit-action-chip">FEFO_SWEEP</span>
+              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac37e276762fe12b5922')">hash:ac37e2...</span>
+            </div>
+            <span class="tabular audit-stream-time">00:14:12.312</span>
+          </div>
+
+          <div class="audit-stream-row">
+            <div>
+              <span class="audit-action-chip">DOCK_RECV</span>
+              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ae75c3f497d9b17b5c30')">hash:ae75c3...</span>
+            </div>
+            <span class="tabular audit-stream-time">00:13:58.110</span>
+          </div>
+
+          <div class="audit-stream-row">
+            <div>
+              <span class="audit-action-chip">PUTAWAY</span>
+              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac8efae6ed1fb55e7b35')">hash:ac8efa...</span>
+            </div>
+            <span class="tabular audit-stream-time">00:13:45.020</span>
+          </div>
+        </div>
+      </article>
+
     </section>
 
     <!-- 4. Attention Queue ("Needs attention", Ruled List, 6px Dots) -->
