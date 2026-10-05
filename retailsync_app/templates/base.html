@@ -16,7 +16,7 @@
   <!-- Google Fonts: IBM Plex & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Core Calm Mission Studio Design System Stylesheets -->
   <link rel="stylesheet" href="/styles/tokens.css?v=2.1.2">
@@ -31,195 +31,253 @@
   {% block head_extra %}{% endblock %}
 </head>
 <body>
-  <!-- Top Navigation Bar (Strict 3-Zone Flex Layout) -->
-  <header class="navbar-wrapper">
-    <div class="navbar-app">
-      <!-- Zone 1 (Left): Brand logo (30x30) + RETAIL SYNC + v2.0-RELEASE badge -->
-      <div class="nav-zone-left">
-        <a href="/dashboard" class="brand-wrapper">
-          <img src="/assets/retailsync_logo.svg" alt="RetailSync" class="brand-logo-img" style="width: 28px; height: 28px;">
-          <div class="brand-title">RETAIL<span class="accent">SYNC</span> <span class="badge-version">v2.0-RELEASE</span></div>
+  <!-- 1. Sticky 56px Site Header (Calm Mission Studio) -->
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <div class="header__brand">
+        <a href="/dashboard" class="header__wordmark" aria-label="Retail Sync Operations Overview">
+          RETAIL SYNC
         </a>
+        <span class="header__version tabular" aria-label="Version 2.0-RELEASE">v2.0-RELEASE</span>
       </div>
 
-      <!-- Zone 2 (Center): Clean, text-only navigation links (Zero Wrapping Guaranteed) -->
-      <nav class="nav-zone-center nav-links">
-        <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">Overview</a>
-        <a href="/pos" class="nav-item {% if active_page == 'pos' %}active{% endif %}">Checkout</a>
-        <a href="/inbound" class="nav-item {% if active_page == 'inbound' %}active{% endif %}">Inbound</a>
-        <a href="/putaway" class="nav-item {% if active_page == 'putaway' %}active{% endif %}">Putaway</a>
-        <a href="/warehouse" class="nav-item {% if active_page == 'warehouse' %}active{% endif %}">Digital Twin</a>
-        <a href="/procurement" class="nav-item {% if active_page == 'procurement' %}active{% endif %}">Procurement</a>
-        <a href="/audits" class="nav-item {% if active_page == 'audits' %}active{% endif %}">Ledger</a>
+      <!-- Center Primary Navigation with More Dropdown -->
+      <nav class="nav nav-zone-center" aria-label="Primary Navigation">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <a href="/dashboard" class="nav__link {% if active_page == 'dashboard' %}nav__link--active{% endif %}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>Overview</a>
+          </li>
+          <li class="nav__item">
+            <a href="/pos" class="nav__link {% if active_page == 'pos' %}nav__link--active{% endif %}" {% if active_page == 'pos' %}aria-current="page"{% endif %}>Checkout</a>
+          </li>
+          <li class="nav__item">
+            <a href="/inbound" class="nav__link {% if active_page == 'inbound' %}nav__link--active{% endif %}" {% if active_page == 'inbound' %}aria-current="page"{% endif %}>Inbound</a>
+          </li>
+          <li class="nav__item">
+            <a href="/putaway" class="nav__link {% if active_page == 'putaway' %}nav__link--active{% endif %}" {% if active_page == 'putaway' %}aria-current="page"{% endif %}>Putaway</a>
+          </li>
+
+          <!-- Secondary Workspaces Dropdown -->
+          <li class="nav__item dropdown">
+            <button type="button" class="nav__link dropdown__trigger" id="moreNavBtn" aria-haspopup="true" aria-expanded="false">
+              <span>More</span>
+              <svg class="dropdown__chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                <polyline points="2,3 5,7 8,3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></polyline>
+              </svg>
+            </button>
+            <div class="dropdown__menu" id="moreNavMenu" role="menu" aria-labelledby="moreNavBtn">
+              <a href="/warehouse" class="dropdown__item {% if active_page == 'warehouse' %}dropdown__item--active{% endif %}" role="menuitem">
+                <span class="dropdown__label">Spatial Twin</span>
+                <span class="dropdown__shortcut tabular">W</span>
+              </a>
+              <a href="/procurement" class="dropdown__item {% if active_page == 'procurement' %}dropdown__item--active{% endif %}" role="menuitem">
+                <span class="dropdown__label">Replenishment DSS</span>
+                <span class="dropdown__shortcut tabular">R</span>
+              </a>
+              <a href="/audits" class="dropdown__item {% if active_page == 'audits' %}dropdown__item--active{% endif %}" role="menuitem">
+                <span class="dropdown__label">Stock Ledger</span>
+                <span class="dropdown__shortcut tabular">L</span>
+              </a>
+              <div class="dropdown__divider" role="separator"></div>
+              <a href="/showcase" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+                <span class="dropdown__label">Showcase ↗</span>
+                <span class="dropdown__shortcut tabular">Ext ↗</span>
+              </a>
+              <a href="/slides" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+                <span class="dropdown__label">Slides ↗</span>
+                <span class="dropdown__shortcut tabular">Ext ↗</span>
+              </a>
+              <a href="/technical-guide" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+                <span class="dropdown__label">Viva Defense Guide</span>
+                <span class="dropdown__shortcut tabular">MD ↗</span>
+              </a>
+              <a href="/team-pack.zip" class="dropdown__item" role="menuitem">
+                <span class="dropdown__label" style="font-weight: 600; color: var(--color-accent);">Download Team Pack</span>
+                <span class="dropdown__shortcut tabular">ZIP</span>
+              </a>
+            </div>
+          </li>
+        </ul>
       </nav>
 
-      <!-- Calm Mission Studio Live Telemetry Ribbon -->
-      <div class="telemetry-ribbon" role="status" aria-label="System Telemetry" style="display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-family: var(--font-mono);">
-        <div class="telemetry-item" style="display: flex; align-items: center; gap: 4px;">
-          <span style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--emerald-400, #10b981); display: inline-block;"></span>
-          <span>SYS: <b style="color: var(--primary-500, #38bdf8);">NOMINAL</b></span>
-        </div>
-        <span style="opacity: 0.4;">•</span>
-        <div class="telemetry-item" style="display: flex; align-items: center; gap: 4px;">
-          <span>FEFO: <b style="color: var(--emerald-400, #10b981);">ACTIVE</b></span>
-        </div>
-        <span style="opacity: 0.4;">•</span>
+      <!-- Real-Time Telemetry Ribbon & Store Selector (Calm Mission Studio) -->
+      <div class="telemetry-ribbon" role="status" aria-label="System Operational Telemetry">
         <div class="telemetry-item">
-          <select id="activeStoreSelectGlobal" onchange="switchDemoStore(this.value)" class="store-select-pill" style="font-size: 11px; font-family: var(--font-mono); background: var(--color-bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 2px 6px; color: var(--text-primary);">
-            <option value="uttara">Store: Uttara Central</option>
+          <span class="telemetry-dot--pulsing" aria-hidden="true"></span>
+          <span>SYSTEM: <span class="telemetry-val--highlight">NOMINAL</span></span>
+        </div>
+        <span class="footer-sep" aria-hidden="true">•</span>
+        <div class="telemetry-item">
+          <span class="status-dot status-dot--success" aria-hidden="true"></span>
+          <span>FEFO SWEEP: <span class="telemetry-val--highlight">ACTIVE</span></span>
+        </div>
+        <span class="footer-sep" aria-hidden="true">•</span>
+        <div class="telemetry-item">
+          <label for="activeStoreSelect" class="sr-only">Active Store Location</label>
+          <select id="activeStoreSelect" class="store-select-pill" onchange="switchStoreLocation(this.value)" aria-label="Active Store Location">
+            <option value="uttara" selected>Store: Uttara Central</option>
             <option value="dhanmondi">Store: Dhanmondi Express</option>
             <option value="gulshan">Store: Gulshan Mega Mart</option>
           </select>
         </div>
       </div>
 
-      <!-- Zone 3 (Right - Compact Utility Dock) -->
-      <div class="nav-zone-right user-controls">
-        <!-- Theme Toggle Button -->
-        <button id="themeToggleBtn" onclick="toggleTheme()" class="btn-theme-toggle" title="Toggle Theme" style="background:var(--color-bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-sm, 4px); padding:4px 8px; cursor:pointer; font-size:13px;">🌙</button>
-
-        <!-- Compact Role Switcher with Custom Chevron -->
-        <div class="role-select-wrapper">
-          <select id="roleSwitcher" class="select-role-compact" onchange="switchDemoRole(this.value)" title="Quickly switch operational role for demonstration" style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); font-family: var(--font-sans); font-size: 11.5px;">
-            <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Role: Cashier</option>
-            <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Role: Dock Clerk</option>
-            <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Role: Floor Operator</option>
-            <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Role: Supervisor</option>
-            <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>Role: SCM Officer</option>
-            <option value="admin" {% if current_user and current_user.username == 'admin' %}selected{% endif %}>Role: Admin</option>
-          </select>
-          <span class="select-chevron">▾</span>
-        </div>
-
-        <!-- Clean Compact Showcase & Slides Links -->
-        <a href="/showcase" target="_blank" class="nav-ext-link" title="Open Public Proposal Showcase" style="font-size: 11.5px; font-weight: 500;">Showcase ↗</a>
-        <a href="/slides" target="_blank" class="nav-ext-link" title="Open Defense Slides" style="font-size: 11.5px; font-weight: 500;">Slides ↗</a>
-
-        <!-- Dossier & Documents Dropdown -->
-        <div class="nav-dropdown-wrapper">
-          <button type="button" class="nav-ext-link nav-dropdown-btn" title="Academic Deliverables, Slides & 70p Technical Suite" style="font-size: 11.5px; font-weight: 500;">
-            <span>Docs</span>
-            <span style="font-size: 9px; opacity: 0.7;">▾</span>
-          </button>
-          <div class="nav-dropdown-menu">
-            <div class="nav-dropdown-header">Academic Deliverables (DIU)</div>
-            <a href="/proposal/pdf" target="_blank" class="nav-dropdown-item">
-              <span>Proposal</span> <span class="doc-badge">PDF</span>
-            </a>
-            <a href="/proposal/docx" class="nav-dropdown-item">
-              <span>Proposal</span> <span class="doc-badge">DOCX</span>
-            </a>
-            <a href="/engineering-suite/pdf" target="_blank" class="nav-dropdown-item">
-              <span>70p Tech Suite</span> <span class="doc-badge">PDF</span>
-            </a>
-            <a href="/engineering-suite/docx" class="nav-dropdown-item">
-              <span>Tech Suite</span> <span class="doc-badge">DOCX</span>
-            </a>
-            <div class="nav-dropdown-header">Presentation & Viva Defense</div>
-            <a href="/deck" class="nav-dropdown-item">
-              <span>Slide Deck</span> <span class="doc-badge">PPTX</span>
-            </a>
-            <a href="/slides" target="_blank" class="nav-dropdown-item">
-              <span>Defense Slides</span> <span class="doc-badge">WEB</span>
-            </a>
-            <a href="/technical-guide" target="_blank" class="nav-dropdown-item">
-              <span>Viva Prep Guide</span> <span class="doc-badge">MD</span>
-            </a>
-            <div class="nav-dropdown-header">Team Sharing Pack</div>
-            <a href="/team-pack.zip" class="nav-dropdown-item" style="color: var(--primary-500); font-weight: 700;">
-              <span>Download All Docs</span> <span class="doc-badge">ZIP 4.6M</span>
-            </a>
+      <!-- Right Utility Controls -->
+      <div class="header__actions">
+        <!-- Role Switcher -->
+        <div class="role-switcher">
+          <label for="roleSwitcherSelect" class="sr-only">Switch Operational Role</label>
+          <div class="role-switcher__control">
+            <span class="role-switcher__indicator" aria-hidden="true">ROLE</span>
+            <select id="roleSwitcherSelect" class="role-switcher__select select-role-compact" onchange="switchRole(this.value)" aria-label="Select system persona">
+              <option value="admin" {% if not current_user or current_user.username == 'admin' %}selected{% endif %}>Director (All)</option>
+              <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Cashier</option>
+              <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Dock Clerk</option>
+              <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Floor Operator</option>
+              <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Supervisor</option>
+              <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>SCM Officer</option>
+            </select>
+            <svg class="role-switcher__chevron" width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
+              <path d="M1 2.5L4 5.5L7 2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path>
+            </svg>
           </div>
         </div>
+
+        <!-- Minimalist Theme Toggle (SVG Sun/Moon, Zero Emoji) -->
+        <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark and light color theme" title="Toggle Theme (T)">
+          <svg class="theme-toggle__icon theme-toggle__icon--sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle__icon theme-toggle__icon--moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Drawer Hamburger Trigger -->
+        <button type="button" class="header__menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Toggle navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content Container (max-width: 1280px) -->
-  <main class="app-container">
+  <!-- Mobile Navigation Drawer Overlay -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+    <div class="mobile-drawer__content">
+      <div class="mobile-drawer__header">
+        <span class="header__wordmark">RETAIL SYNC</span>
+        <button type="button" class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
+      </div>
+      <nav class="mobile-drawer__nav" aria-label="Mobile Navigation">
+        <a href="/dashboard" class="mobile-drawer__link {% if active_page == 'dashboard' %}mobile-drawer__link--active{% endif %}">Overview</a>
+        <a href="/pos" class="mobile-drawer__link {% if active_page == 'pos' %}mobile-drawer__link--active{% endif %}">Checkout POS</a>
+        <a href="/inbound" class="mobile-drawer__link {% if active_page == 'inbound' %}mobile-drawer__link--active{% endif %}">Inbound Receiving</a>
+        <a href="/putaway" class="mobile-drawer__link {% if active_page == 'putaway' %}mobile-drawer__link--active{% endif %}">Putaway Routing</a>
+        <a href="/warehouse" class="mobile-drawer__link {% if active_page == 'warehouse' %}mobile-drawer__link--active{% endif %}">Spatial Digital Twin</a>
+        <a href="/procurement" class="mobile-drawer__link {% if active_page == 'procurement' %}mobile-drawer__link--active{% endif %}">Replenishment DSS</a>
+        <a href="/audits" class="mobile-drawer__link {% if active_page == 'audits' %}mobile-drawer__link--active{% endif %}">Stock Ledger</a>
+        <div class="mobile-drawer__divider"></div>
+        <a href="/showcase" target="_blank" rel="noopener" class="mobile-drawer__link">Project Showcase ↗</a>
+        <a href="/slides" target="_blank" rel="noopener" class="mobile-drawer__link">Defense Slides ↗</a>
+        <a href="/technical-guide" target="_blank" rel="noopener" class="mobile-drawer__link">Viva Defense Guide ↗</a>
+        <a href="/team-pack.zip" class="mobile-drawer__link" style="color: var(--color-accent); font-weight: 600;">Download Team Pack (ZIP)</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="container" id="main-content" role="main">
     {% block content %}{% endblock %}
   </main>
 
   <!-- Global Floating Toast Container -->
   <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Footer with Telemetry Bar -->
-  <footer class="app-footer">
-    <div class="footer-telemetry">
-      <span class="heartbeat-dot"></span>
-      <span>PG16 3NF ACTIVE</span>
-      <span class="footer-sep">•</span>
-      <span>02:00 BST SWEEP ON</span>
-      <span class="footer-sep">•</span>
-      <span>PostgreSQL 16 Engine Synchronized</span>
+  <!-- 6. Academic Deliverables & Master Technical Suite Ruled Colophon -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__deliverables">
+      <div class="footer__deliverables-header">
+        <span class="footer__deliverables-title">Academic Deliverables &amp; Master Technical Suite</span>
+        <span class="footer__deliverables-sub tabular">Daffodil International University • 70-Page Master Technical Engineering Suite</span>
+      </div>
+      <div class="footer__deliverables-grid">
+        <div class="footer__doc-col">
+          <span class="footer__doc-label">Proposal &amp; Presentation</span>
+          <div class="footer__doc-links">
+            <a href="/proposal/pdf" target="_blank" rel="noopener" class="footer__link">Project Proposal [PDF]</a>
+            <a href="/proposal/docx" class="footer__link">Project Proposal [DOCX]</a>
+            <a href="/deck" class="footer__link">Defense Slide Deck [PPTX]</a>
+            <a href="/slides" target="_blank" rel="noopener" class="footer__link">Defense Presentation [WEB]</a>
+          </div>
+        </div>
+        <div class="footer__doc-col">
+          <span class="footer__doc-label">Engineering Specification</span>
+          <div class="footer__doc-links">
+            <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="footer__link">70p Technical Suite [PDF]</a>
+            <a href="/engineering-suite/docx" class="footer__link">Technical Suite [DOCX]</a>
+            <a href="/technical-guide" target="_blank" rel="noopener" class="footer__link">Viva Defense Guide [MD]</a>
+            <a href="/team-pack.zip" class="footer__link">Complete Team Pack [ZIP]</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="footer-meta">
-      <b>RetailSync: Centralized Super Shop Warehouse Management System</b> • Department of Software Engineering, Daffodil International University (DIU)<br>
-      Project Team: <b>Raisul Islam Likhon</b> (Lead: 251-35-508), <b>Shottobroto Dey</b> (251-35-017), <b>Golam Husnain Papon</b> (251-35-529) • Section: <b>SWE-44D</b><br>
-      <div style="margin-top: 6px; font-size: 11.5px;">
-        <b>Deliverables:</b> 
-        <a href="/proposal/pdf" target="_blank" style="color: var(--primary-500); text-decoration: none;">Proposal (PDF)</a> • 
-        <a href="/proposal/docx" style="color: var(--primary-500); text-decoration: none;">Proposal (DOCX)</a> • 
-        <a href="/engineering-suite/pdf" target="_blank" style="color: var(--primary-500); text-decoration: none; font-weight: 600;">70-Page Tech Suite (PDF)</a> • 
-        <a href="/engineering-suite/docx" style="color: var(--primary-500); text-decoration: none;">Tech Suite (DOCX)</a> • 
-        <a href="/deck" style="color: var(--primary-500); text-decoration: none;">Slides (.pptx)</a> • 
-        <a href="/slides" target="_blank" style="color: var(--primary-500); text-decoration: none;">Web Slides</a> • 
-        <a href="/technical-guide" target="_blank" style="color: var(--primary-500); text-decoration: none;">Viva Defense Guide</a> • 
-        <a href="/team-pack.zip" style="color: var(--primary-500); text-decoration: none; font-weight: 700;">📦 All Docs (ZIP)</a>
+
+    <div class="footer__bottom">
+      <div class="footer__status footer-telemetry">
+        <span class="status-dot status-dot--success heartbeat-dot" aria-hidden="true"></span>
+        <span class="footer__status-text">All systems operational • PG16 3NF ACTIVE</span>
+        <span class="footer__sep">/</span>
+        <span class="footer__time tabular">Synced 02:00 BST</span>
+      </div>
+
+      <div class="footer__colophon">
+        <span>RetailSync v2.0</span>
+        <span class="footer__sep">•</span>
+        <span>PostgreSQL 16 Engine</span>
+        <span class="footer__sep">•</span>
+        <a href="/api/docs" class="footer__link">API Reference</a>
       </div>
     </div>
   </footer>
 
+  <script src="/static/js/nav.js?v=2.1.2"></script>
+
   <script>
-    // Theme Toggle Persistence Script
-    function initTheme() {
-      const saved = localStorage.getItem('retailsync-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', saved);
-      const btn = document.getElementById('themeToggleBtn');
-      if (btn) btn.innerText = saved === 'light' ? '🌙' : '☀️';
-      try {
-        const savedStore = localStorage.getItem('retailsync-active-store');
-        const storeSelect = document.getElementById('activeStoreSelectGlobal');
-        if (savedStore && storeSelect) storeSelect.value = savedStore;
-      } catch (e) {}
-    }
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      const next = current === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('retailsync-theme', next);
-      const btn = document.getElementById('themeToggleBtn');
-      if (btn) btn.innerText = next === 'light' ? '🌙' : '☀️';
-    }
-    document.addEventListener('DOMContentLoaded', initTheme);
-
-    // Global Floating Glass Toast System
+    // Universal Toast Notification System & Native Dialog Interceptors
     function showToast(message, type = 'info', title = '') {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-
+      let container = document.getElementById('toastContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        document.body.appendChild(container);
+      }
       const toast = document.createElement('div');
       toast.className = `toast-item toast-${type}`;
-
       const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-      const iconColor = type === 'success' ? 'var(--emerald-400)' : type === 'error' ? 'var(--rose-400)' : 'var(--primary-500)';
-      const defaultTitle = type === 'success' ? 'Operation Approved' : type === 'error' ? 'Operational Alert' : 'System Notice';
-      const displayTitle = title || defaultTitle;
-
+      const iconColor = type === 'success' ? 'var(--color-status-success, #10b981)' : type === 'error' ? 'var(--color-status-danger, #ef4444)' : 'var(--color-accent, #38bdf8)';
+      const defaultTitle = type === 'success' ? 'Operation Confirmed' : type === 'error' ? 'System Alert' : 'Operational Notice';
       toast.innerHTML = `
-        <div class="toast-icon" style="color: ${iconColor}; font-weight: 800;">${icon}</div>
+        <div class="toast-icon" style="color: ${iconColor}; font-weight: 700; font-family: var(--font-mono);">${icon}</div>
         <div class="toast-body">
-          <div class="toast-title">${displayTitle}</div>
-          <div class="toast-message">${message}</div>
+          <div class="toast-title" style="font-weight: 600; font-size: 13px;">${title || defaultTitle}</div>
+          <div class="toast-message" style="font-size: 12px; color: var(--color-text-secondary);">${message}</div>
         </div>
-        <button class="toast-close-btn" onclick="dismissToast(this.parentElement)" title="Dismiss">✕</button>
+        <button class="toast-close-btn" onclick="this.parentElement.remove()" title="Dismiss" style="background:none; border:none; color:var(--color-text-muted); cursor:pointer;">✕</button>
       `;
-
       container.appendChild(toast);
-
-      setTimeout(() => {
-        dismissToast(toast);
-      }, 3500);
+      setTimeout(() => { if (toast.parentElement) toast.remove(); }, 3500);
     }
 
     // Intercept native browser alert() and confirm() to use floating toasts
@@ -230,43 +288,6 @@
       showToast(String(msg), 'info', 'Action Confirmed');
       return true;
     };
-
-    function dismissToast(el) {
-      if (!el || el.classList.contains('toast-dismissing')) return;
-      el.classList.add('toast-dismissing');
-      setTimeout(() => {
-        if (el.parentElement) el.remove();
-      }, 250);
-    }
-
-    async function switchDemoRole(username) {
-      try {
-        const res = await fetch('/api/v1/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username_or_email: username, password: 'Password123!' })
-        });
-        if (res.ok) {
-          showToast(`Switched operational role to ${username}`, 'success', 'Role Updated');
-          setTimeout(() => window.location.reload(), 400);
-        }
-      } catch (e) {
-        showToast("Role switch error: " + e.message, 'error', 'Authentication Failed');
-      }
-    }
-
-    function switchDemoStore(store) {
-      const storeNames = {
-        uttara: 'Uttara Central Super Shop',
-        dhanmondi: 'Dhanmondi Express Hub',
-        gulshan: 'Gulshan Mega Mart'
-      };
-      const name = storeNames[store] || store;
-      try {
-        localStorage.setItem('retailsync-active-store', store);
-      } catch (e) {}
-      showToast(`Switched active store node to ${name}`, 'info', 'Store Synchronized');
-    }
 
     // Universal Table Search & CSV Export Utilities
     function initTableSearch(inputId, tableId, countBadgeId = null) {
@@ -295,7 +316,7 @@
             emptyRow = document.createElement('tr');
             emptyRow.className = 'table-empty-row';
             const colCount = table.querySelectorAll('thead th').length || 8;
-            emptyRow.innerHTML = `<td colspan="${colCount}" style="text-align: center; color: var(--text-muted); padding: 32px 16px;">No matching records found for "${input.value}".</td>`;
+            emptyRow.innerHTML = `<td colspan="${colCount}" style="text-align: center; color: var(--color-text-muted); padding: 32px 16px;">No matching records found for "${input.value}".</td>`;
             tbody.appendChild(emptyRow);
           } else {
             emptyRow.style.display = '';
@@ -356,7 +377,9 @@
       });
 
       if (exportedCount === 0) {
-        showToast("No records available to export", "info", "Export Notice");
+        if (typeof showToast === 'function') {
+          showToast("No records available to export", "info", "Export Notice");
+        }
         return;
       }
 
@@ -372,7 +395,9 @@
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      showToast(`Successfully exported ${exportedCount} rows to CSV!`, "success", "Export Complete");
+      if (typeof showToast === 'function') {
+        showToast(`Successfully exported ${exportedCount} rows to CSV!`, "success", "Export Complete");
+      }
     }
   </script>
   {% block scripts %}{% endblock %}

@@ -17,25 +17,29 @@
   </div>
 </div>
 
-<!-- Spatial Putaway KPI Telemetry Strip -->
-<div class="metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Dock Staging Queue</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--amber-400);" id="topPendingBatchCount">Pending Staging</div>
+<!-- Spatial Putaway KPI Telemetry Strip (Calm Mission Studio) -->
+<section class="status-strip" aria-label="Operational Putaway Strip" style="margin-bottom: 24px;">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Dock Staging Queue</span>
+    <div class="status-strip__val tabular" id="topPendingBatchCount" style="color: var(--color-status-warning);">Pending Staging</div>
+    <span class="status-strip__sub">Awaiting putaway slot</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Putaway Travel Algorithm</div>
-    <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--primary-500);">Shortest-Path</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Putaway Travel Algorithm</span>
+    <div class="status-strip__val tabular" style="color: var(--color-accent); font-size: 20px;">Shortest-Path</div>
+    <span class="status-strip__sub">Manhattan routing active</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Aisle Load Balancing</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--emerald-400);">98.4% Balanced</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Aisle Load Balancing</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-success);">98.4% Balanced</div>
+    <span class="status-strip__sub">Bay optimization OK</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Average Placement Time</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--text-primary);">1.8 mins</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Average Placement Time</span>
+    <div class="status-strip__val tabular">1.8 mins</div>
+    <span class="status-strip__sub">Cycle efficiency</span>
   </div>
-</div>
+</section>
 
 <div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
   <!-- Left: Unallocated Batches Queue -->

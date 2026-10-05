@@ -13,9 +13,9 @@
 html[data-theme="light"],
 [data-theme="light"] {
   /* Typography Tokens: Manrope (Headings) + Inter (Body) + JetBrains Mono (Code/Numerics) */
-  --font-heading: 'Manrope', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: 'Manrope', 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
 
   /* [data-theme="light"] (Day Mode - Apple Calm Mist, ZERO eye glare) */
   --bg-canvas: #f5f6f8;
@@ -37,12 +37,12 @@ html[data-theme="light"],
   --cyan: #0284c7;
   --cyan-soft: #e0f2fe;
 
-  /* Expressive Bento Geometry & Shadows */
+  /* Calm Mission Studio Crisp Geometry & Zero Clutter */
   --radius-card: 16px;
-  --radius-sm: 10px;
+  --radius-sm: 4px;
   --radius-full: 9999px;
-  --shadow-bento: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-  --shadow-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.07), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
+  --shadow-bento: 0 4px 20px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   --table-th-bg: #f9fafb;
   --table-row-alt: #fcfdfe;
 
@@ -122,28 +122,28 @@ html[data-theme="light"],
 
 html[data-theme="dark"],
 [data-theme="dark"] {
-  /* [data-theme="dark"] (Night Mode - Apple Space Charcoal) */
+  /* [data-theme="dark"] (Night Mode - Calm Mission Studio Dark Slate) */
   --bg-canvas: #0c0e14;
   --bg-surface: #151821;
-  --bg-surface-elevated: #1c202d;
+  --bg-surface-elevated: #1f2937;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.16);
   --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
   --primary: #38bdf8;
-  --primary-soft: rgba(56, 189, 248, 0.15);
+  --primary-soft: rgba(56, 189, 248, 0.12);
   --emerald: #10b981;
-  --emerald-soft: rgba(16, 185, 129, 0.15);
+  --emerald-soft: rgba(16, 185, 129, 0.12);
   --amber: #f59e0b;
-  --amber-soft: rgba(245, 158, 11, 0.15);
+  --amber-soft: rgba(245, 158, 11, 0.12);
   --rose: #f43f5e;
-  --rose-soft: rgba(244, 63, 94, 0.15);
+  --rose-soft: rgba(244, 63, 94, 0.12);
   --cyan: #38bdf8;
-  --cyan-soft: rgba(56, 189, 248, 0.15);
+  --cyan-soft: rgba(56, 189, 248, 0.12);
 
   --radius-card: 16px;
-  --radius-sm: 10px;
+  --radius-sm: 4px;
   --radius-full: 9999px;
   --shadow-bento: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   --shadow-hover: 0 16px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);

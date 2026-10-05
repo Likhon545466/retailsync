@@ -17,25 +17,29 @@
   </div>
 </div>
 
-<!-- Inbound Dock KPI Telemetry Strip -->
-<div class="metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Inbound POs in Queue</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--text-primary);" id="metricInboundPOs">3 Orders</div>
+<!-- Inbound Dock KPI Telemetry Strip (Calm Mission Studio) -->
+<section class="status-strip" aria-label="Operational Inbound Strip" style="margin-bottom: 24px;">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Inbound POs in Queue</span>
+    <div class="status-strip__val tabular" id="metricInboundPOs">3 Orders</div>
+    <span class="status-strip__sub">Dock Gate #02 active</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Units Delivered Today</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--emerald-400);">450 Units</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Units Delivered Today</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-success);">450 Units</div>
+    <span class="status-strip__sub">Receiving shift</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Quality Gate Pass Rate</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--primary-500);">94.2%</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Quality Gate Pass Rate</span>
+    <div class="status-strip__val tabular" style="color: var(--color-accent);">94.2%</div>
+    <span class="status-strip__sub">Target &gt; 90%</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Gate Threshold</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--amber-400);">≥ 65% Freshness</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Gate Threshold</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-warning);">≥ 65% Freshness</div>
+    <span class="status-strip__sub">Shelf-life compliance</span>
   </div>
-</div>
+</section>
 
 <div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
   <!-- Left: Open Purchase Orders List -->

@@ -16,32 +16,29 @@
   </div>
 </div>
 
-<!-- Replenishment DSS KPI Telemetry Strip -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
-  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
-    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Monitored Fast-Movers</div>
-    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums;">5 FMCG SKUs</div>
-    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Daily sales &amp; stock velocity tracked</div>
+<!-- Replenishment DSS KPI Telemetry Strip (Calm Mission Studio) -->
+<section class="status-strip" aria-label="Operational Procurement Strip" style="margin-bottom: 24px;">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Monitored Fast-Movers</span>
+    <div class="status-strip__val tabular">5 FMCG SKUs</div>
+    <span class="status-strip__sub">Daily velocity tracked</span>
   </div>
-
-  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
-    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Safety Stock Formulation</div>
-    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--color-accent, var(--primary));">Greasley Stochastic</div>
-    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">σd &amp; σL covariance modeled</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Safety Stock Formulation</span>
+    <div class="status-strip__val tabular" style="color: var(--color-accent); font-size: 20px;">Greasley Stochastic</div>
+    <span class="status-strip__sub">σd &amp; σL covariance modeled</span>
   </div>
-
-  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
-    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Lot Sizing Strategy</div>
-    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--emerald-400);">Wilson EOQ</div>
-    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Minimizes ordering &amp; holding costs</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Lot Sizing Strategy</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-success); font-size: 20px;">Wilson EOQ</div>
+    <span class="status-strip__sub">Min ordering/holding costs</span>
   </div>
-
-  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 14px 16px;">
-    <div style="font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Stockout Risk Index</div>
-    <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--rose-400); font-variant-numeric: tabular-nums;" id="topBreachCount">0 Critical Breaches</div>
-    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Dynamic ROP thresholds evaluated</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Stockout Risk Index</span>
+    <div class="status-strip__val tabular" id="topBreachCount" style="color: var(--color-status-danger);">0 Breaches</div>
+    <span class="status-strip__sub">Dynamic ROP evaluated</span>
   </div>
-</div>
+</section>
 
 <!-- Interactive DSS Parameter Controls -->
 <div class="glass-panel" style="margin-bottom: 20px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 18px;">

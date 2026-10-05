@@ -23,25 +23,29 @@
   </div>
 </div>
 
-<!-- Digital Twin KPI Strip -->
-<div class="metric-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Floor Storage Utilization</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--emerald-400);">78.4%</div>
+<!-- Digital Twin KPI Strip (Calm Mission Studio) -->
+<section class="status-strip" aria-label="Operational Warehouse Strip" style="margin-bottom: 24px;">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Floor Storage Utilization</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-success);">78.4%</div>
+    <span class="status-strip__sub">Bays A through E</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Monitored Rack Bins</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--primary-500);">142 Slots</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Monitored Rack Bins</span>
+    <div class="status-strip__val tabular" style="color: var(--color-accent);">142 Slots</div>
+    <span class="status-strip__sub">Live spatial mesh</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Near-Expiry Watchlist</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--rose-400);">4 Critical Bins</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Near-Expiry Watchlist</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-danger);">4 Critical Bins</div>
+    <span class="status-strip__sub">FEFO alert &lt; 7d</span>
   </div>
-  <div class="glass-panel" style="padding: 14px 18px;">
-    <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 4px;">Chilled &amp; Frozen Zones</div>
-    <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--cyan-400);">Online (4°C / -18°C)</div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Chilled &amp; Frozen Zones</span>
+    <div class="status-strip__val tabular" style="font-size: 18px;">Online (4°C / -18°C)</div>
+    <span class="status-strip__sub">Telemetry nominal</span>
   </div>
-</div>
+</section>
 
 <div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px;">
   <!-- Left: 2D Spatial Rack Grid with Thermal Zone Bays -->

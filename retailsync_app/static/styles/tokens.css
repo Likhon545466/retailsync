@@ -1,8 +1,8 @@
 @layer tokens {
   :root {
     /* 1. Typography Fonts & Numeric Features */
-    --font-sans: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --font-sans: 'IBM Plex Sans', 'Manrope', 'Noto Sans Bengali', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Noto Sans Bengali', ui-monospace, Menlo, Monaco, Consolas, monospace;
     --font-numeric-tabular: tabular-nums;
 
     /* 2. Type Scale (1.25 Modular Ratio) */
@@ -14,7 +14,7 @@
     --text-xl: 31px;
     --text-display: 39px;
 
-    /* 3. Line Heights & Weights (400, 500, 600 only) */
+    /* 3. Line Heights & Weights */
     --leading-tight: 1.15;
     --leading-normal: 1.5;
     --font-regular: 400;
@@ -31,86 +31,169 @@
     --space-8: 64px;
     --space-12: 96px;
 
-    /* 5. Radius: 2px Maximum */
-    --radius-max: 2px;
-    --radius: 2px;
+    /* 5. Radius */
+    --radius-max: 4px;
+    --radius: 4px;
+    --radius-sm: 6px;
+    --radius-md: 14px;
+    --radius-card: 16px;
+    --radius-modal: 20px;
+    --radius-full: 9999px;
+    --radius-xs: 6px;
 
-    /* 6. Motion (120-180ms ease-out, transform and opacity only) */
+    /* 6. Motion */
     --motion-duration: 150ms;
     --motion-timing: ease-out;
     --motion-transition: 150ms ease-out;
 
-    /* 7. Dark Theme Palette (Default) */
-    --neutral-0: #0b0f17; /* Canvas background */
-    --neutral-1: #111827; /* Surface low */
-    --neutral-2: #1f2937; /* Interactive row hover */
-    --neutral-3: rgba(255, 255, 255, 0.08); /* 1px hairline divider */
-    --neutral-4: rgba(255, 255, 255, 0.16); /* Border emphasis */
-    --neutral-5: #64748b; /* Micro labels & index numbers */
-    --neutral-6: #94a3b8; /* Muted descriptions & subtitles */
-    --neutral-7: #cbd5e1; /* Body secondary */
-    --neutral-8: #f1f5f9; /* Headings */
-    --neutral-9: #f9fafb; /* Primary high-contrast text */
+    /* =========================================================================
+       7. LIGHT THEME PALETTE (Default — page starts light)
+       ========================================================================= */
+    --neutral-0: #f5f6f8;
+    --neutral-1: #ffffff;
+    --neutral-2: #f1f5f9;
+    --neutral-3: rgba(15, 23, 42, 0.08);
+    --neutral-4: rgba(15, 23, 42, 0.16);
+    --neutral-5: #9ca3af;
+    --neutral-6: #4b5563;
+    --neutral-7: #374151;
+    --neutral-8: #1f2937;
+    --neutral-9: #111827;
 
-    /* Semantic mappings */
-    --color-bg-canvas: var(--neutral-0);
-    --color-bg-surface: var(--neutral-1);
-    --color-bg-hover: var(--neutral-2);
-    --color-border: var(--neutral-3);
+    /* --color-* semantic tokens (used by base.css / components.css) */
+    --color-bg-canvas:    var(--neutral-0);
+    --color-bg-surface:   var(--neutral-1);
+    --color-bg-hover:     var(--neutral-2);
+    --color-border:       var(--neutral-3);
     --color-border-hover: var(--neutral-4);
-    --color-text-primary: var(--neutral-9);
+    --color-text-primary:   var(--neutral-9);
     --color-text-secondary: var(--neutral-6);
-    --color-text-muted: var(--neutral-5);
+    --color-text-muted:     var(--neutral-5);
 
-    /* Single Accent Color (Dark) */
-    --color-accent: #38bdf8;
-    --color-accent-subtle: rgba(56, 189, 248, 0.12);
+    /* Bridge aliases: map app.css --bg-*/--text-*/--border-* names */
+    --bg-canvas:          var(--color-bg-canvas);
+    --bg-surface:         var(--color-bg-surface);
+    --bg-surface-elevated: #fafbfc;
+    --border-subtle:      var(--color-border);
+    --border-medium:      var(--neutral-4);
+    --text-primary:       var(--color-text-primary);
+    --text-secondary:     var(--color-text-secondary);
+    --text-muted:         var(--color-text-muted);
 
-    /* Semantic Status (6px dots and status text only) */
-    --color-status-success: #10b981;
-    --color-status-warning: #f59e0b;
-    --color-status-danger: #ef4444;
+    /* Accent & status */
+    --color-accent: #0369a1;
+    --color-accent-subtle: rgba(3, 105, 161, 0.08);
+    --color-status-success: #059669;
+    --color-status-warning: #d97706;
+    --color-status-danger:  #dc2626;
+
+    /* Colour aliases used by page templates */
+    --primary:      #2563eb;
+    --primary-soft: #eff6ff;
+    --primary-500:  var(--primary);
+    --primary-hover: #1d4ed8;
+    --emerald:      #059669;
+    --emerald-soft: #ecfdf5;
+    --emerald-400:  var(--emerald);
+    --amber:        #d97706;
+    --amber-soft:   #fef3c7;
+    --amber-400:    var(--amber);
+    --amber-500:    var(--amber);
+    --rose:         #dc2626;
+    --rose-soft:    #fee2e2;
+    --rose-400:     var(--rose);
+    --cyan:         #0284c7;
+    --cyan-soft:    #e0f2fe;
+    --cyan-400:     var(--cyan);
+
+    /* Shadows */
+    --shadow-bento: 0 2px 12px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);
+    --shadow-hover:  0 12px 28px -4px rgba(0,0,0,0.07), 0 4px 8px -2px rgba(0,0,0,0.03);
+    --shadow-card:       var(--shadow-bento);
+    --shadow-card-hover: var(--shadow-hover);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    --shadow-modal: 0 24px 48px -12px rgba(0,0,0,0.12), 0 12px 24px -8px rgba(0,0,0,0.06);
+
+    /* Table */
+    --table-th-bg:   #f9fafb;
+    --table-row-alt: #fcfdfe;
 
     /* Hairlines */
-    --border-hairline: 1px solid var(--color-border);
-    --border-hairline-top: 1px solid var(--color-border);
+    --border-hairline:        1px solid var(--color-border);
+    --border-hairline-top:    1px solid var(--color-border);
     --border-hairline-bottom: 1px solid var(--color-border);
 
-    /* Focus ring (WCAG 2.2 AA visible focus) */
-    --focus-ring: 2px solid var(--color-accent);
+    /* Focus ring (WCAG 2.2 AA) */
+    --focus-ring:   2px solid var(--color-accent);
     --focus-offset: 2px;
   }
 
-  /* Light Theme Palette Overrides */
-  [data-theme="light"] {
-    --neutral-0: #ffffff; /* Canvas background */
-    --neutral-1: #f8fafc; /* Surface low */
-    --neutral-2: #f1f5f9; /* Interactive row hover */
-    --neutral-3: rgba(15, 23, 42, 0.08); /* 1px hairline divider */
-    --neutral-4: rgba(15, 23, 42, 0.16); /* Border emphasis */
-    --neutral-5: #64748b; /* Micro labels & index numbers */
-    --neutral-6: #475569; /* Muted descriptions & subtitles */
-    --neutral-7: #334155; /* Body secondary */
-    --neutral-8: #1e293b; /* Headings */
-    --neutral-9: #0f172a; /* Primary high-contrast text */
+  /* =========================================================================
+     DARK THEME OVERRIDES — applied when html[data-theme="dark"]
+     ========================================================================= */
+  [data-theme="dark"] {
+    --neutral-0: #0b0f17;
+    --neutral-1: #111827;
+    --neutral-2: #1f2937;
+    --neutral-3: rgba(255, 255, 255, 0.08);
+    --neutral-4: rgba(255, 255, 255, 0.16);
+    --neutral-5: #64748b;
+    --neutral-6: #94a3b8;
+    --neutral-7: #cbd5e1;
+    --neutral-8: #f1f5f9;
+    --neutral-9: #f9fafb;
 
-    --color-bg-canvas: var(--neutral-0);
-    --color-bg-surface: var(--neutral-1);
-    --color-bg-hover: var(--neutral-2);
-    --color-border: var(--neutral-3);
+    --color-bg-canvas:    var(--neutral-0);
+    --color-bg-surface:   var(--neutral-1);
+    --color-bg-hover:     var(--neutral-2);
+    --color-border:       var(--neutral-3);
     --color-border-hover: var(--neutral-4);
-    --color-text-primary: var(--neutral-9);
+    --color-text-primary:   var(--neutral-9);
     --color-text-secondary: var(--neutral-6);
-    --color-text-muted: var(--neutral-5);
+    --color-text-muted:     var(--neutral-5);
 
-    /* Single Accent Color (Light) */
-    --color-accent: #0369a1;
-    --color-accent-subtle: rgba(3, 105, 161, 0.08);
+    --bg-canvas:           var(--color-bg-canvas);
+    --bg-surface:          var(--color-bg-surface);
+    --bg-surface-elevated: #1c202d;
+    --border-subtle:       var(--color-border);
+    --border-medium:       var(--neutral-4);
+    --text-primary:        var(--color-text-primary);
+    --text-secondary:      var(--color-text-secondary);
+    --text-muted:          var(--color-text-muted);
 
-    /* Semantic Status */
-    --color-status-success: #059669;
-    --color-status-warning: #d97706;
-    --color-status-danger: #dc2626;
+    --color-accent: #38bdf8;
+    --color-accent-subtle: rgba(56, 189, 248, 0.12);
+    --color-status-success: #10b981;
+    --color-status-warning: #f59e0b;
+    --color-status-danger:  #ef4444;
+
+    --primary:      #38bdf8;
+    --primary-soft: rgba(56, 189, 248, 0.15);
+    --primary-500:  var(--primary);
+    --primary-hover: #0284c7;
+    --emerald:      #10b981;
+    --emerald-soft: rgba(16, 185, 129, 0.15);
+    --emerald-400:  var(--emerald);
+    --amber:        #f59e0b;
+    --amber-soft:   rgba(245, 158, 11, 0.15);
+    --amber-400:    var(--amber);
+    --amber-500:    var(--amber);
+    --rose:         #f43f5e;
+    --rose-soft:    rgba(244, 63, 94, 0.15);
+    --rose-400:     var(--rose);
+    --cyan:         #38bdf8;
+    --cyan-soft:    rgba(56, 189, 248, 0.15);
+    --cyan-400:     var(--cyan);
+
+    --shadow-bento: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+    --shadow-hover:  0 16px 36px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
+    --shadow-card:       var(--shadow-bento);
+    --shadow-card-hover: var(--shadow-hover);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+    --shadow-modal: 0 24px 48px -12px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08);
+
+    --table-th-bg:   #1c202d;
+    --table-row-alt: #181c27;
 
     --border-hairline: 1px solid var(--color-border);
   }
