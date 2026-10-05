@@ -15,10 +15,44 @@
     </div>
     <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">High-speed barcode deduction with sub-2.0s transactional FEFO row-locking.</p>
   </div>
-  <div style="display: flex; gap: 10px;">
-    <button class="btn-sm btn-secondary" onclick="openConcurrencyModal()">⚡ Test Multi-Till Race Condition</button>
-  </div>
 </div>
+
+<!-- Supermarket Operational Lifecycle Flow -->
+<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
+  <a href="/inbound" style="color: var(--text-secondary); text-decoration: none;">Step 1: Inbound Receiving Dock</a>
+  <span>→</span>
+  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
+  <span>→</span>
+  <a href="/warehouse" style="color: var(--text-secondary); text-decoration: none;">Step 3: 2D Spatial Twin</a>
+  <span>→</span>
+  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Step 4: POS Checkout Register (Current)</span>
+  <span>→</span>
+  <a href="/audits" style="color: var(--text-secondary); text-decoration: none;">Step 5: Stock Ledger</a>
+</nav>
+
+<!-- Frontline POS Checkout KPI Telemetry Strip (Calm Mission Studio) -->
+<section class="status-strip" aria-label="Operational POS Strip" style="margin-bottom: 24px;">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Register Station</span>
+    <div class="status-strip__val tabular" style="color: var(--emerald-400);">Till #01 Ready</div>
+    <span class="status-strip__sub">Dhanmondi Flagship</span>
+  </div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Perishable Batch Pick</span>
+    <div class="status-strip__val tabular" style="color: var(--color-accent); font-size: 20px;">FEFO Automated</div>
+    <span class="status-strip__sub">Oldest stock routed first</span>
+  </div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Transaction Isolation</span>
+    <div class="status-strip__val tabular" style="color: var(--color-status-success); font-size: 18px;">Serializable Locks</div>
+    <span class="status-strip__sub">Zero overselling protection</span>
+  </div>
+  <div class="status-strip__item">
+    <span class="status-strip__label">Checkout SLA</span>
+    <div class="status-strip__val tabular">Sub-2.0s</div>
+    <span class="status-strip__sub">Fast barcode scan &amp; tender</span>
+  </div>
+</section>
 
 <div class="pos-layout">
   <!-- Left Side: Barcode Scanner & Quick-Tap Catalog -->
@@ -31,9 +65,9 @@
         </div>
         <button class="btn-sm btn-primary" onclick="scanBarcode()" style="height: 42px; padding: 0 20px; font-weight: 600;">Scan Item</button>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); flex-wrap: wrap; gap: 8px;">
         <span>Shortcuts: [ENTER] to Scan • Click Card to Add</span>
-        <span>Automatic FEFO Expiry Routing Enabled</span>
+        <button type="button" class="btn-sm btn-secondary" onclick="openConcurrencyModal()" style="font-size: 11px; padding: 3px 8px;">⚡ Test Multi-Till Race Condition</button>
       </div>
     </div>
 
@@ -152,7 +186,10 @@
         </div>
       </div>
 
-      <button class="btn-checkout-emerald" onclick="closeReceiptModal()" style="width: 100%; padding: 12px; font-size: 13.5px;">Close & Next Customer</button>
+      <button class="btn-checkout-emerald" onclick="closeReceiptModal()" style="width: 100%; padding: 12px; font-size: 13.5px;">Close &amp; Next Customer</button>
+      <a href="/audits" class="btn-sm btn-secondary" style="width: 100%; margin-top: 8px; text-decoration: none; text-align: center; display: block; padding: 10px; font-size: 12px;">
+        Verify Transaction Entry in Stock Ledger →
+      </a>
     </div>
   </div>
 </div>

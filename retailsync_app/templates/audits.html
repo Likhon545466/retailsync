@@ -12,9 +12,22 @@
       </span>
       <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">APPEND ONLY</span>
     </div>
-    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Tamper-proof chronological transaction ledger tracking physical inventory deltas across all retail channels.</p>
-  </div>
 </div>
+
+<!-- Supermarket Operational Lifecycle Flow -->
+<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
+  <a href="/inbound" style="color: var(--text-secondary); text-decoration: none;">Step 1: Inbound Receiving Dock</a>
+  <span>→</span>
+  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
+  <span>→</span>
+  <a href="/warehouse" style="color: var(--text-secondary); text-decoration: none;">Step 3: 2D Spatial Twin</a>
+  <span>→</span>
+  <a href="/pos" style="color: var(--text-secondary); text-decoration: none;">Step 4: POS Checkout</a>
+  <span>→</span>
+  <a href="/procurement" style="color: var(--text-secondary); text-decoration: none;">Step 5: Replenishment DSS</a>
+  <span>→</span>
+  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Step 6: Stock Ledger (Current)</span>
+</nav>
 
 <!-- Stock Ledger KPI Telemetry Strip (Calm Mission Studio) -->
 <section class="status-strip" aria-label="Operational Ledger Strip" style="margin-bottom: 24px;">

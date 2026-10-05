@@ -369,6 +369,13 @@ def team_pack_download():
         zip_path = os.path.join(root_dir, "proposal", "RetailSync_Team_Sharing_Pack.zip")
     if not os.path.exists(zip_path):
         zip_path = os.path.join(root_dir, "docs", "RetailSync_Team_Sharing_Pack.zip")
+    if not os.path.exists(zip_path):
+        archive_src = os.path.join(root_dir, "archive", "RetailSync_Team_Sharing_Pack")
+        if os.path.exists(archive_src):
+            import shutil
+            dest_base = os.path.join(root_dir, "RetailSync_Team_Sharing_Pack")
+            shutil.make_archive(dest_base, "zip", archive_src)
+            zip_path = dest_base + ".zip"
     if os.path.exists(zip_path):
         return FileResponse(
             zip_path,

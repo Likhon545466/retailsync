@@ -1,685 +1,434 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Operations Overview — Retail Sync WMS</title>
+{% extends "base.html" %}
 
-  <!-- Pre-render Theme Initialization (Prevents FOUC) -->
-  <script>
-    (function() {
-      try {
-        var saved = localStorage.getItem('retailsync-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', saved);
-      } catch (e) {}
-    })();
-  </script>
+{% block title %}Operations Overview — Retail Sync WMS{% endblock %}
 
-  <!-- Google Fonts: IBM Plex Sans & IBM Plex Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-
-  <!-- Layered Swiss Minimalist Design System -->
-  <link rel="stylesheet" href="/styles/tokens.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/reset.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/base.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/layout.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/components.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/utilities.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/index.css?v=2.1.2">
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-</head>
-<body>
-  <!-- Skip to Main Content Link for WCAG Accessibility -->
-  <a href="#main-content" class="skip-link">Skip to operational content</a>
-
-  <!-- 1. Sticky 56px Site Header -->
-  <header class="header" role="banner">
-    <div class="header__inner">
-      <div class="header__brand">
-        <a href="/dashboard" class="header__wordmark" aria-label="Retail Sync Operations Overview">
-          RETAIL SYNC
-        </a>
-        <span class="header__version tabular" aria-label="Version 2.0-RELEASE">v2.0-RELEASE</span>
-      </div>
-
-      <!-- Center Primary Navigation with More Dropdown -->
-      <nav class="nav" aria-label="Primary Navigation">
-        <ul class="nav__list">
-          <li class="nav__item">
-            <a href="/dashboard" class="nav__link nav__link--active" aria-current="page">Overview</a>
-          </li>
-          <li class="nav__item">
-            <a href="/pos" class="nav__link">Checkout</a>
-          </li>
-          <li class="nav__item">
-            <a href="/inbound" class="nav__link">Inbound</a>
-          </li>
-          <li class="nav__item">
-            <a href="/putaway" class="nav__link">Putaway</a>
-          </li>
-
-          <!-- Secondary Workspaces Dropdown -->
-          <li class="nav__item dropdown">
-            <button type="button" class="nav__link dropdown__trigger" id="moreNavBtn" aria-haspopup="true" aria-expanded="false">
-              <span>More</span>
-              <svg class="dropdown__chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-                <polyline points="2,3 5,7 8,3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></polyline>
-              </svg>
-            </button>
-            <div class="dropdown__menu" id="moreNavMenu" role="menu" aria-labelledby="moreNavBtn">
-              <a href="/warehouse" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Spatial Twin</span>
-                <span class="dropdown__shortcut tabular">W</span>
-              </a>
-              <a href="/procurement" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Replenishment DSS</span>
-                <span class="dropdown__shortcut tabular">R</span>
-              </a>
-              <a href="/audits" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Stock Ledger</span>
-                <span class="dropdown__shortcut tabular">L</span>
-              </a>
-              <div class="dropdown__divider" role="separator"></div>
-              <a href="/showcase" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Project Showcase</span>
-                <span class="dropdown__shortcut tabular">Ext ↗</span>
-              </a>
-              <a href="/slides" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Defense Slides</span>
-                <span class="dropdown__shortcut tabular">Ext ↗</span>
-              </a>
-            </div>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Real-Time Telemetry Ribbon & Store Selector (Calm Mission Studio) -->
-      <div class="telemetry-ribbon" role="status" aria-label="System Operational Telemetry">
-        <div class="telemetry-item">
-          <span class="telemetry-dot--pulsing" aria-hidden="true"></span>
-          <span>SYSTEM: <span class="telemetry-val--highlight">NOMINAL</span></span>
-        </div>
-        <span class="footer-sep" aria-hidden="true">•</span>
-        <div class="telemetry-item">
-          <span class="status-dot status-dot--success" aria-hidden="true"></span>
-          <span>FEFO SWEEP: <span class="telemetry-val--highlight">ACTIVE</span></span>
-        </div>
-        <span class="footer-sep" aria-hidden="true">•</span>
-        <div class="telemetry-item">
-          <span>POS LATENCY: <span class="telemetry-val--highlight">{{ stats.avg_pos_latency_ms|round|int }}ms</span></span>
-        </div>
-        <span class="footer-sep" aria-hidden="true">•</span>
-        <div class="telemetry-item">
-          <label for="activeStoreSelect" class="sr-only">Active Store Location</label>
-          <select id="activeStoreSelect" class="store-select-pill" onchange="switchStoreLocation(this.value)" aria-label="Active Store Location">
-            <option value="uttara" selected>Store: Uttara Central</option>
-            <option value="dhanmondi">Store: Dhanmondi Express</option>
-            <option value="gulshan">Store: Gulshan Mega Mart</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Right Utility Controls -->
-      <div class="header__actions">
-        <!-- Role Switcher -->
-        <div class="role-switcher">
-          <label for="roleSwitcherSelect" class="sr-only">Switch Operational Role</label>
-          <div class="role-switcher__control">
-            <span class="role-switcher__indicator" aria-hidden="true">ROLE</span>
-            <select id="roleSwitcherSelect" class="role-switcher__select" onchange="switchRole(this.value)" aria-label="Select system persona to reorder workspaces">
-              <option value="admin" {% if not current_user or current_user.username == 'admin' %}selected{% endif %}>Director (All)</option>
-              <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Cashier</option>
-              <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Dock Clerk</option>
-              <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Floor Operator</option>
-              <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Supervisor</option>
-              <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>SCM Officer</option>
-            </select>
-            <svg class="role-switcher__chevron" width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
-              <path d="M1 2.5L4 5.5L7 2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Minimalist Theme Toggle (SVG Sun/Moon, Zero Emoji) -->
-        <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark and light color theme" title="Toggle Theme (T)">
-          <svg class="theme-toggle__icon theme-toggle__icon--sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="theme-toggle__icon theme-toggle__icon--moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-
-        <!-- Mobile Drawer Hamburger Trigger -->
-        <button type="button" class="header__menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Toggle navigation menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Mobile Navigation Drawer Overlay -->
-  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
-    <div class="mobile-drawer__content">
-      <div class="mobile-drawer__header">
-        <span class="header__wordmark">RETAIL SYNC</span>
-        <button type="button" class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
-      </div>
-      <nav class="mobile-drawer__nav">
-        <a href="/dashboard" class="mobile-drawer__link mobile-drawer__link--active">Overview</a>
-        <a href="/pos" class="mobile-drawer__link">Checkout POS</a>
-        <a href="/inbound" class="mobile-drawer__link">Inbound Receiving</a>
-        <a href="/putaway" class="mobile-drawer__link">Directed Putaway</a>
-        <a href="/warehouse" class="mobile-drawer__link">Spatial Twin</a>
-        <a href="/procurement" class="mobile-drawer__link">Replenishment DSS</a>
-        <a href="/audits" class="mobile-drawer__link">Stock Ledger</a>
-        <div class="mobile-drawer__divider"></div>
-        <a href="/showcase" target="_blank" rel="noopener" class="mobile-drawer__link">Project Showcase ↗</a>
-        <a href="/slides" target="_blank" rel="noopener" class="mobile-drawer__link">Defense Slides ↗</a>
-        <a href="/proposal/pdf" target="_blank" rel="noopener" class="mobile-drawer__link">Proposal [PDF] ↗</a>
-        <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="mobile-drawer__link">70p Technical Suite [PDF] ↗</a>
-      </nav>
+{% block content %}
+<!-- 1. Page Header / Hero Area -->
+<section class="page-header" aria-labelledby="pageTitle" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
+  <div class="page-header__left">
+    <h1 id="pageTitle" class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Operations Overview</h1>
+    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Centralized retail inventory valuation, checkout telemetry, and multi-tier warehouse control.</p>
+  </div>
+  <div class="page-header__right">
+    <div class="telemetry-status" aria-label="System status" style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); background: var(--color-bg-surface); border: 1px solid var(--border-subtle); padding: 6px 12px; border-radius: var(--radius-sm, 4px);">
+      <span class="status-dot status-dot--success" aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span>
+      <span class="telemetry-status__text" style="color: var(--emerald-400); font-weight: 600;">Telemetry active</span>
+      <span class="telemetry-status__sep">/</span>
+      <span class="telemetry-status__time tabular">Synced 02:00 BST</span>
     </div>
   </div>
+</section>
 
-  <!-- Main Operational Container -->
-  <main id="main-content" class="container" role="main">
-    
-    <!-- 2. Page Header / Hero Area -->
-    <section class="page-header" aria-labelledby="pageTitle">
-      <div class="page-header__left">
-        <h1 id="pageTitle" class="page-header__title">Operations</h1>
-        <p class="page-header__subtitle">Centralized retail inventory valuation, checkout telemetry, and multi-tier warehouse control.</p>
+<!-- 2. Status Strip (Hairline Separators, Mono Valuation) -->
+<section class="status-strip" aria-label="Operational Telemetry Strip" style="margin-bottom: 24px;">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Inventory Valuation</span>
+    <div class="status-strip__val tabular" id="metricValuation" data-target="{{ stats.total_inventory_valuation_bdt }}">
+      <span class="status-strip__currency">৳</span>{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}
+    </div>
+    <span class="status-strip__sub">Asset ledger synced</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Active SKUs</span>
+    <div class="status-strip__val tabular">{{ stats.total_active_skus }}</div>
+    <span class="status-strip__sub">Catalog in stock</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Active Batches</span>
+    <div class="status-strip__val tabular">{{ stats.active_inventory_batches }}</div>
+    <span class="status-strip__sub">FEFO tracked</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Open Orders</span>
+    <div class="status-strip__val tabular">{{ stats.open_purchase_orders }}</div>
+    <span class="status-strip__sub">Awaiting dock reception</span>
+  </div>
+
+  <div class="status-strip__item">
+    <span class="status-strip__label">Checkout Latency</span>
+    <div class="status-strip__val tabular">{{ stats.avg_pos_latency_ms|round|int }} ms</div>
+    <span class="status-strip__sub">Target &lt; 2000 ms</span>
+  </div>
+</section>
+
+<!-- 3. Operations Cockpit Grid (4 Critical Panes) -->
+<section class="mission-grid" aria-label="Calm Mission Studio Operations Cockpit" style="margin-bottom: 28px;">
+  
+  <!-- Pane 1: Financial Valuation Sparkline & Revenue Dynamics -->
+  <article class="mission-pane glass-panel" aria-labelledby="sparklinePaneTitle">
+    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <h2 id="sparklinePaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
+        <span class="status-dot status-dot--info" aria-hidden="true"></span>
+        Inventory Valuation Dynamics
+      </h2>
+      <div class="mission-pane__actions">
+        <span class="tabular" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">30-Day Trend</span>
       </div>
-      <div class="page-header__right">
-        <div class="telemetry-status" aria-label="System status">
-          <span class="status-dot status-dot--success" aria-hidden="true"></span>
-          <span class="telemetry-status__text">Telemetry active</span>
-          <span class="telemetry-status__sep">/</span>
-          <span class="telemetry-status__time tabular">Synced 02:00 BST</span>
-        </div>
-      </div>
-    </section>
+    </header>
 
-    <!-- 3. Status Strip (Hairline Separators, 31px Mono Valuation) -->
-    <section class="status-strip" aria-label="Operational Telemetry Strip">
-      <div class="status-strip__item status-strip__item--primary">
-        <span class="status-strip__label">Inventory Valuation</span>
-        <div class="status-strip__val tabular" id="metricValuation" data-target="{{ stats.total_inventory_valuation_bdt }}">
-          <span class="status-strip__currency">৳</span>{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}
-        </div>
-        <span class="status-strip__sub">Asset ledger synced</span>
-      </div>
-
-      <div class="status-strip__item">
-        <span class="status-strip__label">Active SKUs</span>
-        <div class="status-strip__val tabular">{{ stats.total_active_skus }}</div>
-        <span class="status-strip__sub">Catalog in stock</span>
-      </div>
-
-      <div class="status-strip__item">
-        <span class="status-strip__label">Active Batches</span>
-        <div class="status-strip__val tabular">{{ stats.active_inventory_batches }}</div>
-        <span class="status-strip__sub">FEFO tracked</span>
-      </div>
-
-      <div class="status-strip__item">
-        <span class="status-strip__label">Open Orders</span>
-        <div class="status-strip__val tabular">{{ stats.open_purchase_orders }}</div>
-        <span class="status-strip__sub">Awaiting dock reception</span>
-      </div>
-
-      <div class="status-strip__item">
-        <span class="status-strip__label">Checkout Latency</span>
-        <div class="status-strip__val tabular">{{ stats.avg_pos_latency_ms|round|int }} ms</div>
-        <span class="status-strip__sub">Target &lt; 2000 ms</span>
-      </div>
-    </section>
-
-    <!-- 4. Calm Mission Studio Cockpit Grid (4 Mission-Critical Panes) -->
-    <section class="mission-grid" aria-label="Calm Mission Studio Operations Cockpit">
-      
-      <!-- Pane 1: Financial Valuation Sparkline & Revenue Dynamics -->
-      <article class="mission-pane" aria-labelledby="sparklinePaneTitle">
-        <header class="mission-pane__header">
-          <h2 id="sparklinePaneTitle" class="mission-pane__title">
-            <span class="status-dot status-dot--info" aria-hidden="true"></span>
-            Inventory Valuation Dynamics
-          </h2>
-          <div class="mission-pane__actions">
-            <span class="tabular">30-Day Trend</span>
-          </div>
-        </header>
-
-        <div class="sparkline-container">
-          <div class="sparkline-stats-row">
-            <div>
-              <span class="status-strip__label">Ledger Asset Value</span>
-              <div class="sparkline-primary-val tabular">৳{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}</div>
-            </div>
-            <div class="sparkline-delta tabular">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <polyline points="2,8 6,4 10,8"></polyline>
-              </svg>
-              <span>+4.3% vs Prev Month</span>
-            </div>
-          </div>
-
-          <!-- Interactive SVG Sparkline with Dynamic Curve -->
-          <div class="sparkline-svg-box">
-            <svg viewBox="0 0 460 140" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="sparklineGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.3"></stop>
-                  <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.0"></stop>
-                </linearGradient>
-              </defs>
-              <!-- Grid Lines -->
-              <line x1="0" y1="20" x2="460" y2="20" stroke="var(--neutral-3)" stroke-dasharray="2,2"></line>
-              <line x1="0" y1="60" x2="460" y2="60" stroke="var(--neutral-3)" stroke-dasharray="2,2"></line>
-              <line x1="0" y1="100" x2="460" y2="100" stroke="var(--neutral-3)" stroke-dasharray="2,2"></line>
-              <!-- Area Fill -->
-              <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20 L 460,140 L 0,140 Z" fill="url(#sparklineGradient)"></path>
-              <!-- Sparkline Stroke -->
-              <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"></path>
-              <!-- Live Data Markers -->
-              <circle cx="160" cy="80" r="3" fill="var(--color-accent)"></circle>
-              <circle cx="320" cy="50" r="3" fill="var(--color-accent)"></circle>
-              <circle cx="460" cy="20" r="4" fill="var(--color-status-success)"></circle>
-            </svg>
-          </div>
-
-          <div class="sparkline-legend">
-            <span>Jan • ৳5.2M</span>
-            <span>Apr • ৳6.1M</span>
-            <span>Jul • ৳7.4M</span>
-            <span class="telemetry-val--highlight">Oct • ৳8.9M Peak</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Pane 2: Live 2D Warehouse Floorplan Heatmap -->
-      <article class="mission-pane" aria-labelledby="floorplanPaneTitle">
-        <header class="mission-pane__header">
-          <h2 id="floorplanPaneTitle" class="mission-pane__title">
-            <span class="status-dot status-dot--success" aria-hidden="true"></span>
-            2D Spatial Warehouse Floorplan
-          </h2>
-          <div class="mission-pane__actions">
-            <span class="dock-berth"><span class="status-dot status-dot--success"></span> 42/50 Bins Active</span>
-          </div>
-        </header>
-
-        <div class="warehouse-floorplan-box">
-          <div class="warehouse-racks-visual" id="warehouseVisualGrid">
-            <!-- Dynamic SVG Picker Route connecting dock to Aisles -->
-            <svg class="warehouse-route-svg" viewBox="0 0 440 120" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M 40,110 L 40,70 L 130,70 L 130,20 L 220,20 L 220,50" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"></path>
-              <circle cx="220" cy="50" r="3" fill="var(--color-accent)"></circle>
-            </svg>
-
-            <!-- Aisle A (Dry FMCG) -->
-            <div class="warehouse-rack-col">
-              <span class="warehouse-rack-label">Bay A</span>
-              <div class="warehouse-rack-bins">
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-01: Rice (Available)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-02: Lentils (Available)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-03: Flour (Available)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-04: Sugar (Available)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-05: Salt (Available)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin A-06: Spices (High Occupancy)"></div>
-              </div>
-            </div>
-
-            <!-- Aisle B (Oils & Condiments) -->
-            <div class="warehouse-rack-col">
-              <span class="warehouse-rack-label">Bay B</span>
-              <div class="warehouse-rack-bins">
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-01: Mustard Oil"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-02: Soybean Oil"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin B-03: Ghee (Near Expiry)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-04: Vinegar"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-05: Sauce"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-06: Tea Bags"></div>
-              </div>
-            </div>
-
-            <!-- Aisle C (Dairy & Chill - 4°C) -->
-            <div class="warehouse-rack-col">
-              <span class="warehouse-rack-label">Bay C (Cold)</span>
-              <div class="warehouse-rack-bins">
-                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-01: Fresh Milk (Exp: 2d)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--red" title="Bin C-02: Yogurt (Exp: 1d Critical)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-03: Butter (Safe)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-04: Cheese (Safe)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-05: Paneer (Exp: 5d)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-06: Ice Cream"></div>
-              </div>
-            </div>
-
-            <!-- Aisle D (Snacks & Beverages) -->
-            <div class="warehouse-rack-col">
-              <span class="warehouse-rack-label">Bay D</span>
-              <div class="warehouse-rack-bins">
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-01: Biscuits"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-02: Chips"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin D-03: Juice (Exp: 14d)"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-04: Mineral Water"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-05: Soda"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-06: Confectionery"></div>
-              </div>
-            </div>
-
-            <!-- Aisle E (Household & Personal Care) -->
-            <div class="warehouse-rack-col">
-              <span class="warehouse-rack-label">Bay E</span>
-              <div class="warehouse-rack-bins">
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-01: Detergent"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-02: Soap"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-03: Toothpaste"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-04: Shampoo"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin E-05: Disinfectant"></div>
-                <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-06: Paper Towels"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Receiving Berths Strip -->
-          <div class="warehouse-dock-strip">
-            <span class="dock-berth"><span class="status-dot status-dot--success"></span> Dock #1: Inbound Receiving</span>
-            <span class="dock-berth"><span class="status-dot status-dot--warning"></span> Dock #2: Putaway Unloading</span>
-            <span class="dock-berth"><span class="status-dot status-dot--info"></span> Dock #3: Dispatched</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Pane 3: Active FEFO Batch Expiration Table -->
-      <article class="mission-pane" aria-labelledby="fefoTablePaneTitle">
-        <header class="mission-pane__header">
-          <h2 id="fefoTablePaneTitle" class="mission-pane__title">
-            <span class="status-dot status-dot--warning" aria-hidden="true"></span>
-            Active FEFO Batch Expiration Matrix
-          </h2>
-          <div class="mission-pane__actions">
-            <a href="/pos" class="action-link" style="font-size: 11px;">Prioritize at Checkout →</a>
-          </div>
-        </header>
-
-        <div style="overflow-x: auto;">
-          <table class="mission-table" aria-label="Active FEFO Batches">
-            <thead>
-              <tr>
-                <th>Batch / SKU</th>
-                <th>Brand / Product</th>
-                <th>Units</th>
-                <th>Shelf-Life</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="tabular"><code>B-094182</code></td>
-                <td>Aarong Dairy Full Cream Milk 1L</td>
-                <td class="tabular">120</td>
-                <td><span class="fefo-badge fefo-badge--critical">2 Days Left</span></td>
-                <td><a href="/pos" class="action-link" style="font-size: 11px;">Allocate POS</a></td>
-              </tr>
-              <tr>
-                <td class="tabular"><code>B-094183</code></td>
-                <td>Pran Mustard Oil 500ml</td>
-                <td class="tabular">350</td>
-                <td><span class="fefo-badge fefo-badge--amber">14 Days Left</span></td>
-                <td><a href="/putaway" class="action-link" style="font-size: 11px;">Zone Bay B</a></td>
-              </tr>
-              <tr>
-                <td class="tabular"><code>B-094184</code></td>
-                <td>Fresh Premium Miniket Rice 5kg</td>
-                <td class="tabular">480</td>
-                <td><span class="fefo-badge fefo-badge--fresh">85 Days Left</span></td>
-                <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay A</a></td>
-              </tr>
-              <tr>
-                <td class="tabular"><code>B-094185</code></td>
-                <td>Olympic Energy Plus Biscuits</td>
-                <td class="tabular">210</td>
-                <td><span class="fefo-badge fefo-badge--fresh">120 Days Left</span></td>
-                <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay D</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
-
-      <!-- Pane 4: Live Tamper-Evident Cryptographic Stock Audit Ledger Stream -->
-      <article class="mission-pane" aria-labelledby="auditStreamPaneTitle">
-        <header class="mission-pane__header">
-          <h2 id="auditStreamPaneTitle" class="mission-pane__title">
-            <span class="status-dot status-dot--success" aria-hidden="true"></span>
-            Cryptographic Stock Audit Stream
-          </h2>
-          <div class="mission-pane__actions">
-            <a href="/audits" class="action-link" style="font-size: 11px;">Full Ledger →</a>
-          </div>
-        </header>
-
-        <div class="audit-stream-box" id="auditStreamContainer" role="log" aria-live="polite">
-          <div class="audit-stream-row">
-            <div>
-              <span class="audit-action-chip">POS_SALE</span>
-              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('aa75ce7e3014b29bca30')">hash:aa75ce...</span>
-            </div>
-            <span class="tabular audit-stream-time">00:14:18.420</span>
-          </div>
-
-          <div class="audit-stream-row">
-            <div>
-              <span class="audit-action-chip">FEFO_SWEEP</span>
-              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac37e276762fe12b5922')">hash:ac37e2...</span>
-            </div>
-            <span class="tabular audit-stream-time">00:14:12.312</span>
-          </div>
-
-          <div class="audit-stream-row">
-            <div>
-              <span class="audit-action-chip">DOCK_RECV</span>
-              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ae75c3f497d9b17b5c30')">hash:ae75c3...</span>
-            </div>
-            <span class="tabular audit-stream-time">00:13:58.110</span>
-          </div>
-
-          <div class="audit-stream-row">
-            <div>
-              <span class="audit-action-chip">PUTAWAY</span>
-              <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac8efae6ed1fb55e7b35')">hash:ac8efa...</span>
-            </div>
-            <span class="tabular audit-stream-time">00:13:45.020</span>
-          </div>
-        </div>
-      </article>
-
-    </section>
-
-    <!-- 4. Attention Queue ("Needs attention", Ruled List, 6px Dots) -->
-    <section class="attention-section" aria-labelledby="attentionHeading">
-      <div class="attention-section__header">
-        <div class="attention-section__title-wrap">
-          <h2 id="attentionHeading" class="attention-section__title">Needs attention</h2>
-          <span class="attention-section__count tabular" id="attentionCount">({{ attention_items|length if attention_items else '3' }})</span>
-        </div>
-        <span class="attention-section__subtitle">Exceptions requiring human triage before next scheduled sweep</span>
-      </div>
-
-      <div class="attention-list" id="attentionList" role="feed">
-        {% for item in attention_items %}
-        <article class="attention-row" data-role="{{ item.role }}" data-severity="{{ item.status_type }}">
-          <div class="attention-row__meta">
-            <span class="status-dot status-dot--{{ item.status_type }}" aria-hidden="true"></span>
-            <span class="attention-row__tag tabular">{{ item.tag }}</span>
-          </div>
-          <div class="attention-row__content">
-            <h3 class="attention-row__title">{{ item.title }}</h3>
-            <p class="attention-row__detail">{{ item.detail }}</p>
-          </div>
-          <div class="attention-row__action">
-            <a href="{{ item.action_url }}" class="action-link">
-              {{ item.action_label }}
-              <span class="action-link__arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
-        </article>
-        {% endfor %}
-      </div>
-    </section>
-
-    <!-- 5. Operational Workspaces Index (2-Column Ruled Index, Numbered, Hover Shift) -->
-    <section class="workspaces-section" aria-labelledby="workspacesHeading">
-      <div class="workspaces-section__header">
+    <div class="sparkline-container">
+      <div class="sparkline-stats-row" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
         <div>
-          <h2 id="workspacesHeading" class="workspaces-section__title">Operational Workspaces</h2>
-          <span class="workspaces-section__subtitle">Core warehouse and retail terminals sorted by operational priority</span>
+          <span class="status-strip__label" style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Ledger Asset Value</span>
+          <div class="sparkline-primary-val tabular" style="font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--text-primary);">৳{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}</div>
         </div>
-        <span class="workspaces-section__role-tag tabular" id="activeRoleIndicator">Role: Director</span>
-      </div>
-
-      <div class="workspaces-index" id="workspacesGrid">
-        <a href="/pos" class="workspace-row workspace-row--primary" data-module="pos" data-priority-role="cashier" id="ws-pos">
-          <div class="workspace-row__num tabular">01</div>
-          <div class="workspace-row__body">
-            <div class="workspace-row__head">
-              <h3 class="workspace-row__title">Checkout POS</h3>
-              <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: P">P</span>
-            </div>
-            <p class="workspace-row__desc">Fast barcode checkout terminal with real-time stock allocation and cash tender.</p>
-          </div>
-          <span class="workspace-row__arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a href="/inbound" class="workspace-row" data-module="inbound" data-priority-role="clerk" id="ws-inbound">
-          <div class="workspace-row__num tabular">02</div>
-          <div class="workspace-row__body">
-            <div class="workspace-row__head">
-              <h3 class="workspace-row__title">Inbound Receiving</h3>
-              <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: I">I</span>
-            </div>
-            <p class="workspace-row__desc">Dock delivery manifest verification against purchase orders and quality triage.</p>
-          </div>
-          <span class="workspace-row__arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a href="/putaway" class="workspace-row" data-module="putaway" data-priority-role="operator" id="ws-putaway">
-          <div class="workspace-row__num tabular">03</div>
-          <div class="workspace-row__body">
-            <div class="workspace-row__head">
-              <h3 class="workspace-row__title">Directed Putaway</h3>
-              <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: U">U</span>
-            </div>
-            <p class="workspace-row__desc">Algorithmic bin routing matching product temperature zone and shortest travel path.</p>
-          </div>
-          <span class="workspace-row__arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a href="/warehouse" class="workspace-row" data-module="warehouse" data-priority-role="supervisor" id="ws-warehouse">
-          <div class="workspace-row__num tabular">04</div>
-          <div class="workspace-row__body">
-            <div class="workspace-row__head">
-              <h3 class="workspace-row__title">Spatial Twin</h3>
-              <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: W">W</span>
-            </div>
-            <p class="workspace-row__desc">Visual warehouse map displaying bays, racks, temperature zones, and capacity.</p>
-          </div>
-          <span class="workspace-row__arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a href="/procurement" class="workspace-row" data-module="procurement" data-priority-role="procurement" id="ws-procurement">
-          <div class="workspace-row__num tabular">05</div>
-          <div class="workspace-row__body">
-            <div class="workspace-row__head">
-              <h3 class="workspace-row__title">Replenishment DSS</h3>
-              <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: R">R</span>
-            </div>
-            <p class="workspace-row__desc">Dual-variance safety stock forecasting and one-click purchase order issuance.</p>
-          </div>
-          <span class="workspace-row__arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a href="/audits" class="workspace-row" data-module="audits" data-priority-role="admin" id="ws-audits">
-          <div class="workspace-row__num tabular">06</div>
-          <div class="workspace-row__body">
-            <div class="workspace-row__head">
-              <h3 class="workspace-row__title">Stock Ledger</h3>
-              <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: L">L</span>
-            </div>
-            <p class="workspace-row__desc">Immutable audit log of all inventory receipts, transfers, and retail sales.</p>
-          </div>
-          <span class="workspace-row__arrow" aria-hidden="true">→</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- 6. Academic Deliverables & Master Technical Suite Ruled Colophon -->
-    <footer class="footer" role="contentinfo">
-      <div class="footer__deliverables">
-        <div class="footer__deliverables-header">
-          <span class="footer__deliverables-title">Academic Deliverables &amp; Master Technical Suite</span>
-          <span class="footer__deliverables-sub tabular">Daffodil International University • 70-Page Master Technical Engineering Suite</span>
-        </div>
-        <div class="footer__deliverables-grid">
-          <div class="footer__doc-col">
-            <span class="footer__doc-label">Proposal &amp; Presentation</span>
-            <div class="footer__doc-links">
-              <a href="/proposal/pdf" target="_blank" rel="noopener" class="footer__link">Project Proposal [PDF]</a>
-              <a href="/proposal/docx" class="footer__link">Project Proposal [DOCX]</a>
-              <a href="/deck" class="footer__link">Defense Slide Deck [PPTX]</a>
-              <a href="/slides" target="_blank" rel="noopener" class="footer__link">Defense Presentation [WEB]</a>
-            </div>
-          </div>
-          <div class="footer__doc-col">
-            <span class="footer__doc-label">Engineering Specification</span>
-            <div class="footer__doc-links">
-              <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="footer__link">70p Technical Suite [PDF]</a>
-              <a href="/engineering-suite/docx" class="footer__link">Technical Suite [DOCX]</a>
-              <a href="/technical-guide" target="_blank" rel="noopener" class="footer__link">Viva Defense Guide [MD]</a>
-              <a href="/team-pack.zip" class="footer__link">Complete Team Pack [ZIP]</a>
-            </div>
-          </div>
+        <div class="sparkline-delta tabular" style="font-size: 11.5px; font-family: var(--font-mono); color: var(--emerald-400); display: flex; align-items: center; gap: 4px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="2,8 6,4 10,8"></polyline>
+          </svg>
+          <span>+4.3% vs Prev Month</span>
         </div>
       </div>
 
-      <div class="footer__bottom">
-        <div class="footer__status">
-          <span class="status-dot status-dot--success" aria-hidden="true"></span>
-          <span class="footer__status-text">All systems operational</span>
-          <span class="footer__sep">/</span>
-          <span class="footer__time tabular">Synced 02:00 BST</span>
+      <!-- Interactive SVG Sparkline with Dynamic Curve -->
+      <div class="sparkline-svg-box">
+        <svg viewBox="0 0 460 140" preserveAspectRatio="none" aria-hidden="true" style="width: 100%; height: 120px;">
+          <defs>
+            <linearGradient id="sparklineGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.3"></stop>
+              <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.0"></stop>
+            </linearGradient>
+          </defs>
+          <!-- Grid Lines -->
+          <line x1="0" y1="20" x2="460" y2="20" stroke="var(--border-subtle)" stroke-dasharray="2,2"></line>
+          <line x1="0" y1="60" x2="460" y2="60" stroke="var(--border-subtle)" stroke-dasharray="2,2"></line>
+          <line x1="0" y1="100" x2="460" y2="100" stroke="var(--border-subtle)" stroke-dasharray="2,2"></line>
+          <!-- Area Fill -->
+          <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20 L 460,140 L 0,140 Z" fill="url(#sparklineGradient)"></path>
+          <!-- Sparkline Stroke -->
+          <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"></path>
+          <!-- Live Data Markers -->
+          <circle cx="160" cy="80" r="3" fill="var(--color-accent)"></circle>
+          <circle cx="320" cy="50" r="3" fill="var(--color-accent)"></circle>
+          <circle cx="460" cy="20" r="4" fill="var(--color-status-success)"></circle>
+        </svg>
+      </div>
+
+      <div class="sparkline-legend" style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+        <span>Jan • ৳5.2M</span>
+        <span>Apr • ৳6.1M</span>
+        <span>Jul • ৳7.4M</span>
+        <span class="telemetry-val--highlight" style="color: var(--color-accent); font-weight: 600;">Oct • ৳8.9M Peak</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- Pane 2: Live 2D Warehouse Floorplan Heatmap -->
+  <article class="mission-pane glass-panel" aria-labelledby="floorplanPaneTitle">
+    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <h2 id="floorplanPaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
+        <span class="status-dot status-dot--success" aria-hidden="true"></span>
+        2D Spatial Warehouse Floorplan
+      </h2>
+      <div class="mission-pane__actions">
+        <a href="/warehouse" class="dock-berth" style="font-size: 11px; font-family: var(--font-mono); text-decoration: none; color: var(--text-primary);"><span class="status-dot status-dot--success"></span> 42/50 Bins Active →</a>
+      </div>
+    </header>
+
+    <div class="warehouse-floorplan-box">
+      <div class="warehouse-racks-visual" id="warehouseVisualGrid">
+        <!-- Aisle A (Dry FMCG) -->
+        <div class="warehouse-rack-col">
+          <span class="warehouse-rack-label">Bay A</span>
+          <div class="warehouse-rack-bins">
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-01: Rice (Available)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-02: Lentils (Available)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-03: Flour (Available)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-04: Sugar (Available)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-05: Salt (Available)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin A-06: Spices (High Occupancy)"></div>
+          </div>
         </div>
 
-        <div class="footer__colophon">
-          <span>RetailSync v2.0</span>
-          <span class="footer__sep">•</span>
-          <span>PostgreSQL 16 Engine</span>
-          <span class="footer__sep">•</span>
-          <a href="/api/docs" class="footer__link">API Reference</a>
+        <!-- Aisle B (Oils & Condiments) -->
+        <div class="warehouse-rack-col">
+          <span class="warehouse-rack-label">Bay B</span>
+          <div class="warehouse-rack-bins">
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-01: Mustard Oil"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-02: Soybean Oil"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin B-03: Ghee (Near Expiry)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-04: Vinegar"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-05: Sauce"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-06: Tea Bags"></div>
+          </div>
+        </div>
+
+        <!-- Aisle C (Dairy & Chill - 4°C) -->
+        <div class="warehouse-rack-col">
+          <span class="warehouse-rack-label">Bay C (Cold)</span>
+          <div class="warehouse-rack-bins">
+            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-01: Fresh Milk (Exp: 2d)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--red" title="Bin C-02: Yogurt (Exp: 1d Critical)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-03: Butter (Safe)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-04: Cheese (Safe)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-05: Paneer (Exp: 5d)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-06: Ice Cream"></div>
+          </div>
+        </div>
+
+        <!-- Aisle D (Snacks & Beverages) -->
+        <div class="warehouse-rack-col">
+          <span class="warehouse-rack-label">Bay D</span>
+          <div class="warehouse-rack-bins">
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-01: Biscuits"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-02: Chips"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin D-03: Juice (Exp: 14d)"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-04: Mineral Water"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-05: Soda"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-06: Confectionery"></div>
+          </div>
+        </div>
+
+        <!-- Aisle E (Household & Personal Care) -->
+        <div class="warehouse-rack-col">
+          <span class="warehouse-rack-label">Bay E</span>
+          <div class="warehouse-rack-bins">
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-01: Detergent"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-02: Soap"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-03: Toothpaste"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-04: Shampoo"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin E-05: Disinfectant"></div>
+            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-06: Paper Towels"></div>
+          </div>
         </div>
       </div>
-    </footer>
 
-  </main>
+      <!-- Bottom Receiving Berths Strip -->
+      <div class="warehouse-dock-strip" style="display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;">
+        <span class="dock-berth"><span class="status-dot status-dot--success"></span> Dock #1: Inbound Receiving</span>
+        <span class="dock-berth"><span class="status-dot status-dot--warning"></span> Dock #2: Putaway Unloading</span>
+        <span class="dock-berth"><span class="status-dot status-dot--info"></span> Dock #3: Dispatched</span>
+      </div>
+    </div>
+  </article>
 
-  <!-- Interactive Overview Script -->
-  <script src="/static/js/overview.js?v=2.1.0"></script>
-</body>
-</html>
+  <!-- Pane 3: Active FEFO Batch Expiration Table -->
+  <article class="mission-pane glass-panel" aria-labelledby="fefoTablePaneTitle">
+    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <h2 id="fefoTablePaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
+        <span class="status-dot status-dot--warning" aria-hidden="true"></span>
+        Active FEFO Batch Expiration Matrix
+      </h2>
+      <div class="mission-pane__actions">
+        <a href="/pos" class="action-link" style="font-size: 11px;">Prioritize at Checkout →</a>
+      </div>
+    </header>
+
+    <div style="overflow-x: auto;">
+      <table class="mission-table" aria-label="Active FEFO Batches" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>Batch / SKU</th>
+            <th>Brand / Product</th>
+            <th>Units</th>
+            <th>Shelf-Life</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tabular"><code>B-094182</code></td>
+            <td>Aarong Dairy Full Cream Milk 1L</td>
+            <td class="tabular">120</td>
+            <td><span class="fefo-badge fefo-badge--critical">2 Days Left</span></td>
+            <td><a href="/pos" class="action-link" style="font-size: 11px;">Allocate POS</a></td>
+          </tr>
+          <tr>
+            <td class="tabular"><code>B-094183</code></td>
+            <td>Pran Mustard Oil 500ml</td>
+            <td class="tabular">350</td>
+            <td><span class="fefo-badge fefo-badge--amber">14 Days Left</span></td>
+            <td><a href="/putaway" class="action-link" style="font-size: 11px;">Zone Bay B</a></td>
+          </tr>
+          <tr>
+            <td class="tabular"><code>B-094184</code></td>
+            <td>Fresh Premium Miniket Rice 5kg</td>
+            <td class="tabular">480</td>
+            <td><span class="fefo-badge fefo-badge--fresh">85 Days Left</span></td>
+            <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay A</a></td>
+          </tr>
+          <tr>
+            <td class="tabular"><code>B-094185</code></td>
+            <td>Olympic Energy Plus Biscuits</td>
+            <td class="tabular">210</td>
+            <td><span class="fefo-badge fefo-badge--fresh">120 Days Left</span></td>
+            <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay D</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <!-- Pane 4: Live Cryptographic Stock Audit Ledger Stream -->
+  <article class="mission-pane glass-panel" aria-labelledby="auditStreamPaneTitle">
+    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <h2 id="auditStreamPaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
+        <span class="status-dot status-dot--success" aria-hidden="true"></span>
+        Cryptographic Stock Audit Stream
+      </h2>
+      <div class="mission-pane__actions">
+        <a href="/audits" class="action-link" style="font-size: 11px;">Full Ledger →</a>
+      </div>
+    </header>
+
+    <div class="audit-stream-box" id="auditStreamContainer" role="log" aria-live="polite">
+      <div class="audit-stream-row">
+        <div>
+          <span class="audit-action-chip">POS_SALE</span>
+          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('aa75ce7e3014b29bca30')">hash:aa75ce...</span>
+        </div>
+        <span class="tabular audit-stream-time">00:14:18.420</span>
+      </div>
+
+      <div class="audit-stream-row">
+        <div>
+          <span class="audit-action-chip">FEFO_SWEEP</span>
+          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac37e276762fe12b5922')">hash:ac37e2...</span>
+        </div>
+        <span class="tabular audit-stream-time">00:14:12.312</span>
+      </div>
+
+      <div class="audit-stream-row">
+        <div>
+          <span class="audit-action-chip">DOCK_RECV</span>
+          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ae75c3f497d9b17b5c30')">hash:ae75c3...</span>
+        </div>
+        <span class="tabular audit-stream-time">00:13:58.110</span>
+      </div>
+
+      <div class="audit-stream-row">
+        <div>
+          <span class="audit-action-chip">PUTAWAY</span>
+          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac8efae6ed1fb55e7b35')">hash:ac8efa...</span>
+        </div>
+        <span class="tabular audit-stream-time">00:13:45.020</span>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- 4. Attention Queue ("Needs attention", Ruled List, 6px Dots) -->
+<section class="attention-section glass-panel" aria-labelledby="attentionHeading" style="margin-bottom: 28px; padding: 20px;">
+  <div class="attention-section__header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+    <div class="attention-section__title-wrap" style="display: flex; align-items: baseline; gap: 8px;">
+      <h2 id="attentionHeading" class="attention-section__title" style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">Needs attention</h2>
+      <span class="attention-section__count tabular" id="attentionCount" style="font-size: 13px; font-family: var(--font-mono); color: var(--text-muted);">({{ attention_items|length if attention_items else '3' }})</span>
+    </div>
+    <span class="attention-section__subtitle" style="font-size: 12px; color: var(--text-muted);">Exceptions requiring operational triage</span>
+  </div>
+
+  <div class="attention-list" id="attentionList" role="feed">
+    {% for item in attention_items %}
+    <article class="attention-row" data-role="{{ item.role }}" data-severity="{{ item.status_type }}">
+      <div class="attention-row__meta">
+        <span class="status-dot status-dot--{{ item.status_type }}" aria-hidden="true"></span>
+        <span class="attention-row__tag tabular">{{ item.tag }}</span>
+      </div>
+      <div class="attention-row__content">
+        <h3 class="attention-row__title">{{ item.title }}</h3>
+        <p class="attention-row__detail">{{ item.detail }}</p>
+      </div>
+      <div class="attention-row__action">
+        <a href="{{ item.action_url }}" class="action-link">
+          {{ item.action_label }}
+          <span class="action-link__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- 5. Operational Workspaces Index (2-Column Ruled Index, Numbered, Hover Shift) -->
+<section class="workspaces-section glass-panel" aria-labelledby="workspacesHeading" style="padding: 20px;">
+  <div class="workspaces-section__header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+    <div>
+      <h2 id="workspacesHeading" class="workspaces-section__title" style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">Operational Workspaces</h2>
+      <span class="workspaces-section__subtitle" style="font-size: 12px; color: var(--text-muted);">Core warehouse and retail terminals sorted by operational priority</span>
+    </div>
+    <span class="workspaces-section__role-tag tabular" id="activeRoleIndicator" style="font-size: 11px; font-family: var(--font-mono); color: var(--color-accent); background: var(--color-bg-hover); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Role: Director</span>
+  </div>
+
+  <div class="workspaces-index" id="workspacesGrid">
+    <a href="/inbound" class="workspace-row" data-module="inbound" data-priority-role="clerk" id="ws-inbound">
+      <div class="workspace-row__num tabular">01</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Inbound Receiving</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: I">I</span>
+        </div>
+        <p class="workspace-row__desc">Dock delivery manifest verification against purchase orders and quality gate triage.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/putaway" class="workspace-row" data-module="putaway" data-priority-role="operator" id="ws-putaway">
+      <div class="workspace-row__num tabular">02</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Directed Putaway</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: U">U</span>
+        </div>
+        <p class="workspace-row__desc">Algorithmic bin routing matching product temperature zone and shortest travel path.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/warehouse" class="workspace-row" data-module="warehouse" data-priority-role="supervisor" id="ws-warehouse">
+      <div class="workspace-row__num tabular">03</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Spatial Twin</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: W">W</span>
+        </div>
+        <p class="workspace-row__desc">Visual 2D warehouse map displaying bays, racks, temperature zones, and capacity.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/pos" class="workspace-row workspace-row--primary" data-module="pos" data-priority-role="cashier" id="ws-pos">
+      <div class="workspace-row__num tabular">04</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Checkout POS</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: P">P</span>
+        </div>
+        <p class="workspace-row__desc">Fast barcode checkout terminal with real-time stock allocation and cash tender.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/procurement" class="workspace-row" data-module="procurement" data-priority-role="procurement" id="ws-procurement">
+      <div class="workspace-row__num tabular">05</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Replenishment DSS</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: R">R</span>
+        </div>
+        <p class="workspace-row__desc">Dual-variance safety stock forecasting and one-click purchase order issuance.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="/audits" class="workspace-row" data-module="audits" data-priority-role="admin" id="ws-audits">
+      <div class="workspace-row__num tabular">06</div>
+      <div class="workspace-row__body">
+        <div class="workspace-row__head">
+          <h3 class="workspace-row__title">Stock Ledger</h3>
+          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: L">L</span>
+        </div>
+        <p class="workspace-row__desc">Immutable audit log of all inventory receipts, transfers, and retail sales.</p>
+      </div>
+      <span class="workspace-row__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/overview.js?v=2.1.2"></script>
+{% endblock %}

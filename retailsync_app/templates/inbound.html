@@ -17,6 +17,19 @@
   </div>
 </div>
 
+<!-- Supermarket Operational Lifecycle Flow -->
+<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
+  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Step 1: Inbound Receiving Dock (Current)</span>
+  <span>→</span>
+  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
+  <span>→</span>
+  <a href="/warehouse" style="color: var(--text-secondary); text-decoration: none;">Step 3: 2D Spatial Twin</a>
+  <span>→</span>
+  <a href="/pos" style="color: var(--text-secondary); text-decoration: none;">Step 4: POS Checkout</a>
+  <span>→</span>
+  <a href="/audits" style="color: var(--text-secondary); text-decoration: none;">Step 5: Stock Ledger</a>
+</nav>
+
 <!-- Inbound Dock KPI Telemetry Strip (Calm Mission Studio) -->
 <section class="status-strip" aria-label="Operational Inbound Strip" style="margin-bottom: 24px;">
   <div class="status-strip__item status-strip__item--primary">
@@ -136,6 +149,24 @@
         Accept Shipment &amp; Issue GRN
       </button>
     </div>
+
+    <!-- Post-Receipt Workflow Handshake: Immediate Direct Action -->
+    <div id="grnSuccessBanner" style="display: none; margin-top: 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid var(--emerald-400); border-radius: var(--radius-sm, 4px); padding: 16px;">
+      <div style="display: flex; align-items: center; gap: 8px; color: var(--emerald-400); font-weight: 600; font-size: 13.5px;">
+        <span style="font-size: 16px;">✓</span> <span id="grnSuccessTitle">GRN Issued Successfully</span>
+      </div>
+      <p id="grnSuccessMessage" style="font-size: 12px; color: var(--text-secondary); margin: 8px 0 14px 0; line-height: 1.5;">
+        Cartons received into dock staging buffer. Follow warehouse routing directive to allocate rack slots.
+      </p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="/putaway" class="btn-sm btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          Proceed to Directed Putaway →
+        </a>
+        <a href="/audits" class="btn-sm btn-secondary" style="text-decoration: none;">
+          View in Stock Ledger
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
@@ -189,6 +220,9 @@ function renderPOList() {
 function selectPO(poId) {
   selectedPO = openPOs.find(p => p.po_id === poId);
   if (!selectedPO) return;
+
+  const banner = document.getElementById('grnSuccessBanner');
+  if (banner) banner.style.display = 'none';
 
   document.getElementById('selectedPoHeader').innerText = `Active PO: ${selectedPO.po_number} (${selectedPO.supplier_name})`;
   document.getElementById('receivingFormBody').style.display = 'flex';
@@ -300,7 +334,14 @@ async function submitGoodsReceipt() {
     showToast(`GRN ${data.grn_number} issued! ${data.total_cartons_received} cartons accepted into dock buffer.`, "success", "Shipment Accepted");
     loadOpenPOs();
     document.getElementById('receivingFormBody').style.display = 'none';
-    document.getElementById('selectedPoHeader').innerText = "Select a PO from the left to start inspection";
+    document.getElementById('selectedPoHeader').innerText = "Delivery received into dock staging buffer";
+    
+    const banner = document.getElementById('grnSuccessBanner');
+    if (banner) {
+      document.getElementById('grnSuccessTitle').innerText = `Goods Receipt Note #${data.grn_number} Issued`;
+      document.getElementById('grnSuccessMessage').innerText = `${data.total_cartons_received} cartons successfully accepted into dock staging queue. Proceed to Directed Putaway to assign warehouse racks.`;
+      banner.style.display = 'block';
+    }
   } catch (e) {
     showToast("Network error: " + e.message, "error", "Network Error");
   }

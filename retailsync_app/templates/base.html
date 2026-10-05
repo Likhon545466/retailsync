@@ -13,7 +13,7 @@
     })();
   </script>
 
-  <!-- Google Fonts: IBM Plex & Inter -->
+  <!-- Google Fonts: IBM Plex Sans & IBM Plex Mono & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,14 +41,11 @@
         <span class="header__version tabular" aria-label="Version 2.0-RELEASE">v2.0-RELEASE</span>
       </div>
 
-      <!-- Center Primary Navigation with More Dropdown -->
+      <!-- Center Primary Navigation: Seamless End-to-End Supermarket Operational Lifecycle -->
       <nav class="nav nav-zone-center" aria-label="Primary Navigation">
         <ul class="nav__list">
           <li class="nav__item">
             <a href="/dashboard" class="nav__link {% if active_page == 'dashboard' %}nav__link--active{% endif %}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>Overview</a>
-          </li>
-          <li class="nav__item">
-            <a href="/pos" class="nav__link {% if active_page == 'pos' %}nav__link--active{% endif %}" {% if active_page == 'pos' %}aria-current="page"{% endif %}>Checkout</a>
           </li>
           <li class="nav__item">
             <a href="/inbound" class="nav__link {% if active_page == 'inbound' %}nav__link--active{% endif %}" {% if active_page == 'inbound' %}aria-current="page"{% endif %}>Inbound</a>
@@ -56,29 +53,28 @@
           <li class="nav__item">
             <a href="/putaway" class="nav__link {% if active_page == 'putaway' %}nav__link--active{% endif %}" {% if active_page == 'putaway' %}aria-current="page"{% endif %}>Putaway</a>
           </li>
+          <li class="nav__item">
+            <a href="/warehouse" class="nav__link {% if active_page == 'warehouse' %}nav__link--active{% endif %}" {% if active_page == 'warehouse' %}aria-current="page"{% endif %}>Spatial Twin</a>
+          </li>
+          <li class="nav__item">
+            <a href="/pos" class="nav__link {% if active_page == 'pos' %}nav__link--active{% endif %}" {% if active_page == 'pos' %}aria-current="page"{% endif %}>Checkout</a>
+          </li>
+          <li class="nav__item">
+            <a href="/procurement" class="nav__link {% if active_page == 'procurement' %}nav__link--active{% endif %}" {% if active_page == 'procurement' %}aria-current="page"{% endif %}>Replenishment</a>
+          </li>
+          <li class="nav__item">
+            <a href="/audits" class="nav__link {% if active_page == 'audits' %}nav__link--active{% endif %}" {% if active_page == 'audits' %}aria-current="page"{% endif %}>Stock Ledger</a>
+          </li>
 
-          <!-- Secondary Workspaces Dropdown -->
+          <!-- Deliverables & Academic Suite Dropdown -->
           <li class="nav__item dropdown">
             <button type="button" class="nav__link dropdown__trigger" id="moreNavBtn" aria-haspopup="true" aria-expanded="false">
-              <span>More</span>
+              <span>Deliverables</span>
               <svg class="dropdown__chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
                 <polyline points="2,3 5,7 8,3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></polyline>
               </svg>
             </button>
             <div class="dropdown__menu" id="moreNavMenu" role="menu" aria-labelledby="moreNavBtn">
-              <a href="/warehouse" class="dropdown__item {% if active_page == 'warehouse' %}dropdown__item--active{% endif %}" role="menuitem">
-                <span class="dropdown__label">Spatial Twin</span>
-                <span class="dropdown__shortcut tabular">W</span>
-              </a>
-              <a href="/procurement" class="dropdown__item {% if active_page == 'procurement' %}dropdown__item--active{% endif %}" role="menuitem">
-                <span class="dropdown__label">Replenishment DSS</span>
-                <span class="dropdown__shortcut tabular">R</span>
-              </a>
-              <a href="/audits" class="dropdown__item {% if active_page == 'audits' %}dropdown__item--active{% endif %}" role="menuitem">
-                <span class="dropdown__label">Stock Ledger</span>
-                <span class="dropdown__shortcut tabular">L</span>
-              </a>
-              <div class="dropdown__divider" role="separator"></div>
               <a href="/showcase" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
                 <span class="dropdown__label">Showcase ↗</span>
                 <span class="dropdown__shortcut tabular">Ext ↗</span>
@@ -90,6 +86,15 @@
               <a href="/technical-guide" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
                 <span class="dropdown__label">Viva Defense Guide</span>
                 <span class="dropdown__shortcut tabular">MD ↗</span>
+              </a>
+              <div class="dropdown__divider" role="separator"></div>
+              <a href="/proposal/pdf" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+                <span class="dropdown__label">Project Proposal [PDF]</span>
+                <span class="dropdown__shortcut tabular">PDF ↗</span>
+              </a>
+              <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
+                <span class="dropdown__label">70p Technical Suite [PDF]</span>
+                <span class="dropdown__shortcut tabular">PDF ↗</span>
               </a>
               <a href="/team-pack.zip" class="dropdown__item" role="menuitem">
                 <span class="dropdown__label" style="font-weight: 600; color: var(--color-accent);">Download Team Pack</span>
@@ -182,10 +187,10 @@
       </div>
       <nav class="mobile-drawer__nav" aria-label="Mobile Navigation">
         <a href="/dashboard" class="mobile-drawer__link {% if active_page == 'dashboard' %}mobile-drawer__link--active{% endif %}">Overview</a>
-        <a href="/pos" class="mobile-drawer__link {% if active_page == 'pos' %}mobile-drawer__link--active{% endif %}">Checkout POS</a>
         <a href="/inbound" class="mobile-drawer__link {% if active_page == 'inbound' %}mobile-drawer__link--active{% endif %}">Inbound Receiving</a>
         <a href="/putaway" class="mobile-drawer__link {% if active_page == 'putaway' %}mobile-drawer__link--active{% endif %}">Putaway Routing</a>
         <a href="/warehouse" class="mobile-drawer__link {% if active_page == 'warehouse' %}mobile-drawer__link--active{% endif %}">Spatial Digital Twin</a>
+        <a href="/pos" class="mobile-drawer__link {% if active_page == 'pos' %}mobile-drawer__link--active{% endif %}">Checkout POS</a>
         <a href="/procurement" class="mobile-drawer__link {% if active_page == 'procurement' %}mobile-drawer__link--active{% endif %}">Replenishment DSS</a>
         <a href="/audits" class="mobile-drawer__link {% if active_page == 'audits' %}mobile-drawer__link--active{% endif %}">Stock Ledger</a>
         <div class="mobile-drawer__divider"></div>
@@ -237,7 +242,11 @@
     <div class="footer__bottom">
       <div class="footer__status footer-telemetry">
         <span class="status-dot status-dot--success heartbeat-dot" aria-hidden="true"></span>
+        {% if active_page == 'dashboard' %}
+        <span class="footer__status-text">All systems operational • Active Ledger Synchronized</span>
+        {% else %}
         <span class="footer__status-text">All systems operational • PG16 3NF ACTIVE</span>
+        {% endif %}
         <span class="footer__sep">/</span>
         <span class="footer__time tabular">Synced 02:00 BST</span>
       </div>
