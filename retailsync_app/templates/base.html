@@ -105,30 +105,17 @@
         </ul>
       </nav>
 
-      <!-- Real-Time Telemetry Ribbon & Store Selector (Calm Mission Studio) -->
-      <div class="telemetry-ribbon" role="status" aria-label="System Operational Telemetry">
-        <div class="telemetry-item">
-          <span class="telemetry-dot--pulsing" aria-hidden="true"></span>
-          <span>SYSTEM: <span class="telemetry-val--highlight">NOMINAL</span></span>
-        </div>
-        <span class="footer-sep" aria-hidden="true">•</span>
-        <div class="telemetry-item">
-          <span class="status-dot status-dot--success" aria-hidden="true"></span>
-          <span>FEFO SWEEP: <span class="telemetry-val--highlight">ACTIVE</span></span>
-        </div>
-        <span class="footer-sep" aria-hidden="true">•</span>
-        <div class="telemetry-item">
+      <!-- Right Utility Controls -->
+      <div class="header__actions" style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+        <!-- Compact Store Selector -->
+        <div class="store-select-wrap">
           <label for="activeStoreSelect" class="sr-only">Active Store Location</label>
-          <select id="activeStoreSelect" class="store-select-pill" onchange="switchStoreLocation(this.value)" aria-label="Active Store Location">
-            <option value="uttara" selected>Store: Uttara Central</option>
-            <option value="dhanmondi">Store: Dhanmondi Express</option>
-            <option value="gulshan">Store: Gulshan Mega Mart</option>
+          <select id="activeStoreSelect" class="store-select-pill select-store-compact" onchange="switchStoreLocation(this.value)" aria-label="Active Store Location">
+            <option value="uttara" selected>Uttara Central</option>
+            <option value="dhanmondi">Dhanmondi Express</option>
+            <option value="gulshan">Gulshan Mega Mart</option>
           </select>
         </div>
-      </div>
-
-      <!-- Right Utility Controls -->
-      <div class="header__actions">
         <!-- Role Switcher -->
         <div class="role-switcher">
           <label for="roleSwitcherSelect" class="sr-only">Switch Operational Role</label>

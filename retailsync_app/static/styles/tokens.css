@@ -31,6 +31,9 @@
     --space-8: 64px;
     --space-12: 96px;
 
+    /* 4.1 Layout */
+    --layout-max-w: 1440px;
+
     /* 5. Radius */
     --radius-max: 4px;
     --radius: 4px;
