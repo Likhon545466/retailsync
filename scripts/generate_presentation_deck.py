@@ -624,88 +624,116 @@ def create_deck():
     p_sh.font.color.rgb = COLOR_PRIMARY
 
     # ==========================================================================
-    # SLIDE 8: Budget Estimation & Risk Mitigation
+    # SLIDE 8: Risk Management & Future Safeguards
     # ==========================================================================
     slide8 = prs.slides.add_slide(blank_layout)
-    add_slide_header(slide8, "Budget Estimation & Risk Mitigation", "FINANCIAL FEASIBILITY & ENGINEERING SAFEGUARDS", 8)
+    add_slide_header(slide8, "Risk Assessment, Safeguards & Future Architecture", "ENGINEERING RISK MANAGEMENT & FUTURE-PROOF SOLUTIONS", 8)
 
-    # Left: Budget Table & Callout
-    add_card(slide8, 0.8, 1.55, 5.65, 5.25)
-    tx_b = slide8.shapes.add_textbox(Inches(1.05), Inches(1.7), Inches(5.15), Inches(5.0))
-    tf_b = tx_b.text_frame
-    tf_b.word_wrap = True
+    # Left: Concurrency & Operational Safeguards
+    add_card(slide8, 0.8, 1.55, 5.68, 5.25)
+    tx_l = slide8.shapes.add_textbox(Inches(1.05), Inches(1.7), Inches(5.18), Inches(4.9))
+    tf_l = tx_l.text_frame
+    tf_l.word_wrap = True
 
-    p_bh = tf_b.paragraphs[0]
-    p_bh.text = "FRUGAL PROTOTYPING BUDGET (BDT)"
-    p_bh.font.name = FONT_HEADING
-    p_bh.font.size = Pt(12)
-    p_bh.font.bold = True
-    p_bh.font.color.rgb = COLOR_PRIMARY
+    p_lh = tf_l.paragraphs[0]
+    p_lh.text = "OPERATIONAL & CONCURRENCY SAFEGUARDS"
+    p_lh.font.name = FONT_HEADING
+    p_lh.font.size = Pt(12)
+    p_lh.font.bold = True
+    p_lh.font.color.rgb = COLOR_ROSE
 
-    b_items = [
-        ("Cloud VPS Hosting (FastAPI & PostgreSQL)", "4,500 BDT"),
-        ("1D/2D Handheld Barcode Scanners (x2)", "3,800 BDT"),
-        ("Thermal ESC/POS Receipt Printer (x1)", "4,200 BDT"),
-        ("Domain Name & SSL Security (1 Year)", "1,800 BDT"),
-        ("FMCG Test Batches & Prototype Materials", "2,200 BDT"),
-        ("Contingency & Miscellaneous", "2,500 BDT"),
+    operational_risks = [
+        (
+            "Multi-Till Rush-Hour Race Conditions",
+            "Simultaneous checkout at 5+ tills causes overselling and double-allocation of the same lot.",
+            "PostgreSQL row-level locks (SELECT FOR UPDATE SKIP LOCKED) ensure atomic batch deduction in <2.0s. Future: Distributed Redis locking for cluster scale."
+        ),
+        (
+            "Intermittent Network Outages at Checkout",
+            "Local ISP or Wi-Fi drops disconnect cash registers from the central database.",
+            "Client-side offline transaction buffer with automatic sync queue upon reconnect. Future: PWA offline-first service worker architecture."
+        ),
+        (
+            "Barcode Scanning Degradation on Chilled Items",
+            "Moisture condensation on milk/meat pouches makes 1D barcodes unreadable.",
+            "Audio scan validation, regex string normalization, and rapid 3-letter manual SKU fallback. Future: 2D DataMatrix and HF-RFID pallet tags."
+        )
     ]
-    for item, cost in b_items:
-        p = tf_b.add_paragraph()
-        p.text = f"• {item}: {cost}"
-        p.font.name = FONT_BODY
-        p.font.size = Pt(11)
-        p.font.color.rgb = COLOR_TEXT_MAIN
-        p.space_before = Pt(3)
-
-    p_tot = tf_b.add_paragraph()
-    p_tot.text = "\nTOTAL ESTIMATE: ≈ 22,500 BDT (~$190 USD)"
-    p_tot.font.name = FONT_MONO
-    p_tot.font.size = Pt(13)
-    p_tot.font.bold = True
-    p_tot.font.color.rgb = COLOR_PRIMARY
-
-    p_roi = tf_b.add_paragraph()
-    p_roi.text = "100% Open-Source Stack: Zero recurring enterprise software fees. Preventing a single batch expiry incident (≈ ৳30,000) recovers the entire setup cost."
-    p_roi.font.name = FONT_BODY
-    p_roi.font.size = Pt(10.5)
-    p_roi.font.color.rgb = COLOR_TEXT_MUTED
-    p_roi.space_before = Pt(4)
-
-    # Right: Risks & Mitigations
-    add_card(slide8, 6.85, 1.55, 5.68, 5.25)
-    tx_r = slide8.shapes.add_textbox(Inches(7.1), Inches(1.7), Inches(5.18), Inches(5.0))
-    tf_r = tx_r.text_frame
-    tf_r.word_wrap = True
-
-    p_rh = tf_r.paragraphs[0]
-    p_rh.text = "RISKS & MITIGATION MATRIX"
-    p_rh.font.name = FONT_HEADING
-    p_rh.font.size = Pt(12)
-    p_rh.font.bold = True
-    p_rh.font.color.rgb = COLOR_ROSE
-
-    risks_compact = [
-        ("Concurrency Collisions during peak rush", "PostgreSQL row-level locking (SELECT FOR UPDATE SKIP LOCKED) with atomic commit."),
-        ("Intermittent Network Outages at checkout", "Client-side offline buffering with automatic sync queue upon reconnect."),
-        ("Damaged Barcode Labels on cold products", "Audio tone confirmation, regex string cleaning, and manual SKU fallback."),
-        ("Festival Demand Surges (Eid/Ramadan)", "Greasley safety stock variance buffer and 1-click simulation stress presets."),
-        ("Operator Resistance to Complex Tools", "Calm Mission Studio UI with zero clutter and single-key keyboard shortcuts.")
-    ]
-    for rsk, mit in risks_compact:
-        p_rk = tf_r.add_paragraph()
+    for rsk, hazard, solution in operational_risks:
+        p_rk = tf_l.add_paragraph()
         p_rk.text = f"⚠  {rsk}"
         p_rk.font.name = FONT_HEADING
         p_rk.font.size = Pt(11)
         p_rk.font.bold = True
         p_rk.font.color.rgb = COLOR_ROSE
-        p_rk.space_before = Pt(4)
+        p_rk.space_before = Pt(8)
 
-        p_mt = tf_r.add_paragraph()
-        p_mt.text = f"✓ {mit}"
-        p_mt.font.name = FONT_BODY
-        p_mt.font.size = Pt(10)
-        p_mt.font.color.rgb = COLOR_TEXT_MAIN
+        p_hz = tf_l.add_paragraph()
+        p_hz.text = f"Risk: {hazard}"
+        p_hz.font.name = FONT_BODY
+        p_hz.font.size = Pt(9.5)
+        p_hz.font.color.rgb = COLOR_TEXT_MUTED
+        p_hz.space_before = Pt(1)
+
+        p_sl = tf_l.add_paragraph()
+        p_sl.text = f"✓ Solution & Future Safeguard: {solution}"
+        p_sl.font.name = FONT_BODY
+        p_sl.font.size = Pt(9.5)
+        p_sl.font.color.rgb = COLOR_TEXT_MAIN
+        p_sl.space_before = Pt(2)
+
+    # Right: Supply Chain, Food Safety & Scalability Safeguards
+    add_card(slide8, 6.85, 1.55, 5.68, 5.25)
+    tx_r = slide8.shapes.add_textbox(Inches(7.1), Inches(1.7), Inches(5.18), Inches(4.9))
+    tf_r = tx_r.text_frame
+    tf_r.word_wrap = True
+
+    p_rh = tf_r.paragraphs[0]
+    p_rh.text = "SUPPLY CHAIN, FOOD SAFETY & SCALABILITY"
+    p_rh.font.name = FONT_HEADING
+    p_rh.font.size = Pt(12)
+    p_rh.font.bold = True
+    p_rh.font.color.rgb = COLOR_PRIMARY
+
+    scalability_risks = [
+        (
+            "Distributor Delays & Festival Demand Surges",
+            "Local supply chain volatility and festival surges (Eid/Ramadan) trigger stockouts.",
+            "Greasley Stochastic Safety Stock (SS = Z·√(L·σd² + d²·σL²)) with 1-click stress presets (1.4x, 2.5x). Future: Automated vendor EDI purchase order triggers."
+        ),
+        (
+            "Food Safety Non-Compliance (BFSA 2013)",
+            "Manual oversight allowing expired or near-expiry batches on retail shelves.",
+            "Hard-coded 65% residual shelf-life receiving gate and automated FEFO allocation. Future: IoT cold-chain sensor integration with automatic thermal anomaly alerts."
+        ),
+        (
+            "Multi-Branch Growth & Data Synchronization Lag",
+            "Expanding from single store to regional chain creates inventory sync bottlenecks.",
+            "Dockerized modular architecture with read-replica database pools. Future: Event-driven architecture (RabbitMQ/Kafka) for real-time inter-branch stock transfers."
+        )
+    ]
+    for rsk, hazard, solution in scalability_risks:
+        p_rk = tf_r.add_paragraph()
+        p_rk.text = f"⚠  {rsk}"
+        p_rk.font.name = FONT_HEADING
+        p_rk.font.size = Pt(11)
+        p_rk.font.bold = True
+        p_rk.font.color.rgb = COLOR_PRIMARY_DARK
+        p_rk.space_before = Pt(8)
+
+        p_hz = tf_r.add_paragraph()
+        p_hz.text = f"Risk: {hazard}"
+        p_hz.font.name = FONT_BODY
+        p_hz.font.size = Pt(9.5)
+        p_hz.font.color.rgb = COLOR_TEXT_MUTED
+        p_hz.space_before = Pt(1)
+
+        p_sl = tf_r.add_paragraph()
+        p_sl.text = f"✓ Solution & Future Safeguard: {solution}"
+        p_sl.font.name = FONT_BODY
+        p_sl.font.size = Pt(9.5)
+        p_sl.font.color.rgb = COLOR_TEXT_MAIN
+        p_sl.space_before = Pt(2)
 
     # ==========================================================================
     # SLIDE 9: Expected Outcomes & Academic Deliverables
