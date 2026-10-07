@@ -47,16 +47,16 @@
   </div>
 </section>
 
-<div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px;">
+<div class="dashboard-split-layout">
   <!-- Left: 2D Spatial Rack Grid with Thermal Zone Bays -->
   <div class="glass-panel" style="padding: 20px;">
-    <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;" id="aisleFilterButtons">
-      <button class="btn-sm btn-primary" onclick="filterAisle('ALL', this)">All Warehouse Bays</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('A01', this)">Aisle A01 (Ambient)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('A02', this)">Aisle A02 (Ambient)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('B01', this)">Aisle B01 (Ambient)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('C01', this)">Aisle C01 (Chilled)</button>
-      <button class="btn-sm btn-secondary" onclick="filterAisle('D01', this)">Aisle D01 (Frozen)</button>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;" id="aisleFilterButtons">
+      <button type="button" class="filter-chip is-active" onclick="filterAisle('ALL', this)">All Warehouse Bays</button>
+      <button type="button" class="filter-chip" onclick="filterAisle('A01', this)">Aisle A01 (Ambient)</button>
+      <button type="button" class="filter-chip" onclick="filterAisle('A02', this)">Aisle A02 (Ambient)</button>
+      <button type="button" class="filter-chip" onclick="filterAisle('B01', this)">Aisle B01 (Ambient)</button>
+      <button type="button" class="filter-chip" onclick="filterAisle('C01', this)">Aisle C01 (Chilled)</button>
+      <button type="button" class="filter-chip" onclick="filterAisle('D01', this)">Aisle D01 (Frozen)</button>
     </div>
 
     <div class="warehouse-bays-container" id="spatialGrid">
@@ -308,14 +308,30 @@ function closeWarehouseStickerModal() {
 }
 
 async function loadGrid() {
+  const cached = (typeof getRetailSyncCache === 'function') ? getRetailSyncCache('warehouse_grid') : null;
+  if (cached && cached.grid) {
+    gridData = cached.grid;
+    renderGrid();
+  }
+
   try {
     const res = await fetch('/api/v1/warehouse/spatial-grid');
     const data = await res.json();
-    gridData = data.grid;
-    renderGrid();
+    if (res.ok && data.grid) {
+      const isDiff = JSON.stringify(data.grid) !== JSON.stringify(gridData);
+      gridData = data.grid;
+      if (typeof setRetailSyncCache === 'function') {
+        setRetailSyncCache('warehouse_grid', data);
+      }
+      if (isDiff || !cached) {
+        renderGrid();
+      }
+    }
   } catch (e) {
-    console.error("Error loading warehouse grid:", e);
-    showToast("Failed to load warehouse grid telemetry", "error", "Telemetry Error");
+    if (!cached) {
+      console.error("Error loading warehouse grid:", e);
+      showToast("Failed to load warehouse grid telemetry", "error", "Telemetry Error");
+    }
   }
 }
 
@@ -323,9 +339,9 @@ function filterAisle(aisle, btn) {
   currentFilter = aisle;
   if (btn) {
     document.querySelectorAll('#aisleFilterButtons button').forEach(b => {
-      b.className = 'btn-sm btn-secondary';
+      b.classList.remove('is-active');
     });
-    btn.className = 'btn-sm btn-primary';
+    btn.classList.add('is-active');
   }
   renderGrid();
 }

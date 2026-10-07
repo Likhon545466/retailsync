@@ -28,6 +28,26 @@
   <link rel="stylesheet" href="/styles/index.css?v=2.2.0">
   <link rel="stylesheet" href="/static/css/app.css?v=2.2.0">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+  <!-- Speculation Rules API for Instant Route Navigation -->
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      {
+        "urls": ["/dashboard", "/pos", "/inbound", "/putaway", "/warehouse", "/procurement", "/audits"],
+        "eagerness": "eager"
+      }
+    ],
+    "prerender": [
+      {
+        "where": {
+          "href_matches": "/*"
+        },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+  </script>
   {% block head_extra %}{% endblock %}
 </head>
 <body>
@@ -987,6 +1007,119 @@
         showToast(`Successfully exported ${exportedCount} rows to CSV!`, "success", "Export Complete");
       }
     }
+  </script>
+
+  <!-- RetailSync Enterprise Background Preloader & Dynamic Cache Engine -->
+  <script>
+    (function() {
+      window.__retailsync_cache = window.__retailsync_cache || {};
+      window.__retailsync_html_cache = window.__retailsync_html_cache || {};
+
+      const CORE_ROUTES = ['/dashboard', '/pos', '/inbound', '/putaway', '/warehouse', '/procurement', '/audits'];
+      const PRELOAD_APIS = [
+        { key: 'pos_products', url: '/api/v1/pos/products' },
+        { key: 'inbound_pos', url: '/api/v1/inbound/open-pos' },
+        { key: 'putaway_batches', url: '/api/v1/putaway/unallocated-batches' },
+        { key: 'warehouse_grid', url: '/api/v1/warehouse/spatial-grid' },
+        { key: 'audits_ledger', url: '/api/v1/warehouse/ledger?limit=100' }
+      ];
+      const PRODUCT_PHOTOS = [
+        'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=400&q=80',
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80'
+      ];
+
+      window.getRetailSyncCache = function(key) {
+        if (window.__retailsync_cache[key]) return window.__retailsync_cache[key];
+        try {
+          const raw = sessionStorage.getItem('rs_cache_' + key);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            window.__retailsync_cache[key] = parsed;
+            return parsed;
+          }
+        } catch (e) {}
+        return null;
+      };
+
+      window.setRetailSyncCache = function(key, data) {
+        window.__retailsync_cache[key] = data;
+        try {
+          sessionStorage.setItem('rs_cache_' + key, JSON.stringify(data));
+        } catch (e) {}
+      };
+
+      async function prefetchAPI(item) {
+        try {
+          const res = await fetch(item.url, { priority: 'low' });
+          if (res.ok) {
+            const data = await res.json();
+            window.setRetailSyncCache(item.key, data);
+          }
+        } catch (e) {}
+      }
+
+      async function prefetchRouteHTML(route) {
+        try {
+          if (!document.querySelector(`link[rel="prefetch"][href="${route}"]`)) {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = route;
+            document.head.appendChild(link);
+          }
+          if (!window.__retailsync_html_cache[route]) {
+            const res = await fetch(route, { priority: 'low' });
+            if (res.ok) {
+              const html = await res.text();
+              window.__retailsync_html_cache[route] = html;
+            }
+          }
+        } catch (e) {}
+      }
+
+      function preloadImages() {
+        PRODUCT_PHOTOS.forEach(src => {
+          const img = new Image();
+          img.src = src;
+        });
+      }
+
+      function runBackgroundBootstrap() {
+        PRELOAD_APIS.forEach(item => prefetchAPI(item));
+        CORE_ROUTES.forEach(route => prefetchRouteHTML(route));
+        preloadImages();
+      }
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(runBackgroundBootstrap, { timeout: 1200 });
+      } else {
+        window.addEventListener('load', () => setTimeout(runBackgroundBootstrap, 200));
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.sidebar-nav-item, .topbar-action-link').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('/')) {
+            const prewarm = () => {
+              prefetchRouteHTML(href);
+              if (href === '/pos') prefetchAPI({ key: 'pos_products', url: '/api/v1/pos/products' });
+              if (href === '/inbound') prefetchAPI({ key: 'inbound_pos', url: '/api/v1/inbound/open-pos' });
+              if (href === '/putaway') prefetchAPI({ key: 'putaway_batches', url: '/api/v1/putaway/unallocated-batches' });
+              if (href === '/warehouse') prefetchAPI({ key: 'warehouse_grid', url: '/api/v1/warehouse/spatial-grid' });
+              if (href === '/audits') prefetchAPI({ key: 'audits_ledger', url: '/api/v1/warehouse/ledger?limit=100' });
+            };
+            link.addEventListener('pointerenter', prewarm, { passive: true, once: true });
+            link.addEventListener('touchstart', prewarm, { passive: true, once: true });
+          }
+        });
+      });
+    })();
   </script>
   {% block scripts %}{% endblock %}
 </body>

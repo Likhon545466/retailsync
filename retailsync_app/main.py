@@ -161,6 +161,8 @@ def get_operational_attention_items(db: Session):
 def index_route(request: Request):
     return RedirectResponse(url="/dashboard")
 
+HTML_CACHE_HEADERS = {"Cache-Control": "public, max-age=60, stale-while-revalidate=300"}
+
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard_view(request: Request, user: models.User = Depends(auth.get_current_user_optional), db: Session = Depends(get_db)):
     stats = warehouse_routes.get_operational_stats(db)
@@ -173,7 +175,8 @@ def dashboard_view(request: Request, user: models.User = Depends(auth.get_curren
             "current_user": user,
             "stats": stats,
             "attention_items": attention_items,
-        }
+        },
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/pos", response_class=HTMLResponse)
@@ -181,7 +184,8 @@ def pos_view(request: Request, user: models.User = Depends(auth.get_current_user
     return templates.TemplateResponse(
         request=request,
         name="pos.html",
-        context={"active_page": "pos", "current_user": user}
+        context={"active_page": "pos", "current_user": user},
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/inbound", response_class=HTMLResponse)
@@ -189,7 +193,8 @@ def inbound_view(request: Request, user: models.User = Depends(auth.get_current_
     return templates.TemplateResponse(
         request=request,
         name="inbound.html",
-        context={"active_page": "inbound", "current_user": user}
+        context={"active_page": "inbound", "current_user": user},
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/putaway", response_class=HTMLResponse)
@@ -197,7 +202,8 @@ def putaway_view(request: Request, user: models.User = Depends(auth.get_current_
     return templates.TemplateResponse(
         request=request,
         name="putaway.html",
-        context={"active_page": "putaway", "current_user": user}
+        context={"active_page": "putaway", "current_user": user},
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/warehouse", response_class=HTMLResponse)
@@ -205,7 +211,8 @@ def warehouse_view(request: Request, user: models.User = Depends(auth.get_curren
     return templates.TemplateResponse(
         request=request,
         name="warehouse.html",
-        context={"active_page": "warehouse", "current_user": user}
+        context={"active_page": "warehouse", "current_user": user},
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/procurement", response_class=HTMLResponse)
@@ -213,7 +220,8 @@ def procurement_view(request: Request, user: models.User = Depends(auth.get_curr
     return templates.TemplateResponse(
         request=request,
         name="procurement.html",
-        context={"active_page": "procurement", "current_user": user}
+        context={"active_page": "procurement", "current_user": user},
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/audits", response_class=HTMLResponse)
@@ -221,7 +229,8 @@ def audits_view(request: Request, user: models.User = Depends(auth.get_current_u
     return templates.TemplateResponse(
         request=request,
         name="audits.html",
-        context={"active_page": "audits", "current_user": user}
+        context={"active_page": "audits", "current_user": user},
+        headers=HTML_CACHE_HEADERS
     )
 
 @app.get("/showcase", response_class=HTMLResponse)

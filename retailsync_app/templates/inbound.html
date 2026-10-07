@@ -44,7 +44,7 @@
 </section>
 
 <!-- 2-Column Quality Gate Workspace (Left: POs / Right: Quality Inspection Form) -->
-<div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;" class="dashboard-split-layout">
+<div class="dashboard-split-layout">
   <!-- Left: Open Purchase Orders List -->
   <div class="glass-panel" style="padding: 22px; border-radius: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -190,8 +190,9 @@
         <a href="/putaway" class="btn-gradient-pill" style="text-decoration: none; padding: 8px 14px; font-size: 12px;">
           Proceed to Directed Putaway →
         </a>
-        <button type="button" class="btn-outline-pill" onclick="openStickerModal()" style="font-size: 12px; padding: 8px 14px;">
-          🏷️ Print 4x2 Batch Stickers
+        <button type="button" class="btn-outline-pill" onclick="openStickerModal()" style="font-size: 12px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          <span>Print 4x2 Batch Stickers</span>
         </button>
         <a href="/audits" class="btn-outline-pill" style="text-decoration: none; font-size: 12px; padding: 8px 14px;">
           View in Stock Ledger
@@ -270,16 +271,36 @@ function setFreshnessCheck(passed) {
 }
 
 async function loadOpenPOs() {
-  try {
-    const res = await fetch('/api/v1/inbound/open-pos');
-    openPOs = await res.json();
+  const cached = (typeof getRetailSyncCache === 'function') ? getRetailSyncCache('inbound_pos') : null;
+  if (cached && Array.isArray(cached) && cached.length > 0) {
+    openPOs = cached;
     renderPOList();
-    if (openPOs.length > 0 && !selectedPO) {
+    if (!selectedPO) {
       selectPO(openPOs[0].po_id);
     }
+  }
+
+  try {
+    const res = await fetch('/api/v1/inbound/open-pos');
+    const fresh = await res.json();
+    if (res.ok) {
+      const isDiff = JSON.stringify(fresh) !== JSON.stringify(openPOs);
+      openPOs = fresh;
+      if (typeof setRetailSyncCache === 'function') {
+        setRetailSyncCache('inbound_pos', fresh);
+      }
+      if (isDiff || !cached) {
+        renderPOList();
+        if (openPOs.length > 0 && !selectedPO) {
+          selectPO(openPOs[0].po_id);
+        }
+      }
+    }
   } catch (e) {
-    console.error("Error loading POs:", e);
-    showToast("Failed to load open purchase orders", "error", "Data Error");
+    if (!cached) {
+      console.error("Error loading POs:", e);
+      showToast("Failed to load open purchase orders", "error", "Data Error");
+    }
   }
 }
 

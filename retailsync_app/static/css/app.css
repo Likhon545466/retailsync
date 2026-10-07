@@ -450,8 +450,10 @@ td, th, .tabular, .price, .pos-price-tag, .status-strip__val, .hero-bento-val, .
 
 .brand-text-block {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
   flex: 1;
   min-width: 0;
 }
@@ -3357,3 +3359,83 @@ html.dark .glass-card,
     grid-template-columns: 1fr;
   }
 }
+
+/* Standardized 4-Column Operational Status Strip across POS, Inbound, Putaway, Warehouse, Procurement */
+.status-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 12px !important;
+  border: 1px solid var(--border-subtle) !important;
+  background: var(--bg-surface-glass) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: 20px !important;
+  padding: 8px 16px !important;
+  box-sizing: border-box !important;
+}
+
+.status-strip__item {
+  border-right: 1px solid var(--border-subtle) !important;
+  padding: 10px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.status-strip__item:last-child {
+  border-right: none !important;
+}
+
+@media (max-width: 1080px) {
+  .status-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .status-strip__item:nth-child(2) {
+    border-right: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .status-strip {
+    grid-template-columns: 1fr !important;
+  }
+  .status-strip__item {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+  }
+  .status-strip__item:last-child {
+    border-bottom: none !important;
+  }
+}
+
+/* Responsive 2-Column Split Workspace (Inbound, Putaway, Warehouse) */
+.dashboard-split-layout {
+  display: grid !important;
+  grid-template-columns: 1fr 440px !important;
+  gap: 24px !important;
+  align-items: start !important;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-split-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Standardized Product Card Vertical Metric Alignments */
+.pos-product-card {
+  min-height: 250px;
+}
+
+.pos-product-title {
+  min-height: 38px !important;
+  line-height: 1.35 !important;
+}
+
+/* Table Vertical Alignment Standards */
+.retailsync-table th,
+.retailsync-table td {
+  vertical-align: middle !important;
+}
+

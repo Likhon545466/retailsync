@@ -38,7 +38,7 @@
   </div>
 </section>
 
-<div class="glass-panel" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 18px;">
+<div class="glass-panel" style="padding: 22px; border-radius: 20px;">
   <!-- Search & Export Toolbar -->
   <div class="table-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;">
@@ -256,13 +256,30 @@ function signoffAnomaly() {
 }
 
 async function loadLedger() {
+  const cached = (typeof getRetailSyncCache === 'function') ? getRetailSyncCache('audits_ledger') : null;
+  if (cached && Array.isArray(cached) && cached.length > 0) {
+    allLedgerEntries = cached;
+    filterLedger();
+  }
+
   try {
     const res = await fetch('/api/v1/warehouse/ledger?limit=100');
-    allLedgerEntries = await res.json();
-    filterLedger();
+    const fresh = await res.json();
+    if (res.ok) {
+      const isDiff = JSON.stringify(fresh) !== JSON.stringify(allLedgerEntries);
+      allLedgerEntries = fresh;
+      if (typeof setRetailSyncCache === 'function') {
+        setRetailSyncCache('audits_ledger', fresh);
+      }
+      if (isDiff || !cached) {
+        filterLedger();
+      }
+    }
   } catch (e) {
-    console.error("Error loading ledger:", e);
-    showToast("Failed to load stock ledger transactions", "error", "Data Error");
+    if (!cached) {
+      console.error("Error loading ledger:", e);
+      showToast("Failed to load stock ledger transactions", "error", "Data Error");
+    }
   }
 }
 

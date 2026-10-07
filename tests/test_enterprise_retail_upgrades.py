@@ -206,3 +206,53 @@ def test_manager_executive_suite_and_text_consistency():
     assert res_css.status_code == 200
     assert "font-size: 15px;" in res_css.text
 
+
+def test_speculative_loading_and_background_cache():
+    """Verify Speculation Rules API, preloader, and Stale-While-Revalidate headers."""
+    # HTML routes return Cache-Control headers
+    res_dash = client.get("/dashboard")
+    assert res_dash.status_code == 200
+    assert "stale-while-revalidate" in res_dash.headers.get("cache-control", "").lower()
+
+    res_pos = client.get("/pos")
+    assert res_pos.status_code == 200
+    assert "stale-while-revalidate" in res_pos.headers.get("cache-control", "").lower()
+
+    html = res_dash.text
+    # Speculation Rules tag present
+    assert '<script type="speculationrules">' in html
+    assert '"prefetch"' in html
+    assert '"prerender"' in html
+
+    # Background Cache Engine present
+    assert "__retailsync_cache" in html
+    assert "getRetailSyncCache" in html
+    assert "pos_products" in html
+    assert "inbound_pos" in html
+
+
+def test_layout_alignments_and_box_harmony():
+    """Verify standardized status strip, responsive split layout, and card alignment rules."""
+    res_css = client.get("/static/css/app.css")
+    assert res_css.status_code == 200
+    css = res_css.text
+
+    # Status strip 4-column layout
+    assert "repeat(4, 1fr) !important;" in css
+
+    # Responsive split layout
+    assert ".dashboard-split-layout" in css
+    assert "grid-template-columns: 1fr 440px !important;" in css
+
+    # Brand text vertical stack
+    assert ".brand-text-block" in css
+    assert "flex-direction: column;" in css
+
+    # Product title height alignment
+    assert ".pos-product-title" in css
+    assert "min-height: 38px !important;" in css
+
+    # Table cell vertical alignment
+    assert "vertical-align: middle !important;" in css
+
+

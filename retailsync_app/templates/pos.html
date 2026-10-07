@@ -57,7 +57,7 @@
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
         <span>Press <kbd style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); padding: 1px 5px; border-radius: 4px; font-family: var(--font-mono);">Enter</kbd> to Scan • Tap any card to add to slip</span>
-        <button type="button" class="btn-outline-pill" onclick="openConcurrencyModal()" style="font-size: 11px; padding: 3px 10px;">⚡ Test Multi-Till Concurrency</button>
+        <button type="button" class="btn-outline-pill" onclick="openConcurrencyModal()" style="font-size: 11px; padding: 3px 10px; display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> <span>Test Multi-Till Concurrency</span></button>
       </div>
     </div>
 
@@ -343,13 +343,30 @@ function filterPosCategory(cat, btn) {
 }
 
 async function loadProducts() {
+  const cached = (typeof getRetailSyncCache === 'function') ? getRetailSyncCache('pos_products') : null;
+  if (cached && Array.isArray(cached) && cached.length > 0) {
+    products = cached;
+    renderCatalog();
+  }
+
   try {
     const res = await fetch('/api/v1/pos/products');
-    products = await res.json();
-    renderCatalog();
+    const fresh = await res.json();
+    if (res.ok) {
+      const isDiff = JSON.stringify(fresh) !== JSON.stringify(products);
+      products = fresh;
+      if (typeof setRetailSyncCache === 'function') {
+        setRetailSyncCache('pos_products', fresh);
+      }
+      if (isDiff || !cached) {
+        renderCatalog();
+      }
+    }
   } catch (e) {
-    console.error("Error loading products:", e);
-    showToast("Failed to load product catalog", "error", "Catalog Error");
+    if (!cached) {
+      console.error("Error loading products:", e);
+      showToast("Failed to load product catalog", "error", "Catalog Error");
+    }
   }
 }
 

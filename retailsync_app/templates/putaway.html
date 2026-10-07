@@ -51,7 +51,7 @@
 </div>
 
 <!-- Tab 1: Directed Putaway Panel -->
-<div id="panelPutaway" style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
+<div id="panelPutaway" class="dashboard-split-layout">
   <!-- Left: Unallocated Batches Queue -->
   <div class="glass-panel" style="padding: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -395,13 +395,30 @@ function completeWavePick() {
 }
 
 async function loadUnallocated() {
+  const cached = (typeof getRetailSyncCache === 'function') ? getRetailSyncCache('putaway_batches') : null;
+  if (cached && Array.isArray(cached)) {
+    unallocated = cached;
+    renderUnallocated();
+  }
+
   try {
     const res = await fetch('/api/v1/putaway/unallocated-batches');
-    unallocated = await res.json();
-    renderUnallocated();
+    const fresh = await res.json();
+    if (res.ok) {
+      const isDiff = JSON.stringify(fresh) !== JSON.stringify(unallocated);
+      unallocated = fresh;
+      if (typeof setRetailSyncCache === 'function') {
+        setRetailSyncCache('putaway_batches', fresh);
+      }
+      if (isDiff || !cached) {
+        renderUnallocated();
+      }
+    }
   } catch (e) {
-    console.error("Error loading unallocated batches:", e);
-    showToast("Failed to load staging dock batches", "error", "Data Error");
+    if (!cached) {
+      console.error("Error loading unallocated batches:", e);
+      showToast("Failed to load staging dock batches", "error", "Data Error");
+    }
   }
 }
 
