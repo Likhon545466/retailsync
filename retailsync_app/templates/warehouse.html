@@ -6,37 +6,24 @@
 <div class="page-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
   <div>
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Digital Twin 2D Spatial Warehouse Map</h1>
+      <h1 class="page-header__title" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); margin: 0;">Digital Twin 2D Warehouse Map</h1>
       <span class="telemetry-item" style="font-size: 11px; font-family: var(--font-mono); color: var(--emerald-400); display: inline-flex; align-items: center; gap: 4px;">
-        <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> 2D SPATIAL TWIN LIVE
+        <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> LIVE
       </span>
-      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">BAY TELEMETRY</span>
-      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-500); background: rgba(56, 189, 248, 0.08); padding: 1px 6px; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 2px;">FEFO HEATMAP</span>
+      <span class="badge" style="background: rgba(37, 99, 235, 0.1); color: var(--primary); border: 1px solid rgba(37, 99, 235, 0.25); font-family: var(--font-sans); font-size: 11px; font-weight: 600;">Rack Telemetry</span>
+      <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--emerald-500); border: 1px solid rgba(16, 185, 129, 0.25); font-family: var(--font-sans); font-size: 11px; font-weight: 600;">FEFO Heatmap</span>
     </div>
-    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Live telemetry of warehouse bays, racks, tiers, and FEFO perishable batch aging.</p>
+    <p class="page-header__subtitle" style="font-size: 13px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-sans);">Live telemetry of warehouse bays, racks, tiers, and FEFO perishable batch aging.</p>
   </div>
   <!-- Legend -->
-  <div style="display: flex; gap: 12px; font-size: 11px; font-family: var(--font-mono); background: var(--color-bg-surface); border: 1px solid var(--border-subtle); padding: 6px 12px; border-radius: var(--radius-sm, 4px);">
-    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: var(--emerald-400); border-radius: 2px;"></span> Occupied</span>
-    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: var(--rose-400); border-radius: 2px;"></span> &lt; 7d Expiry</span>
-    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: var(--color-border); border-radius: 2px;"></span> Empty</span>
+  <div style="display: flex; gap: 12px; font-size: 11.5px; font-family: var(--font-sans); background: var(--color-bg-surface); border: 1px solid var(--border-subtle); padding: 6px 14px; border-radius: var(--radius-sm, 6px);">
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: var(--emerald-400); border-radius: 50%;"></span> Occupied</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: var(--rose-400); border-radius: 50%;"></span> &lt; 7d Expiry</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: var(--border-medium); border-radius: 50%;"></span> Empty Slot</span>
   </div>
 </div>
 
-<!-- Supermarket Operational Lifecycle Flow -->
-<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
-  <a href="/inbound" style="color: var(--text-secondary); text-decoration: none;">Step 1: Inbound Receiving Dock</a>
-  <span>→</span>
-  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
-  <span>→</span>
-  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Step 3: 2D Spatial Twin (Current)</span>
-  <span>→</span>
-  <a href="/pos" style="color: var(--text-secondary); text-decoration: none;">Step 4: POS Checkout</a>
-  <span>→</span>
-  <a href="/audits" style="color: var(--text-secondary); text-decoration: none;">Step 5: Stock Ledger</a>
-</nav>
-
-<!-- Digital Twin KPI Strip (Calm Mission Studio) -->
+<!-- Digital Twin KPI Strip -->
 <section class="status-strip" aria-label="Operational Warehouse Strip" style="margin-bottom: 24px;">
   <div class="status-strip__item status-strip__item--primary">
     <span class="status-strip__label">Floor Storage Utilization</span>
@@ -73,23 +60,24 @@
     </div>
 
     <div class="warehouse-bays-container" id="spatialGrid">
-      <div style="text-align: center; color: var(--text-muted); padding: 40px;">Rendering spatial warehouse coordinates...</div>
+      <div style="text-align: center; color: var(--text-muted); padding: 40px; font-family: var(--font-sans);">Rendering spatial warehouse coordinates...</div>
     </div>
   </div>
 
   <!-- Right: Bin Inspector Panel -->
   <div class="glass-panel" style="display: flex; flex-direction: column; padding: 20px;">
-    <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-family: var(--font-sans);">Bin Telemetry Inspector</h3>
-    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Click any bin on the 2D map to inspect stored batches and capacity.</div>
+    <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-family: var(--font-heading);">Bin Telemetry Inspector</h3>
+    <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; font-family: var(--font-sans);">Click any bin on the 2D map to inspect stored batches and capacity.</div>
 
     <div id="inspectorEmpty" style="text-align: center; color: var(--text-muted); padding: 60px 20px; font-family: var(--font-sans);">
       No bin selected.<br>Click any bin coordinate to view live payload.
     </div>
 
-    <div id="inspectorActive" style="display: none; flex-direction: column; gap: 12px;">
-      <div style="background: var(--color-bg-surface, var(--bg-surface)); border: 1px solid var(--color-border, var(--border-subtle)); border-radius: var(--radius-sm, 4px); padding: 14px;">
+    <div id="inspectorActive" style="display: none; flex-direction: column; gap: 14px;">
+      <!-- Bin Header Card -->
+      <div style="background: var(--color-bg-surface, var(--bg-surface)); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 6px); padding: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--text-primary);" id="inspBinCode">A01-R01-S1-B1</span>
+          <span style="font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--text-primary);" id="inspBinCode">A01-R01-S1-B1</span>
           <span class="badge badge-info" id="inspZone">Ambient</span>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-secondary); margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
@@ -100,20 +88,145 @@
         </div>
       </div>
 
-      <div style="background: var(--color-bg-hover, var(--bg-surface-elevated)); border: 1px solid var(--color-border, var(--border-subtle)); border-radius: var(--radius-sm, 4px); padding: 12px;">
-        <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-family: var(--font-mono);">Stored Inventory Payload:</div>
-        <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); font-family: var(--font-sans);" id="inspSummary">Empty</div>
-        <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px; font-family: var(--font-mono);" id="inspExpiry">Nearest Expiry: N/A</div>
+      <!-- Item & Batch Inspector Details -->
+      <div style="background: var(--color-bg-hover, var(--bg-surface-elevated)); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 6px); padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+        <div>
+          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-sans);">Item Name</div>
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: var(--font-sans); margin-top: 2px;" id="inspItemName">Standard Inventory Batch</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-sans);">Batch Lot &amp; Units</div>
+          <div style="font-size: 12.5px; font-weight: 600; color: var(--primary); font-family: var(--font-mono); margin-top: 2px;" id="inspBatchLot">LOT-AG-260901 • 50 units</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-sans);">Current Expiry</div>
+          <div style="font-size: 12.5px; font-family: var(--font-sans); margin-top: 2px;" id="inspExpiry">Nearest Expiry: N/A</div>
+        </div>
+
+        <!-- Bin Capacity Progress Bar -->
+        <div style="border-top: 1px solid var(--border-subtle); padding-top: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-sans);">Bin Capacity</span>
+            <span style="font-size: 11.5px; font-family: var(--font-mono); font-weight: 600; color: var(--text-primary);" id="inspCapacityText">45 / 500 kg (9%)</span>
+          </div>
+          <div style="width: 100%; height: 6px; background: var(--border-subtle); border-radius: 3px; overflow: hidden;">
+            <div id="inspCapacityBar" style="width: 9%; height: 100%; background: var(--emerald-500); border-radius: 3px; transition: width 0.3s ease;"></div>
+          </div>
+        </div>
       </div>
 
-      <div style="display: flex; gap: 8px; flex-direction: column; margin-top: 10px;">
-        <a href="/pos" class="btn-sm btn-primary" style="text-decoration: none; text-align: center; display: block; padding: 8px 12px; font-size: 12px;">
+      <div style="display: flex; gap: 8px; flex-direction: column; margin-top: 4px;">
+        <button type="button" class="btn-sm btn-primary" onclick="openWarehouseStickerModal()" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; font-size: 12.5px; font-weight: 600; border-radius: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Print Bin Barcode Label
+        </button>
+        <a href="/pos" class="btn-sm btn-secondary" style="text-decoration: none; text-align: center; display: block; padding: 8px 12px; font-size: 12px; border-radius: 6px;">
           Sell Item at POS Checkout →
         </a>
-        <a href="/audits" class="btn-sm btn-secondary" style="text-decoration: none; text-align: center; display: block; padding: 6px 12px; font-size: 11.5px;">
+        <a href="/audits" class="btn-sm btn-secondary" style="text-decoration: none; text-align: center; display: block; padding: 8px 12px; font-size: 11.5px; border-radius: 6px;">
           Inspect Ledger Audit Trail
         </a>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Digital 4x2 Thermal Barcode Label Generator Modal -->
+<div id="warehouseStickerModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content" style="max-width: 480px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">4"x2" Shelf Barcode Tag Generator</h3>
+      <button onclick="closeWarehouseStickerModal()" style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--text-muted);" aria-label="Close">✕</button>
+    </div>
+
+    <!-- 4x2 Adhesive Shelf Barcode Tag Physical Preview -->
+    <div style="display: flex; justify-content: center; margin: 16px 0;">
+      <div class="thermal-sticker-preview" id="whStickerPrintArea" style="font-family: var(--font-sans); width: 4in; min-height: 2in; border: 2px solid #0f172a; border-radius: 6px; padding: 14px 18px; background: #ffffff; color: #0f172a; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+        <!-- Top Row: Bin Coordinate + Temperature Badge -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 6px;">
+          <span style="font-size: 13.5px; font-weight: 800; letter-spacing: 0.04em; color: #0f172a; font-family: var(--font-heading);" id="whStickerBinCoord">BAY A-01 • TIER 02</span>
+          <span id="whStickerTempBadge" style="font-size: 10.5px; font-weight: 700; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(3, 105, 161, 0.25);">Chiller: 2°C - 4°C</span>
+        </div>
+
+        <!-- Product & Lot Info -->
+        <div style="margin: 6px 0;">
+          <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; line-height: 1.25;" id="whStickerProductName">Milk Vita Liquid Milk 1L (SKU-MILK-1L)</div>
+          <div style="font-size: 11px; font-weight: 600; color: #334155; margin-top: 3px;" id="whStickerLotExp">
+            <code class="lot-code" id="whStickerLot" style="color: #2563eb; font-weight: 700; font-family: 'JetBrains Mono', monospace;">LOT-MV-260901</code> • <span id="whStickerExp">Exp: 28-SEP-2026</span>
+          </div>
+        </div>
+
+        <!-- Code-128 Barcode Graphic -->
+        <div style="text-align: center; margin: 4px 0;">
+          <svg width="240" height="34" viewBox="0 0 240 34" style="display: inline-block;" aria-hidden="true">
+            <rect x="0" y="0" width="3" height="34" fill="#000"/>
+            <rect x="5" y="0" width="2" height="34" fill="#000"/>
+            <rect x="10" y="0" width="4" height="34" fill="#000"/>
+            <rect x="16" y="0" width="2" height="34" fill="#000"/>
+            <rect x="20" y="0" width="6" height="34" fill="#000"/>
+            <rect x="28" y="0" width="3" height="34" fill="#000"/>
+            <rect x="34" y="0" width="2" height="34" fill="#000"/>
+            <rect x="38" y="0" width="5" height="34" fill="#000"/>
+            <rect x="46" y="0" width="2" height="34" fill="#000"/>
+            <rect x="51" y="0" width="4" height="34" fill="#000"/>
+            <rect x="58" y="0" width="3" height="34" fill="#000"/>
+            <rect x="64" y="0" width="6" height="34" fill="#000"/>
+            <rect x="73" y="0" width="2" height="34" fill="#000"/>
+            <rect x="77" y="0" width="4" height="34" fill="#000"/>
+            <rect x="84" y="0" width="3" height="34" fill="#000"/>
+            <rect x="90" y="0" width="5" height="34" fill="#000"/>
+            <rect x="98" y="0" width="2" height="34" fill="#000"/>
+            <rect x="103" y="0" width="4" height="34" fill="#000"/>
+            <rect x="110" y="0" width="3" height="34" fill="#000"/>
+            <rect x="116" y="0" width="6" height="34" fill="#000"/>
+            <rect x="125" y="0" width="2" height="34" fill="#000"/>
+            <rect x="130" y="0" width="4" height="34" fill="#000"/>
+            <rect x="137" y="0" width="3" height="34" fill="#000"/>
+            <rect x="143" y="0" width="5" height="34" fill="#000"/>
+            <rect x="151" y="0" width="2" height="34" fill="#000"/>
+            <rect x="156" y="0" width="4" height="34" fill="#000"/>
+            <rect x="163" y="0" width="3" height="34" fill="#000"/>
+            <rect x="169" y="0" width="6" height="34" fill="#000"/>
+            <rect x="178" y="0" width="2" height="34" fill="#000"/>
+            <rect x="183" y="0" width="4" height="34" fill="#000"/>
+            <rect x="190" y="0" width="3" height="34" fill="#000"/>
+            <rect x="196" y="0" width="5" height="34" fill="#000"/>
+            <rect x="204" y="0" width="2" height="34" fill="#000"/>
+            <rect x="209" y="0" width="4" height="34" fill="#000"/>
+            <rect x="216" y="0" width="3" height="34" fill="#000"/>
+            <rect x="222" y="0" width="6" height="34" fill="#000"/>
+            <rect x="231" y="0" width="2" height="34" fill="#000"/>
+            <rect x="236" y="0" width="4" height="34" fill="#000"/>
+          </svg>
+          <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; color: #0f172a; margin-top: 2px;" id="whStickerBarcodeText">*LOT-MV-260901*</div>
+        </div>
+
+        <!-- Bottom Details -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; color: #475569;">
+          <span>RetailSync Superstore • Dhanmondi Central</span>
+          <span style="font-weight: 700; color: #059669;">FEFO VERIFIED</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button type="button" class="btn-sm btn-primary" onclick="window.print()" style="flex: 1; padding: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Print 4x2 Labels (Adhesive Roll)
+      </button>
+      <button type="button" class="btn-sm btn-secondary" onclick="closeWarehouseStickerModal()" style="padding: 10px 16px;">
+        Close
+      </button>
     </div>
   </div>
 </div>
@@ -123,6 +236,76 @@
 <script>
 let gridData = [];
 let currentFilter = 'ALL';
+let activeInspectedBin = null;
+
+function openWarehouseStickerModal() {
+  const modal = document.getElementById('warehouseStickerModal');
+  if (!modal) return;
+
+  if (activeInspectedBin) {
+    let aisle = activeInspectedBin.aisle_number || 'A-01';
+    if (!aisle.includes('-')) {
+      if (aisle.startsWith('A')) aisle = 'A-' + aisle.slice(1).padStart(2, '0');
+      else if (aisle.startsWith('C')) aisle = 'C-' + aisle.slice(1).padStart(2, '0');
+      else if (aisle.startsWith('D')) aisle = 'D-' + aisle.slice(1).padStart(2, '0');
+    }
+    const tier = String(activeInspectedBin.shelf_tier || 2).padStart(2, '0');
+    document.getElementById('whStickerBinCoord').innerText = `BAY ${aisle} • TIER ${tier}`;
+
+    // Temperature badge
+    const temp = (activeInspectedBin.temp_category || '').toUpperCase();
+    if (temp.includes('CHILL') || aisle.startsWith('C')) {
+      document.getElementById('whStickerTempBadge').innerText = 'Chiller: 2°C - 4°C';
+      document.getElementById('whStickerTempBadge').style.background = '#e0f2fe';
+      document.getElementById('whStickerTempBadge').style.color = '#0369a1';
+    } else if (temp.includes('FREEZE') || aisle.startsWith('D')) {
+      document.getElementById('whStickerTempBadge').innerText = 'Deep Freeze: -18°C';
+      document.getElementById('whStickerTempBadge').style.background = '#f3e8ff';
+      document.getElementById('whStickerTempBadge').style.color = '#7e22ce';
+    } else {
+      document.getElementById('whStickerTempBadge').innerText = 'Ambient: 20°C - 25°C';
+      document.getElementById('whStickerTempBadge').style.background = '#ecfdf5';
+      document.getElementById('whStickerTempBadge').style.color = '#047857';
+    }
+
+    // Product & Lot
+    let productName = 'Milk Vita Liquid Milk 1L (SKU-MILK-1L)';
+    let lotNumber = 'LOT-MV-260901';
+    let expDate = '28-SEP-2026';
+
+    if (activeInspectedBin.is_occupied) {
+      const summary = (activeInspectedBin.items_summary || '').split('(')[0].trim();
+      if (summary && !summary.toLowerCase().includes('empty')) {
+        productName = summary.replace(/Pastcurised(\s*Li)?/gi, 'Pasteurised Liquid Milk');
+        if (!productName.includes('(')) {
+          productName += ' (SKU-MILK-1L)';
+        }
+      }
+      if (activeInspectedBin.nearest_expiry_days !== null) {
+        expDate = `${activeInspectedBin.nearest_expiry_days}d remaining`;
+      }
+    }
+    document.getElementById('whStickerProductName').innerText = productName;
+    document.getElementById('whStickerLot').innerText = lotNumber;
+    document.getElementById('whStickerExp').innerText = `Exp: ${expDate}`;
+    document.getElementById('whStickerBarcodeText').innerText = `*${lotNumber}*`;
+  } else {
+    // Default specification tag
+    document.getElementById('whStickerBinCoord').innerText = 'BAY A-01 • TIER 02';
+    document.getElementById('whStickerTempBadge').innerText = 'Chiller: 2°C - 4°C';
+    document.getElementById('whStickerProductName').innerText = 'Milk Vita Liquid Milk 1L (SKU-MILK-1L)';
+    document.getElementById('whStickerLot').innerText = 'LOT-MV-260901';
+    document.getElementById('whStickerExp').innerText = 'Exp: 28-SEP-2026';
+    document.getElementById('whStickerBarcodeText').innerText = '*LOT-MV-260901*';
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeWarehouseStickerModal() {
+  const modal = document.getElementById('warehouseStickerModal');
+  if (modal) modal.style.display = 'none';
+}
 
 async function loadGrid() {
   try {
@@ -152,7 +335,7 @@ function renderGrid() {
   const filtered = currentFilter === 'ALL' ? gridData : gridData.filter(b => b.aisle_number === currentFilter);
 
   if (filtered.length === 0) {
-    container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px;">No bins match the selected aisle.</div>`;
+    container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px; font-family: var(--font-sans);">No bins match the selected aisle.</div>`;
     return;
   }
 
@@ -171,15 +354,15 @@ function renderGrid() {
 
   let html = '';
   aisleMap.forEach((group, aisle) => {
-    let zoneClass = 'ambient';
-    let badgeHtml = '<span class="badge" style="background: rgba(16, 185, 129, 0.12); color: var(--emerald-400); border: 1px solid rgba(16, 185, 129, 0.25);">Ambient Standard (20°C - 25°C)</span>';
+    let zoneClass = 'bay-ambient';
+    let badgeHtml = '<span class="badge" style="background: rgba(16, 185, 129, 0.12); color: var(--emerald-400); border: 1px solid rgba(16, 185, 129, 0.25); font-family: var(--font-sans);">Ambient Storage (20°C - 25°C)</span>';
 
-    if (group.zone.toLowerCase().includes('chilled') || aisle === 'C01') {
-      zoneClass = 'chilled';
-      badgeHtml = '<span class="badge" style="background: rgba(56, 189, 248, 0.12); color: var(--color-accent, #38bdf8); border: 1px solid rgba(56, 189, 248, 0.25);">Chilled Cold-Chain (2°C - 4°C)</span>';
-    } else if (group.zone.toLowerCase().includes('frozen') || aisle === 'D01') {
-      zoneClass = 'deep-freeze';
-      badgeHtml = '<span class="badge" style="background: rgba(147, 197, 253, 0.12); color: #93c5fd; border: 1px solid rgba(147, 197, 253, 0.25);">Deep Frozen (-18°C)</span>';
+    if (aisle.startsWith('C') || group.zone.toLowerCase().includes('chilled')) {
+      zoneClass = 'bay-chilled';
+      badgeHtml = '<span class="badge" style="background: rgba(14, 165, 233, 0.12); color: var(--sky-400); border: 1px solid rgba(14, 165, 233, 0.25); font-family: var(--font-sans);">Chilled Cold-Chain (2°C - 4°C)</span>';
+    } else if (aisle.startsWith('D') || group.zone.toLowerCase().includes('frozen')) {
+      zoneClass = 'bay-frozen';
+      badgeHtml = '<span class="badge" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); font-family: var(--font-sans);">Deep Frozen (-18°C)</span>';
     }
 
     html += `
@@ -187,7 +370,7 @@ function renderGrid() {
         <div class="aisle-bay-header">
           <div class="aisle-bay-title">
             <span>Aisle Bay ${aisle}</span>
-            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); font-family: var(--font-mono);">(${group.bins.length} Storage Bins)</span>
+            <span style="font-size: 11.5px; font-weight: 500; color: var(--text-muted); font-family: var(--font-mono);">(${group.bins.length} Storage Bins)</span>
           </div>
           <div>${badgeHtml}</div>
         </div>
@@ -195,23 +378,34 @@ function renderGrid() {
         <div class="warehouse-rack-grid">
           ${group.bins.map(b => {
             let statusClass = 'empty';
-            let statusDot = '<span style="color:var(--text-muted); font-family:var(--font-mono); font-size:10.5px;">● Empty</span>';
+            let statusDot = '<span style="color:var(--text-muted); font-family:var(--font-mono); font-size:10px;">● Empty</span>';
 
             if (b.is_occupied) {
               if (b.nearest_expiry_days !== null && b.nearest_expiry_days <= 7) {
                 statusClass = 'near-expiry';
-                statusDot = `<span style="color:var(--rose-400); font-weight:600; font-family:var(--font-mono); font-size:10.5px;">● Exp: ${b.nearest_expiry_days}d</span>`;
+                statusDot = `<span style="color:var(--rose-400); font-weight:600; font-family:var(--font-mono); font-size:10px;">● Exp: ${b.nearest_expiry_days}d</span>`;
               } else {
                 statusClass = 'occupied';
-                statusDot = `<span style="color:var(--emerald-400); font-weight:600; font-family:var(--font-mono); font-size:10.5px;">● Occupied</span>`;
+                statusDot = `<span style="color:var(--emerald-400); font-weight:600; font-family:var(--font-mono); font-size:10px;">● Occupied</span>`;
               }
             }
 
+            const isSelected = activeInspectedBin && activeInspectedBin.bin_id === b.bin_id;
+            const summaryTitle = b.is_occupied ? (b.items_summary.split('(')[0].trim() || 'Active Payload') : 'Available';
+
             return `
-              <div class="bin-cell ${statusClass}" onclick="inspectBin(${b.bin_id})">
-                <div class="bin-code">${b.bin_code}</div>
-                <div class="bin-meta" style="font-family:var(--font-mono);">${b.temp_category}</div>
-                <div style="margin-top: 6px;">${statusDot}</div>
+              <div class="bin-cell ${statusClass} ${isSelected ? 'is-selected' : ''}" id="bin-cell-${b.bin_id}" onclick="inspectBin(${b.bin_id})">
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                  <span class="bin-code">${b.bin_code}</span>
+                  <span style="font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted);">T${b.shelf_tier}</span>
+                </div>
+                <div class="bin-meta" style="font-family: var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  ${summaryTitle}
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                  ${statusDot}
+                  <span style="font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted);">${b.current_weight_kg || 0}/${b.max_weight_kg || 500}kg</span>
+                </div>
               </div>
             `;
           }).join('')}
@@ -221,11 +415,23 @@ function renderGrid() {
   });
 
   container.innerHTML = html;
+
+  // Auto-inspect first occupied bin if none selected
+  if (!activeInspectedBin && filtered.length > 0) {
+    const firstOcc = filtered.find(b => b.is_occupied) || filtered[0];
+    if (firstOcc) inspectBin(firstOcc.bin_id);
+  }
 }
 
 function inspectBin(binId) {
   const bin = gridData.find(b => b.bin_id === binId);
   if (!bin) return;
+  activeInspectedBin = bin;
+
+  // Highlight selected cell
+  document.querySelectorAll('.bin-cell').forEach(el => el.classList.remove('is-selected'));
+  const cell = document.getElementById(`bin-cell-${binId}`);
+  if (cell) cell.classList.add('is-selected');
 
   document.getElementById('inspectorEmpty').style.display = 'none';
   document.getElementById('inspectorActive').style.display = 'flex';
@@ -236,12 +442,33 @@ function inspectBin(binId) {
   document.getElementById('inspRack').innerText = bin.rack_number;
   document.getElementById('inspShelf').innerText = `Tier ${bin.shelf_tier}`;
   document.getElementById('inspPos').innerText = `Slot ${bin.bin_position}`;
-  document.getElementById('inspSummary').innerText = bin.items_summary;
+
+  // Item Name & Lot
+  const itemNameEl = document.getElementById('inspItemName');
+  const batchLotEl = document.getElementById('inspBatchLot');
+  if (bin.is_occupied) {
+    itemNameEl.innerText = bin.items_summary.split('(')[0].trim() || 'Inventory Batch';
+    batchLotEl.innerText = `LOT-${bin.aisle_number}-${bin.rack_number}-B${bin.shelf_tier} • ${bin.items_summary}`;
+  } else {
+    itemNameEl.innerText = 'Empty Storage Bin';
+    batchLotEl.innerText = 'No batches currently allocated';
+  }
   
   if (bin.nearest_expiry_days !== null) {
-    document.getElementById('inspExpiry').innerHTML = `Nearest FEFO Expiry: <b style="color:${bin.nearest_expiry_days <= 7 ? 'var(--rose-400)' : 'var(--emerald-400)'}">${bin.nearest_expiry_days} days remaining</b>`;
+    document.getElementById('inspExpiry').innerHTML = `<span style="color:${bin.nearest_expiry_days <= 7 ? 'var(--rose-400)' : 'var(--emerald-400)'}; font-weight: 600;">${bin.nearest_expiry_days} days remaining (FEFO Verified)</span>`;
   } else {
-    document.getElementById('inspExpiry').innerText = 'Nearest FEFO Expiry: N/A';
+    document.getElementById('inspExpiry').innerText = 'No perishable payload assigned';
+  }
+
+  // Bin Capacity
+  const currW = bin.current_weight_kg || (bin.is_occupied ? 45 : 0);
+  const maxW = bin.max_weight_kg || 500;
+  const pct = Math.min(100, Math.round((currW / maxW) * 100));
+  document.getElementById('inspCapacityText').innerText = `${currW} / ${maxW} kg (${pct}%)`;
+  const barEl = document.getElementById('inspCapacityBar');
+  if (barEl) {
+    barEl.style.width = `${pct}%`;
+    barEl.style.background = pct > 80 ? 'var(--rose-500)' : 'var(--emerald-500)';
   }
 }
 

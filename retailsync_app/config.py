@@ -25,9 +25,9 @@ class Settings(BaseSettings):
     DEPARTMENT: str = "Department of Software Engineering"
     COURSE: str = "SE-231: Capstone Project 2"
     TEAM_MEMBERS: list[dict] = [
-        {"name": "Raisul Islam Likhon", "id": "251-35-508", "role": "Project Lead"},
-        {"name": "Shottobroto Dey", "id": "251-35-017", "role": "Core Developer"},
-        {"name": "Golam Husnain Papon", "id": "251-35-529", "role": "Core Developer"}
+        {"name": "Raisul Islam Likhon", "role": "Project Lead"},
+        {"name": "Shottobroto Dey", "role": "Core Developer"},
+        {"name": "Golam Husnain Papon", "role": "Core Developer"}
     ]
     BATCH: str = "44th Batch"
     SECTION: str = "SWE-44D"

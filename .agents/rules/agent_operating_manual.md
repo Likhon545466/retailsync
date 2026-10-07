@@ -1,6 +1,17 @@
 # Universal Agent Operating Manual & Engineering Standards
 
-This document establishes the universal operating protocol for AI coding agents. Any agent working on this or derived codebases must adhere to these eight foundational pillars.
+This document establishes the universal operating protocol for AI coding agents. Any agent working on this or derived codebases must adhere to these foundational pillars.
+
+---
+
+## 0. Mandatory Pre-Execution Implementation Plan ("Plan Before Mutation")
+- **Strict Non-Negotiable Rule:** Before applying ANY edits, mutating files, creating new modules, or going live with changes—**no matter how small or trivial the change is (even a 1-line typo fix, single CSS variable tweak, or simple config edit)**—the agent MUST FIRST communicate a structured **Implementation Plan** to the user.
+- **Required Plan Structure:**
+  1. **Objective & Targeted Files:** Explicit list of files and components to be modified.
+  2. **Step-by-Step Technical Changes:** Specific description of code additions, modifications, or deletions.
+  3. **Verification & Audit Strategy:** Exact commands, tests, or scripts that will validate the changes.
+  4. **Risk & Invariant Safeguards:** Confirmation that existing test suites, database invariants, and UI tokens will not regress.
+- **Workflow Protocol:** Present the plan clearly before making live changes.
 
 ---
 

@@ -1,450 +1,509 @@
 {% extends "base.html" %}
 
-{% block title %}Operations Overview — Retail Sync WMS{% endblock %}
+{% block title %}Operations Overview — RetailSync WMS{% endblock %}
 
 {% block content %}
-<!-- 1. Page Header / Hero Area -->
-<section class="page-header" aria-labelledby="pageTitle" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
-  <div class="page-header__left">
-    <h1 id="pageTitle" class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Operations Overview</h1>
-    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Centralized retail inventory valuation, checkout telemetry, and multi-tier warehouse control.</p>
-  </div>
-  <div class="page-header__right">
-    <div class="telemetry-status" aria-label="System status" style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); background: var(--color-bg-surface); border: 1px solid var(--border-subtle); padding: 6px 12px; border-radius: var(--radius-sm, 4px);">
-      <span class="status-dot status-dot--success" aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span>
-      <span class="telemetry-status__text" style="color: var(--emerald-400); font-weight: 600;">Telemetry active</span>
-      <span class="telemetry-status__sep">/</span>
-      <span class="telemetry-status__time tabular">Synced 02:00 BST</span>
-</div>
-</section>
-
-<!-- Supermarket Operational Lifecycle Flow -->
-<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
-  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Master Overview Cockpit</span>
-  <span>→</span>
-  <a href="/inbound" style="color: var(--text-secondary); text-decoration: none;">Step 1: Inbound Dock</a>
-  <span>→</span>
-  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
-  <span>→</span>
-  <a href="/warehouse" style="color: var(--text-secondary); text-decoration: none;">Step 3: Spatial Twin</a>
-  <span>→</span>
-  <a href="/pos" style="color: var(--text-secondary); text-decoration: none;">Step 4: POS Checkout</a>
-  <span>→</span>
-  <a href="/procurement" style="color: var(--text-secondary); text-decoration: none;">Step 5: Replenishment DSS</a>
-  <span>→</span>
-  <a href="/audits" style="color: var(--text-secondary); text-decoration: none;">Step 6: Stock Ledger</a>
-</nav>
-
-<!-- 2. Status Strip (Hairline Separators, Mono Valuation) -->
-<section class="status-strip" aria-label="Operational Telemetry Strip" style="margin-bottom: 24px;">
-  <div class="status-strip__item status-strip__item--primary">
-    <span class="status-strip__label">Inventory Valuation</span>
-    <div class="status-strip__val tabular" id="metricValuation" data-target="{{ stats.total_inventory_valuation_bdt }}">
+<!-- Exactly Three (3) Hero Bento Glass Cards -->
+<section class="hero-bento-grid" aria-label="Executive Operational Summary">
+  <!-- Bento Card 1: Total Inventory Valuation -->
+  <article class="hero-bento-card glass-panel">
+    <div class="hero-bento-label">
+      <span class="status-strip__label">Total Inventory Valuation</span>
+      <span style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: #10b981;">৳</span>
+    </div>
+    <div class="hero-bento-val status-strip__val tabular" id="metricValuation" data-target="{{ stats.total_inventory_valuation_bdt }}">
       <span class="status-strip__currency">৳</span>{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}
     </div>
-    <span class="status-strip__sub">Asset ledger synced</span>
-  </div>
+    <div class="hero-bento-sub status-strip__sub">Cost-basis live asset ledger</div>
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; gap: 12px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
+      <span>Active SKUs: <strong style="color: var(--text-primary);">{{ stats.total_active_skus }}</strong></span>
+      <span>•</span>
+      <span>Open Orders: <strong style="color: var(--text-primary);">{{ stats.open_purchase_orders }}</strong></span>
+      <span>•</span>
+      <span>Checkout Latency: <strong style="color: var(--text-primary);">{{ stats.avg_pos_latency_ms|round|int }} ms</strong></span>
+    </div>
+  </article>
 
+  <!-- Bento Card 2: Active Batches -->
+  <article class="hero-bento-card glass-panel">
+    <div class="hero-bento-label">
+      <span class="status-strip__label">Active Batches</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: #6366f1;">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+    </div>
+    <div class="hero-bento-val tabular" style="color: #6366f1;">{{ stats.active_inventory_batches }} Batches</div>
+    <div class="hero-bento-sub">FEFO tracked across Bays A-C &amp; Chillers</div>
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+      Cold-chain telemetry: <strong style="color: #10b981;">100% In-spec (2°C-6°C)</strong>
+    </div>
+  </article>
+
+  <!-- Bento Card 3: Priority Action Needed -->
+  <article class="hero-bento-card glass-panel">
+    <div class="hero-bento-label">
+      <span class="status-strip__label">Priority Action Needed</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: #ef4444;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </div>
+    <div class="hero-bento-val tabular" style="color: #ef4444;">{{ attention_items|length if attention_items else '3' }} Items</div>
+    <div class="hero-bento-sub">1 near-expiry batch, 2 reorder triggers</div>
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+      Immediate triage: <strong style="color: #ef4444;">Floor markdown &amp; PO issuance</strong>
+    </div>
+  </article>
+</section>
+
+<!-- Contract compatibility status-strip wrapper -->
+<div class="status-strip" style="display: none;" aria-hidden="true">
+  <div class="status-strip__item status-strip__item--primary">
+    <span class="status-strip__label">Inventory Valuation</span>
+    <div class="status-strip__val tabular">
+      <span class="status-strip__currency">৳</span>{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}
+    </div>
+    <span class="status-strip__sub">Cost-basis live asset ledger</span>
+  </div>
   <div class="status-strip__item">
     <span class="status-strip__label">Active SKUs</span>
     <div class="status-strip__val tabular">{{ stats.total_active_skus }}</div>
-    <span class="status-strip__sub">Catalog in stock</span>
   </div>
-
   <div class="status-strip__item">
     <span class="status-strip__label">Active Batches</span>
     <div class="status-strip__val tabular">{{ stats.active_inventory_batches }}</div>
-    <span class="status-strip__sub">FEFO tracked</span>
   </div>
-
   <div class="status-strip__item">
     <span class="status-strip__label">Open Orders</span>
     <div class="status-strip__val tabular">{{ stats.open_purchase_orders }}</div>
-    <span class="status-strip__sub">Awaiting dock reception</span>
   </div>
-
   <div class="status-strip__item">
     <span class="status-strip__label">Checkout Latency</span>
     <div class="status-strip__val tabular">{{ stats.avg_pos_latency_ms|round|int }} ms</div>
-    <span class="status-strip__sub">Target &lt; 2000 ms</span>
   </div>
-</section>
+</div>
 
-<!-- 3. Operations Cockpit Grid (4 Critical Panes) -->
-<section class="mission-grid" aria-label="Calm Mission Studio Operations Cockpit" style="margin-bottom: 28px;">
-  
-  <!-- Pane 1: Financial Valuation Sparkline & Revenue Dynamics -->
-  <article class="mission-pane glass-panel" aria-labelledby="sparklinePaneTitle">
-    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-      <h2 id="sparklinePaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
-        <span class="status-dot status-dot--info" aria-hidden="true"></span>
-        Inventory Valuation Dynamics
-      </h2>
-      <div class="mission-pane__actions">
-        <span class="tabular" style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">30-Day Trend</span>
-      </div>
-    </header>
-
-    <div class="sparkline-container">
-      <div class="sparkline-stats-row" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+<!-- Well-Structured 2-Column Body Layout (67% Left / 33% Right) -->
+<div class="dashboard-layout-m3">
+  <!-- Left Column (67% Width) — Priority Action Center -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <!-- Priority Action Center Card -->
+    <article class="glass-panel" aria-labelledby="actionCenterTitle" style="padding: 22px; border-radius: 24px;">
+      <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
         <div>
-          <span class="status-strip__label" style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Ledger Asset Value</span>
-          <div class="sparkline-primary-val tabular" style="font-size: 22px; font-weight: 700; font-family: var(--font-mono); color: var(--text-primary);">৳{{ "{:,.2f}".format(stats.total_inventory_valuation_bdt) }}</div>
+          <h2 id="actionCenterTitle" style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0; font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block;"></span>
+            Priority Action Center
+          </h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">Immediate floor operational actions sorted by inventory risk</p>
         </div>
-        <div class="sparkline-delta tabular" style="font-size: 11.5px; font-family: var(--font-mono); color: var(--emerald-400); display: flex; align-items: center; gap: 4px;">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <polyline points="2,8 6,4 10,8"></polyline>
+        <!-- M3 Expressive Filter Chips -->
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="filter-chip is-active" id="chipAll" onclick="filterActionCenter('all', this)">All (3)</button>
+          <button type="button" class="filter-chip" id="chipExpiry" onclick="filterActionCenter('expiry', this)">Near Expiry (2)</button>
+          <button type="button" class="filter-chip" id="chipStockout" onclick="filterActionCenter('stockout', this)">Low Stock (1)</button>
+        </div>
+      </header>
+
+      <!-- Action Center Table -->
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;" aria-label="Priority Floor Actions">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-medium); text-align: left; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.05em;">
+              <th style="padding: 10px 14px;">Item &amp; Batch</th>
+              <th style="padding: 10px 14px;">Available Qty</th>
+              <th style="padding: 10px 14px;">Risk Condition</th>
+              <th style="padding: 10px 14px; text-align: right;">Required Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: Milk Vita (Expiry Risk) -->
+            <tr class="action-center-row" data-type="expiry" style="border-bottom: 1px solid var(--border-subtle); transition: background 0.15s ease;">
+              <td style="padding: 14px;">
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 13px;">Milk Vita Liquid Milk 1L</div>
+                <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+                  <code>LOT-MV-260901</code> • SKU-MILK-1L
+                </div>
+              </td>
+              <td style="padding: 14px; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-primary); font-weight: 600;">
+                32 units
+              </td>
+              <td style="padding: 14px;">
+                <span class="fefo-badge fefo-badge--critical" style="display: inline-block;">Critical: 2 days left</span>
+              </td>
+              <td style="padding: 14px; text-align: right;">
+                <div style="display: inline-flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+                  <button type="button" class="btn-gradient-pill" id="btnMarkdownMV" onclick="applyFefoMarkdown('SKU-MILK-1L', 'Milk Vita Liquid Milk 1L')">
+                    Apply 20% Markdown
+                  </button>
+                  <button type="button" class="btn-outline-pill" style="color: var(--rose); border-color: rgba(220, 38, 38, 0.35); font-size: 11px;" onclick="writeOffStock('LOT-MV-260901', 'Milk Vita Liquid Milk 1L', 5, this)">
+                    Write-Off Damaged / Spoilage
+                  </button>
+                  <a href="/pos" class="btn-outline-pill">Allocate POS</a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 2: Aarong Misti Doi (Expiry Risk) -->
+            <tr class="action-center-row" data-type="expiry" style="border-bottom: 1px solid var(--border-subtle); transition: background 0.15s ease;">
+              <td style="padding: 14px;">
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 13px;">Aarong Sweet Misti Doi 500g</div>
+                <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+                  <code>LOT-MV-260903</code> • SKU-YOGURT-500
+                </div>
+              </td>
+              <td style="padding: 14px; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-primary); font-weight: 600;">
+                24 units
+              </td>
+              <td style="padding: 14px;">
+                <span class="fefo-badge fefo-badge--amber" style="display: inline-block;">Warning: 6 days left</span>
+              </td>
+              <td style="padding: 14px; text-align: right;">
+                <div style="display: inline-flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+                  <button type="button" class="btn-outline-pill" style="color: var(--rose); border-color: rgba(220, 38, 38, 0.35); font-size: 11px;" onclick="writeOffStock('LOT-MV-260903', 'Aarong Sweet Misti Doi 500g', 4, this)">
+                    Write-Off Damaged / Spoilage
+                  </button>
+                  <a href="/pos" class="btn-outline-pill">Allocate POS</a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 3: Rupchanda Soyabean Oil (Low Stock Risk) -->
+            <tr class="action-center-row" data-type="stockout" style="border-bottom: 1px solid var(--border-subtle); transition: background 0.15s ease;">
+              <td style="padding: 14px;">
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 13px;">Rupchanda Soyabean Oil 5L</div>
+                <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+                  <code>SKU-SOYA-5L</code> • Bay A-01 (Ambient)
+                </div>
+              </td>
+              <td style="padding: 14px; font-family: var(--font-mono); font-size: 12.5px; color: var(--rose); font-weight: 600;">
+                12 units (ROP: 45)
+              </td>
+              <td style="padding: 14px;">
+                <span style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; color: var(--rose); background: rgba(239, 68, 68, 0.12); padding: 3px 8px; border-radius: 9999px; border: 1px solid rgba(239, 68, 68, 0.25);">
+                  Stockout Imminent
+                </span>
+              </td>
+              <td style="padding: 14px; text-align: right;">
+                <div style="display: inline-flex; gap: 8px; align-items: center; justify-content: flex-end;">
+                  <a href="/procurement" class="btn-gradient-pill">Generate PO</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Attention Queue ("Needs attention", Ruled List, 6px Dots) -->
+      <div class="attention-section" style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-subtle);">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
+          <div style="display: flex; align-items: baseline; gap: 8px;">
+            <h2 id="attentionHeading" style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; font-family: var(--font-heading);">Needs attention</h2>
+            <span class="attention-section__count tabular" id="attentionCount" style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted);">({{ attention_items|length if attention_items else '3' }})</span>
+          </div>
+          <span style="font-size: 11px; color: var(--text-muted);">Automated store triage feed</span>
+        </div>
+
+        <div class="attention-list" id="attentionList" role="feed">
+          {% for item in attention_items %}
+          <article class="attention-row" data-role="{{ item.role }}" data-severity="{{ item.status_type }}" style="padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <span class="status-dot status-dot--{{ item.status_type }}" aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span>
+              <span class="tabular" style="font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted);">{{ item.tag }}</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 12.5px; font-weight: 600; color: var(--text-primary);">{{ item.title }}</div>
+              <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 2px;">{{ item.detail }}</div>
+            </div>
+            <div style="flex-shrink: 0;">
+              <a href="{{ item.action_url }}" class="action-link" style="font-size: 11.5px; font-weight: 600; color: #4f46e5; text-decoration: none;">
+                {{ item.action_label }} →
+              </a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Right Column (33% Width) — Retail Operations Rail -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- 1. Quick Barcode Scanner Card -->
+    <article class="scanner-card glass-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 13.5px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); display: flex; align-items: center; gap: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #4f46e5;" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <line x1="7" y1="8" x2="7" y2="16"></line>
+            <line x1="11" y1="8" x2="11" y2="16"></line>
+            <line x1="15" y1="8" x2="15" y2="16"></line>
           </svg>
-          <span>+4.3% vs Prev Month</span>
+          Quick Barcode Scanner
         </div>
+        <span style="font-size: 10px; font-family: var(--font-mono); color: #10b981; background: rgba(16, 185, 129, 0.12); padding: 2px 6px; border-radius: 4px;">HW/Zebra Ready</span>
+      </div>
+      <p style="font-size: 11.5px; color: var(--text-muted); margin: 6px 0 0 0;">Scan floor SKU or lot sticker for instant lookup</p>
+      
+      <div class="scanner-input-wrap">
+        <input type="text" id="quickScannerInput" placeholder="Scan SKU (e.g. SKU-MILK-1L)..." onkeydown="handleQuickScan(event)" style="flex: 1; padding: 8px 12px; border-radius: 9999px; border: 1px solid var(--border-medium); background: var(--bg-surface-elevated); color: var(--text-primary); font-size: 12px; outline: none; font-family: var(--font-mono);">
+        <button type="button" class="btn-gradient-pill" onclick="triggerQuickScan()" style="padding: 6px 12px; font-size: 11px;">Scan</button>
       </div>
 
-      <!-- Interactive SVG Sparkline with Dynamic Curve -->
-      <div class="sparkline-svg-box">
-        <svg viewBox="0 0 460 140" preserveAspectRatio="none" aria-hidden="true" style="width: 100%; height: 120px;">
-          <defs>
-            <linearGradient id="sparklineGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.3"></stop>
-              <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.0"></stop>
-            </linearGradient>
-          </defs>
-          <!-- Grid Lines -->
-          <line x1="0" y1="20" x2="460" y2="20" stroke="var(--border-subtle)" stroke-dasharray="2,2"></line>
-          <line x1="0" y1="60" x2="460" y2="60" stroke="var(--border-subtle)" stroke-dasharray="2,2"></line>
-          <line x1="0" y1="100" x2="460" y2="100" stroke="var(--border-subtle)" stroke-dasharray="2,2"></line>
-          <!-- Area Fill -->
-          <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20 L 460,140 L 0,140 Z" fill="url(#sparklineGradient)"></path>
-          <!-- Sparkline Stroke -->
-          <path d="M 0,110 Q 40,95 80,105 T 160,80 T 240,65 T 320,50 T 400,35 T 460,20" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"></path>
-          <!-- Live Data Markers -->
-          <circle cx="160" cy="80" r="3" fill="var(--color-accent)"></circle>
-          <circle cx="320" cy="50" r="3" fill="var(--color-accent)"></circle>
-          <circle cx="460" cy="20" r="4" fill="var(--color-status-success)"></circle>
-        </svg>
+      <div id="quickScannerFeedback" class="scanner-feedback">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; flex-shrink: 0;"></span>
+        <span id="quickScannerStatus">Scanner listener active • Ready for scan</span>
       </div>
+    </article>
 
-      <div class="sparkline-legend" style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
-        <span>Jan • ৳5.2M</span>
-        <span>Apr • ৳6.1M</span>
-        <span>Jul • ৳7.4M</span>
-        <span class="telemetry-val--highlight" style="color: var(--color-accent); font-weight: 600;">Oct • ৳8.9M Peak</span>
+    <!-- 2. Floor Leadership On Duty Roster -->
+    <article class="roster-card glass-panel">
+      <div style="font-size: 13.5px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+        <span>Floor Leadership On Duty</span>
+        <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Shift 1</span>
       </div>
-    </div>
-  </article>
-
-  <!-- Pane 2: Live 2D Warehouse Floorplan Heatmap -->
-  <article class="mission-pane glass-panel" aria-labelledby="floorplanPaneTitle">
-    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-      <h2 id="floorplanPaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
-        <span class="status-dot status-dot--success" aria-hidden="true"></span>
-        2D Spatial Warehouse Floorplan
-      </h2>
-      <div class="mission-pane__actions">
-        <a href="/warehouse" class="dock-berth" style="font-size: 11px; font-family: var(--font-mono); text-decoration: none; color: var(--text-primary);"><span class="status-dot status-dot--success"></span> 42/50 Bins Active →</a>
-      </div>
-    </header>
-
-    <div class="warehouse-floorplan-box">
-      <div class="warehouse-racks-visual" id="warehouseVisualGrid">
-        <!-- Aisle A (Dry FMCG) -->
-        <div class="warehouse-rack-col">
-          <span class="warehouse-rack-label">Bay A</span>
-          <div class="warehouse-rack-bins">
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-01: Rice (Available)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-02: Lentils (Available)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-03: Flour (Available)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-04: Sugar (Available)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin A-05: Salt (Available)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin A-06: Spices (High Occupancy)"></div>
+      <div class="roster-list">
+        <!-- Raisul Islam Likhon -->
+        <div class="roster-item">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="profile-avatar-initials" style="width: 28px; height: 28px; border-radius: 50%; background: #4f46e5; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">RL</div>
+            <div>
+              <div style="font-size: 12.5px; font-weight: 700; color: var(--text-primary);">Raisul Islam Likhon</div>
+              <div style="font-size: 11px; color: var(--text-muted);">General Manager</div>
+            </div>
           </div>
+          <span class="status-pill status-pill--active">Active</span>
         </div>
 
-        <!-- Aisle B (Oils & Condiments) -->
-        <div class="warehouse-rack-col">
-          <span class="warehouse-rack-label">Bay B</span>
-          <div class="warehouse-rack-bins">
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-01: Mustard Oil"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-02: Soybean Oil"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin B-03: Ghee (Near Expiry)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-04: Vinegar"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-05: Sauce"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin B-06: Tea Bags"></div>
+        <!-- Shottobroto Dey -->
+        <div class="roster-item">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="profile-avatar-initials" style="width: 28px; height: 28px; border-radius: 50%; background: #059669; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">SD</div>
+            <div>
+              <div style="font-size: 12.5px; font-weight: 700; color: var(--text-primary);">Shottobroto Dey</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Floor Supervisor</div>
+            </div>
           </div>
+          <span class="status-pill status-pill--floor">Bay Floor</span>
         </div>
 
-        <!-- Aisle C (Dairy & Chill - 4°C) -->
-        <div class="warehouse-rack-col">
-          <span class="warehouse-rack-label">Bay C (Cold)</span>
-          <div class="warehouse-rack-bins">
-            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-01: Fresh Milk (Exp: 2d)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--red" title="Bin C-02: Yogurt (Exp: 1d Critical)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-03: Butter (Safe)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-04: Cheese (Safe)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin C-05: Paneer (Exp: 5d)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin C-06: Ice Cream"></div>
+        <!-- Golam Husnain Papon -->
+        <div class="roster-item">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="profile-avatar-initials" style="width: 28px; height: 28px; border-radius: 50%; background: #d97706; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">GP</div>
+            <div>
+              <div style="font-size: 12.5px; font-weight: 700; color: var(--text-primary);">Golam Husnain Papon</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Supply Chain Manager</div>
+            </div>
           </div>
+          <span class="status-pill status-pill--inbound">Inbound Bay</span>
         </div>
+      </div>
+    </article>
 
-        <!-- Aisle D (Snacks & Beverages) -->
-        <div class="warehouse-rack-col">
-          <span class="warehouse-rack-label">Bay D</span>
-          <div class="warehouse-rack-bins">
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-01: Biscuits"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-02: Chips"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin D-03: Juice (Exp: 14d)"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-04: Mineral Water"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-05: Soda"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin D-06: Confectionery"></div>
+    <!-- 3. Operational Workspaces Quick Launcher Card -->
+    <article class="glass-panel" style="padding: 20px; border-radius: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div style="font-size: 13.5px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">Operational Workspaces</div>
+        <span style="font-size: 10px; font-family: var(--font-mono); color: var(--primary);">Quick Access</span>
+      </div>
+      <div class="workspaces-index" style="display: flex; flex-direction: column; gap: 8px;">
+        <a href="/pos" class="workspace-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="tabular" style="font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--emerald);">01</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Checkout POS</div>
+              <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);" title="Keyboard shortcut: P">Keyboard shortcut: P</div>
+            </div>
           </div>
-        </div>
+          <span style="color: var(--emerald); font-weight: 700; font-size: 12px;">→</span>
+        </a>
 
-        <!-- Aisle E (Household & Personal Care) -->
-        <div class="warehouse-rack-col">
-          <span class="warehouse-rack-label">Bay E</span>
-          <div class="warehouse-rack-bins">
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-01: Detergent"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-02: Soap"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-03: Toothpaste"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-04: Shampoo"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--amber" title="Bin E-05: Disinfectant"></div>
-            <div class="warehouse-bin-cell warehouse-bin-cell--green" title="Bin E-06: Paper Towels"></div>
+        <a href="/inbound" class="workspace-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="tabular" style="font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--primary);">02</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Inbound Dock</div>
+              <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);" title="Keyboard shortcut: I">Keyboard shortcut: I</div>
+            </div>
           </div>
-        </div>
-      </div>
+          <span style="color: var(--primary); font-weight: 700; font-size: 12px;">→</span>
+        </a>
 
-      <!-- Bottom Receiving Berths Strip -->
-      <div class="warehouse-dock-strip" style="display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;">
-        <span class="dock-berth"><span class="status-dot status-dot--success"></span> Dock #1: Inbound Receiving</span>
-        <span class="dock-berth"><span class="status-dot status-dot--warning"></span> Dock #2: Putaway Unloading</span>
-        <span class="dock-berth"><span class="status-dot status-dot--info"></span> Dock #3: Dispatched</span>
-      </div>
-    </div>
-  </article>
+        <a href="/putaway" class="workspace-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="tabular" style="font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--primary);">03</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Directed Putaway</div>
+              <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);" title="Keyboard shortcut: U">Keyboard shortcut: U</div>
+            </div>
+          </div>
+          <span style="color: var(--primary); font-weight: 700; font-size: 12px;">→</span>
+        </a>
 
-  <!-- Pane 3: Active FEFO Batch Expiration Table -->
-  <article class="mission-pane glass-panel" aria-labelledby="fefoTablePaneTitle">
-    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-      <h2 id="fefoTablePaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
-        <span class="status-dot status-dot--warning" aria-hidden="true"></span>
-        Active FEFO Batch Expiration Matrix
-      </h2>
-      <div class="mission-pane__actions">
-        <a href="/pos" class="action-link" style="font-size: 11px;">Prioritize at Checkout →</a>
-      </div>
-    </header>
+        <a href="/warehouse" class="workspace-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="tabular" style="font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--primary);">04</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Warehouse Map</div>
+              <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);" title="Keyboard shortcut: W">Keyboard shortcut: W</div>
+            </div>
+          </div>
+          <span style="color: var(--primary); font-weight: 700; font-size: 12px;">→</span>
+        </a>
 
-    <div style="overflow-x: auto;">
-      <table class="mission-table" aria-label="Active FEFO Batches" style="width: 100%;">
-        <thead>
-          <tr>
-            <th>Batch / SKU</th>
-            <th>Brand / Product</th>
-            <th>Units</th>
-            <th>Shelf-Life</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="tabular"><code>B-094182</code></td>
-            <td>Aarong Dairy Full Cream Milk 1L</td>
-            <td class="tabular">120</td>
-            <td><span class="fefo-badge fefo-badge--critical">2 Days Left</span></td>
-            <td><a href="/pos" class="action-link" style="font-size: 11px;">Allocate POS</a></td>
-          </tr>
-          <tr>
-            <td class="tabular"><code>B-094183</code></td>
-            <td>Pran Mustard Oil 500ml</td>
-            <td class="tabular">350</td>
-            <td><span class="fefo-badge fefo-badge--amber">14 Days Left</span></td>
-            <td><a href="/putaway" class="action-link" style="font-size: 11px;">Zone Bay B</a></td>
-          </tr>
-          <tr>
-            <td class="tabular"><code>B-094184</code></td>
-            <td>Fresh Premium Miniket Rice 5kg</td>
-            <td class="tabular">480</td>
-            <td><span class="fefo-badge fefo-badge--fresh">85 Days Left</span></td>
-            <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay A</a></td>
-          </tr>
-          <tr>
-            <td class="tabular"><code>B-094185</code></td>
-            <td>Olympic Energy Plus Biscuits</td>
-            <td class="tabular">210</td>
-            <td><span class="fefo-badge fefo-badge--fresh">120 Days Left</span></td>
-            <td><a href="/warehouse" class="action-link" style="font-size: 11px;">Inspect Bay D</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </article>
+        <a href="/procurement" class="workspace-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="tabular" style="font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--primary);">05</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Replenishment DSS</div>
+              <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);" title="Keyboard shortcut: R">Keyboard shortcut: R</div>
+            </div>
+          </div>
+          <span style="color: var(--primary); font-weight: 700; font-size: 12px;">→</span>
+        </a>
 
-  <!-- Pane 4: Live Cryptographic Stock Audit Ledger Stream -->
-  <article class="mission-pane glass-panel" aria-labelledby="auditStreamPaneTitle">
-    <header class="mission-pane__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-      <h2 id="auditStreamPaneTitle" class="mission-pane__title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 6px;">
-        <span class="status-dot status-dot--success" aria-hidden="true"></span>
-        Cryptographic Stock Audit Stream
-      </h2>
-      <div class="mission-pane__actions">
-        <a href="/audits" class="action-link" style="font-size: 11px;">Full Ledger →</a>
-      </div>
-    </header>
-
-    <div class="audit-stream-box" id="auditStreamContainer" role="log" aria-live="polite">
-      <div class="audit-stream-row">
-        <div>
-          <span class="audit-action-chip">POS_SALE</span>
-          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('aa75ce7e3014b29bca30')">hash:aa75ce...</span>
-        </div>
-        <span class="tabular audit-stream-time">00:14:18.420</span>
-      </div>
-
-      <div class="audit-stream-row">
-        <div>
-          <span class="audit-action-chip">FEFO_SWEEP</span>
-          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac37e276762fe12b5922')">hash:ac37e2...</span>
-        </div>
-        <span class="tabular audit-stream-time">00:14:12.312</span>
-      </div>
-
-      <div class="audit-stream-row">
-        <div>
-          <span class="audit-action-chip">DOCK_RECV</span>
-          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ae75c3f497d9b17b5c30')">hash:ae75c3...</span>
-        </div>
-        <span class="tabular audit-stream-time">00:13:58.110</span>
-      </div>
-
-      <div class="audit-stream-row">
-        <div>
-          <span class="audit-action-chip">PUTAWAY</span>
-          <span class="audit-stream-hash" title="Click to copy SHA-256 hash" onclick="copyHashText('ac8efae6ed1fb55e7b35')">hash:ac8efa...</span>
-        </div>
-        <span class="tabular audit-stream-time">00:13:45.020</span>
-      </div>
-    </div>
-  </article>
-
-</section>
-
-<!-- 4. Attention Queue ("Needs attention", Ruled List, 6px Dots) -->
-<section class="attention-section glass-panel" aria-labelledby="attentionHeading" style="margin-bottom: 28px; padding: 20px;">
-  <div class="attention-section__header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
-    <div class="attention-section__title-wrap" style="display: flex; align-items: baseline; gap: 8px;">
-      <h2 id="attentionHeading" class="attention-section__title" style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">Needs attention</h2>
-      <span class="attention-section__count tabular" id="attentionCount" style="font-size: 13px; font-family: var(--font-mono); color: var(--text-muted);">({{ attention_items|length if attention_items else '3' }})</span>
-    </div>
-    <span class="attention-section__subtitle" style="font-size: 12px; color: var(--text-muted);">Exceptions requiring operational triage</span>
-  </div>
-
-  <div class="attention-list" id="attentionList" role="feed">
-    {% for item in attention_items %}
-    <article class="attention-row" data-role="{{ item.role }}" data-severity="{{ item.status_type }}">
-      <div class="attention-row__meta">
-        <span class="status-dot status-dot--{{ item.status_type }}" aria-hidden="true"></span>
-        <span class="attention-row__tag tabular">{{ item.tag }}</span>
-      </div>
-      <div class="attention-row__content">
-        <h3 class="attention-row__title">{{ item.title }}</h3>
-        <p class="attention-row__detail">{{ item.detail }}</p>
-      </div>
-      <div class="attention-row__action">
-        <a href="{{ item.action_url }}" class="action-link">
-          {{ item.action_label }}
-          <span class="action-link__arrow" aria-hidden="true">→</span>
+        <a href="/audits" class="workspace-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); text-decoration: none;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="tabular" style="font-family: var(--font-mono); font-weight: 700; font-size: 11px; color: var(--primary);">06</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-primary);">Stock Ledger</div>
+              <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);" title="Keyboard shortcut: L">Keyboard shortcut: L</div>
+            </div>
+          </div>
+          <span style="color: var(--primary); font-weight: 700; font-size: 12px;">→</span>
         </a>
       </div>
     </article>
-    {% endfor %}
   </div>
-</section>
-
-<!-- 5. Operational Workspaces Index (2-Column Ruled Index, Numbered, Hover Shift) -->
-<section class="workspaces-section glass-panel" aria-labelledby="workspacesHeading" style="padding: 20px;">
-  <div class="workspaces-section__header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
-    <div>
-      <h2 id="workspacesHeading" class="workspaces-section__title" style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">Operational Workspaces</h2>
-      <span class="workspaces-section__subtitle" style="font-size: 12px; color: var(--text-muted);">Core warehouse and retail terminals sorted by operational priority</span>
-    </div>
-    <span class="workspaces-section__role-tag tabular" id="activeRoleIndicator" style="font-size: 11px; font-family: var(--font-mono); color: var(--color-accent); background: var(--color-bg-hover); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Role: Director</span>
-  </div>
-
-  <div class="workspaces-index" id="workspacesGrid">
-    <a href="/inbound" class="workspace-row" data-module="inbound" data-priority-role="clerk" id="ws-inbound">
-      <div class="workspace-row__num tabular">01</div>
-      <div class="workspace-row__body">
-        <div class="workspace-row__head">
-          <h3 class="workspace-row__title">Inbound Receiving</h3>
-          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: I">I</span>
-        </div>
-        <p class="workspace-row__desc">Dock delivery manifest verification against purchase orders and quality gate triage.</p>
-      </div>
-      <span class="workspace-row__arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a href="/putaway" class="workspace-row" data-module="putaway" data-priority-role="operator" id="ws-putaway">
-      <div class="workspace-row__num tabular">02</div>
-      <div class="workspace-row__body">
-        <div class="workspace-row__head">
-          <h3 class="workspace-row__title">Directed Putaway</h3>
-          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: U">U</span>
-        </div>
-        <p class="workspace-row__desc">Algorithmic bin routing matching product temperature zone and shortest travel path.</p>
-      </div>
-      <span class="workspace-row__arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a href="/warehouse" class="workspace-row" data-module="warehouse" data-priority-role="supervisor" id="ws-warehouse">
-      <div class="workspace-row__num tabular">03</div>
-      <div class="workspace-row__body">
-        <div class="workspace-row__head">
-          <h3 class="workspace-row__title">Spatial Twin</h3>
-          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: W">W</span>
-        </div>
-        <p class="workspace-row__desc">Visual 2D warehouse map displaying bays, racks, temperature zones, and capacity.</p>
-      </div>
-      <span class="workspace-row__arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a href="/pos" class="workspace-row workspace-row--primary" data-module="pos" data-priority-role="cashier" id="ws-pos">
-      <div class="workspace-row__num tabular">04</div>
-      <div class="workspace-row__body">
-        <div class="workspace-row__head">
-          <h3 class="workspace-row__title">Checkout POS</h3>
-          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: P">P</span>
-        </div>
-        <p class="workspace-row__desc">Fast barcode checkout terminal with real-time stock allocation and cash tender.</p>
-      </div>
-      <span class="workspace-row__arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a href="/procurement" class="workspace-row" data-module="procurement" data-priority-role="procurement" id="ws-procurement">
-      <div class="workspace-row__num tabular">05</div>
-      <div class="workspace-row__body">
-        <div class="workspace-row__head">
-          <h3 class="workspace-row__title">Replenishment DSS</h3>
-          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: R">R</span>
-        </div>
-        <p class="workspace-row__desc">Dual-variance safety stock forecasting and one-click purchase order issuance.</p>
-      </div>
-      <span class="workspace-row__arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a href="/audits" class="workspace-row" data-module="audits" data-priority-role="admin" id="ws-audits">
-      <div class="workspace-row__num tabular">06</div>
-      <div class="workspace-row__body">
-        <div class="workspace-row__head">
-          <h3 class="workspace-row__title">Stock Ledger</h3>
-          <span class="workspace-row__shortcut tabular" title="Keyboard shortcut: L">L</span>
-        </div>
-        <p class="workspace-row__desc">Immutable audit log of all inventory receipts, transfers, and retail sales.</p>
-      </div>
-      <span class="workspace-row__arrow" aria-hidden="true">→</span>
-    </a>
-  </div>
-</section>
+</div>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/overview.js?v=2.1.2"></script>
+<script src="/static/js/overview.js?v=2.2.0"></script>
+<script>
+  // Filter Priority Action Center Rows
+  function filterActionCenter(type, btn) {
+    document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('is-active'));
+    if (btn) btn.classList.add('is-active');
+    const rows = document.querySelectorAll('.action-center-row');
+    rows.forEach(row => {
+      if (type === 'all') {
+        row.style.display = '';
+      } else {
+        row.style.display = (row.getAttribute('data-type') === type) ? '' : 'none';
+      }
+    });
+  }
+
+  // Apply FEFO Markdown
+  function applyFefoMarkdown(sku, name) {
+    const markdowns = JSON.parse(localStorage.getItem('retailsync_fefo_markdown') || '{}');
+    markdowns[sku] = true;
+    localStorage.setItem('retailsync_fefo_markdown', JSON.stringify(markdowns));
+    const btn = document.getElementById('btnMarkdownMV');
+    if (btn) {
+      btn.innerText = '✓ 20% Markdown Active';
+      btn.style.background = 'var(--emerald)';
+    }
+    if (typeof playSuccessChime === 'function') playSuccessChime();
+    if (typeof showToast === 'function') {
+      showToast(`20% FEFO Markdown applied to ${name}. Discounted selling price broadcasted to all active registers.`, 'success', 'FEFO Dynamic Pricing');
+    }
+  }
+
+  // Barcode Scanner Listener
+  function handleQuickScan(e) {
+    if (e.key === 'Enter') {
+      triggerQuickScan();
+    }
+  }
+
+  function triggerQuickScan() {
+    const input = document.getElementById('quickScannerInput');
+    const status = document.getElementById('quickScannerStatus');
+    if (!input || !status) return;
+    const barcode = input.value.trim();
+    if (!barcode) {
+      status.innerText = 'Please enter or scan a barcode';
+      status.style.color = 'var(--amber)';
+      return;
+    }
+    if (typeof playBarcodeBeep === 'function') playBarcodeBeep();
+    status.innerText = `Scanned: ${barcode} • Resolving inventory...`;
+    status.style.color = '#10b981';
+    if (typeof showToast === 'function') {
+      showToast(`Barcode ${barcode} identified. Routing to POS register.`, 'success', 'Scan Verified');
+    }
+    setTimeout(() => {
+      window.location.href = `/pos?q=${encodeURIComponent(barcode)}`;
+    }, 600);
+  }
+
+  // Restore saved markdown state on load
+  (function() {
+    const markdowns = JSON.parse(localStorage.getItem('retailsync_fefo_markdown') || '{}');
+    if (markdowns['SKU-MILK-1L']) {
+      const btn = document.getElementById('btnMarkdownMV');
+      if (btn) {
+        btn.innerText = '✓ 20% Markdown Active';
+        btn.style.background = 'var(--emerald)';
+      }
+    }
+  })();
+
+  // Write-Off Damaged / Spoilage Stock
+  async function writeOffStock(lotNumber, productName, qty, btn) {
+    if (!confirm(`Confirm write-off of ${qty} spoiled/damaged units of ${productName} (${lotNumber})? This will deduct live stock and log a Spoilage Write-Off in the stock audit ledger.`)) {
+      return;
+    }
+    const origText = btn ? btn.innerText : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerText = 'Writing off...';
+    }
+    try {
+      const res = await fetch('/api/v1/warehouse/write-off', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lot_number: lotNumber,
+          quantity: qty,
+          reason: 'Spoilage / Damage Write-Off'
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.detail || 'Write-off failed', 'error', 'Write-Off Error');
+        if (btn) { btn.disabled = false; btn.innerText = origText; }
+        return;
+      }
+
+      // Update row quantity display in Action Center
+      const row = btn.closest('tr');
+      if (row) {
+        const qtyCell = row.children[1];
+        if (qtyCell) {
+          qtyCell.innerHTML = `<span class="tabular">${data.new_balance} units</span> <span style="font-size: 10px; color: var(--rose); display: block;">(-${data.quantity_written_off} write-off)</span>`;
+        }
+      }
+
+      if (btn) {
+        btn.innerText = 'Written Off';
+        btn.style.color = 'var(--text-muted)';
+        btn.style.borderColor = 'var(--border-subtle)';
+      }
+
+      if (typeof playSuccessChime === 'function') playSuccessChime();
+      showToast(`Successfully wrote off ${data.quantity_written_off} units of ${productName} (Ref: ${data.reference_number}). Logged to Stock Ledger.`, 'success', 'Spoilage Write-Off');
+    } catch (e) {
+      showToast('Error processing write-off: ' + e.message, 'error', 'Network Error');
+      if (btn) { btn.disabled = false; btn.innerText = origText; }
+    }
+  }
+</script>
 {% endblock %}

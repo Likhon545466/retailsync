@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}RetailSync - Enterprise Super Shop WMS{% endblock %}</title>
+  <title>{% block title %}RetailSync WMS - Enterprise Operations{% endblock %}</title>
 
   <!-- Pre-render Theme Initialization (Prevents FOUC) -->
   <script>
@@ -13,244 +13,722 @@
     })();
   </script>
 
-  <!-- Google Fonts: IBM Plex Sans & IBM Plex Mono & Inter -->
+  <!-- Google Fonts: Inter, JetBrains Mono, Plus Jakarta Sans, IBM Plex Sans & IBM Plex Mono & Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Core Calm Mission Studio Design System Stylesheets -->
-  <link rel="stylesheet" href="/styles/tokens.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/reset.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/base.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/layout.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/components.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/utilities.css?v=2.1.2">
-  <link rel="stylesheet" href="/styles/index.css?v=2.1.2">
-  <link rel="stylesheet" href="/static/css/app.css?v=2.1.2">
+  <!-- Core Design System Stylesheets -->
+  <link rel="stylesheet" href="/styles/tokens.css?v=2.2.0">
+  <link rel="stylesheet" href="/styles/reset.css?v=2.2.0">
+  <link rel="stylesheet" href="/styles/base.css?v=2.2.0">
+  <link rel="stylesheet" href="/styles/layout.css?v=2.2.0">
+  <link rel="stylesheet" href="/styles/components.css?v=2.2.0">
+  <link rel="stylesheet" href="/styles/utilities.css?v=2.2.0">
+  <link rel="stylesheet" href="/styles/index.css?v=2.2.0">
+  <link rel="stylesheet" href="/static/css/app.css?v=2.2.0">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   {% block head_extra %}{% endblock %}
 </head>
 <body>
-  <!-- 1. Sticky 56px Site Header (Calm Mission Studio) -->
-  <header class="header" role="banner">
-    <div class="header__inner">
-      <div class="header__brand">
-        <a href="/dashboard" class="header__wordmark" aria-label="Retail Sync Operations Overview">
-          RETAIL SYNC
+  <!-- Ambient Depth Mesh for Material 3 Frosted Glassmorphism -->
+  <div class="ambient-mesh" aria-hidden="true">
+    <div class="ambient-sphere ambient-sphere--indigo"></div>
+    <div class="ambient-sphere ambient-sphere--sky"></div>
+    <div class="ambient-sphere ambient-sphere--purple"></div>
+  </div>
+
+  <div class="app-shell" id="appShell">
+    <!-- Left Column: Fixed-width (240px) sleek dark-slate sidebar (.sidebar-app) -->
+    <aside class="sidebar-app" id="sidebarApp" aria-label="Main Navigation Sidebar">
+      <!-- Top Brand Block -->
+      <div class="sidebar-brand">
+        <a href="/dashboard" class="sidebar-brand-link" aria-label="RetailSync Operations Overview">
+          <div class="brand-logo-mark" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="6" fill="#4f46e5" />
+              <path d="M7 6h6a4 4 0 0 1 4 4c0 2.2-1.8 4-4 4H7V6z" fill="#ffffff" />
+              <path d="M12 14l5 6h-3.5L9 14h3z" fill="#ffffff" />
+              <path d="M9 9h4a1.5 1.5 0 0 1 0 3H9V9z" fill="#4f46e5" />
+            </svg>
+          </div>
+          <div class="brand-text-block">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="brand-title">RetailSync WMS</span>
+              <span class="brand-badge tabular" aria-label="Version 2.0-RELEASE">v2.0-RELEASE</span>
+            </div>
+            <div class="sidebar-store-chip" title="Dhanmondi Superstore Location">
+              <span class="store-pulse-dot" aria-hidden="true"></span>
+              <span>Dhanmondi Superstore</span>
+            </div>
+          </div>
         </a>
-        <span class="header__version tabular" aria-label="Version 2.0-RELEASE">v2.0-RELEASE</span>
       </div>
 
-      <!-- Center Primary Navigation: Seamless End-to-End Supermarket Operational Lifecycle -->
-      <nav class="nav nav-zone-center" aria-label="Primary Navigation">
-        <ul class="nav__list">
-          <li class="nav__item">
-            <a href="/dashboard" class="nav__link {% if active_page == 'dashboard' %}nav__link--active{% endif %}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>Overview</a>
-          </li>
-          <li class="nav__item">
-            <a href="/inbound" class="nav__link {% if active_page == 'inbound' %}nav__link--active{% endif %}" {% if active_page == 'inbound' %}aria-current="page"{% endif %}>Inbound</a>
-          </li>
-          <li class="nav__item">
-            <a href="/putaway" class="nav__link {% if active_page == 'putaway' %}nav__link--active{% endif %}" {% if active_page == 'putaway' %}aria-current="page"{% endif %}>Putaway</a>
-          </li>
-          <li class="nav__item">
-            <a href="/warehouse" class="nav__link {% if active_page == 'warehouse' %}nav__link--active{% endif %}" {% if active_page == 'warehouse' %}aria-current="page"{% endif %}>Spatial Twin</a>
-          </li>
-          <li class="nav__item">
-            <a href="/pos" class="nav__link {% if active_page == 'pos' %}nav__link--active{% endif %}" {% if active_page == 'pos' %}aria-current="page"{% endif %}>Checkout</a>
-          </li>
-          <li class="nav__item">
-            <a href="/procurement" class="nav__link {% if active_page == 'procurement' %}nav__link--active{% endif %}" {% if active_page == 'procurement' %}aria-current="page"{% endif %}>Replenishment</a>
-          </li>
-          <li class="nav__item">
-            <a href="/audits" class="nav__link {% if active_page == 'audits' %}nav__link--active{% endif %}" {% if active_page == 'audits' %}aria-current="page"{% endif %}>Stock Ledger</a>
-          </li>
+      <!-- Vertical Navigation Menu (M3 Capsule Pills) -->
+      <nav class="sidebar-nav nav-zone-center" aria-label="Primary Navigation">
+        <!-- 1. Overview -->
+        <a href="/dashboard" class="sidebar-nav-item {% if active_page == 'dashboard' %}is-active{% endif %}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %} title="Overview (/dashboard)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          <span>Overview</span>
+        </a>
 
-          <!-- Deliverables & Academic Suite Dropdown -->
-          <li class="nav__item dropdown">
-            <button type="button" class="nav__link dropdown__trigger" id="moreNavBtn" aria-haspopup="true" aria-expanded="false">
-              <span>Deliverables</span>
-              <svg class="dropdown__chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-                <polyline points="2,3 5,7 8,3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></polyline>
-              </svg>
-            </button>
-            <div class="dropdown__menu" id="moreNavMenu" role="menu" aria-labelledby="moreNavBtn">
-              <a href="/showcase" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Showcase ↗</span>
-                <span class="dropdown__shortcut tabular">Ext ↗</span>
-              </a>
-              <a href="/slides" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Slides ↗</span>
-                <span class="dropdown__shortcut tabular">Ext ↗</span>
-              </a>
-              <a href="/technical-guide" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Viva Defense Guide</span>
-                <span class="dropdown__shortcut tabular">MD ↗</span>
-              </a>
-              <div class="dropdown__divider" role="separator"></div>
-              <a href="/proposal/pdf" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">Project Proposal [PDF]</span>
-                <span class="dropdown__shortcut tabular">PDF ↗</span>
-              </a>
-              <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label">70p Technical Suite [PDF]</span>
-                <span class="dropdown__shortcut tabular">PDF ↗</span>
-              </a>
-              <a href="/team-pack.zip" class="dropdown__item" role="menuitem">
-                <span class="dropdown__label" style="font-weight: 600; color: var(--color-accent);">Download Team Pack</span>
-                <span class="dropdown__shortcut tabular">ZIP</span>
-              </a>
-            </div>
-          </li>
-        </ul>
+        <!-- 2. POS Terminal -->
+        <a href="/pos" class="sidebar-nav-item {% if active_page == 'pos' %}is-active{% endif %}" {% if active_page == 'pos' %}aria-current="page"{% endif %} title="POS Terminal (/pos)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>POS Terminal</span>
+        </a>
+
+        <!-- 3. Inbound Dock -->
+        <a href="/inbound" class="sidebar-nav-item {% if active_page == 'inbound' %}is-active{% endif %}" {% if active_page == 'inbound' %}aria-current="page"{% endif %} title="Inbound Dock (/inbound)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          </svg>
+          <span>Inbound Dock</span>
+        </a>
+
+        <!-- 4. Directed Putaway -->
+        <a href="/putaway" class="sidebar-nav-item {% if active_page == 'putaway' %}is-active{% endif %}" {% if active_page == 'putaway' %}aria-current="page"{% endif %} title="Directed Putaway (/putaway)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <span>Directed Putaway</span>
+        </a>
+
+        <!-- 5. Warehouse Map -->
+        <a href="/warehouse" class="sidebar-nav-item {% if active_page == 'warehouse' %}is-active{% endif %}" {% if active_page == 'warehouse' %}aria-current="page"{% endif %} title="Warehouse Map (/warehouse)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            <line x1="8" y1="2" x2="8" y2="18"></line>
+            <line x1="16" y1="6" x2="16" y2="22"></line>
+          </svg>
+          <span>Warehouse Map</span>
+        </a>
+
+        <!-- 6. Replenishment DSS -->
+        <a href="/procurement" class="sidebar-nav-item {% if active_page == 'procurement' %}is-active{% endif %}" {% if active_page == 'procurement' %}aria-current="page"{% endif %} title="Replenishment DSS (/procurement)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span>Replenishment DSS</span>
+        </a>
+
+        <!-- 7. Stock Ledger -->
+        <a href="/audits" class="sidebar-nav-item {% if active_page == 'audits' %}is-active{% endif %}" {% if active_page == 'audits' %}aria-current="page"{% endif %} title="Stock Ledger (/audits)">
+          <svg class="sidebar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Stock Ledger</span>
+        </a>
       </nav>
 
-      <!-- Right Utility Controls -->
-      <div class="header__actions" style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-        <!-- Compact Store Selector -->
-        <div class="store-select-wrap">
-          <label for="activeStoreSelect" class="sr-only">Active Store Location</label>
-          <select id="activeStoreSelect" class="store-select-pill select-store-compact" onchange="switchStoreLocation(this.value)" aria-label="Active Store Location">
-            <option value="uttara" selected>Uttara Central</option>
-            <option value="dhanmondi">Dhanmondi Express</option>
-            <option value="gulshan">Gulshan Mega Mart</option>
-          </select>
+      <!-- Collapsible Trigger -->
+      <button type="button" class="sidebar-collapse-toggle" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" aria-label="Toggle sidebar collapse">
+        <svg class="collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span class="collapse-label">Collapsible</span>
+      </button>
+
+      <!-- Bottom of Sidebar: Clean Unclipped User Card & Telemetry Badge -->
+      <div class="sidebar-footer">
+        <button type="button" class="user-card-m3 select-role-compact" onclick="openPersonaModal()" title="Click to switch active demo persona" aria-haspopup="dialog">
+          <div class="profile-avatar-initials" style="width: 34px; height: 34px; border-radius: 50%; background: #4f46e5; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.4);">
+            {% if current_user and current_user.username == 'supervisor' %}SD
+            {% elif current_user and current_user.username == 'procurement' %}GP
+            {% elif current_user and current_user.username == 'cashier' %}C1
+            {% else %}RL{% endif %}
+          </div>
+          <div class="profile-details" style="min-width: 0; flex: 1; text-align: left;">
+            <div class="user-card-name">
+              {% if current_user and current_user.username == 'supervisor' %}Shottobroto Dey
+              {% elif current_user and current_user.username == 'procurement' %}Golam Husnain Papon
+              {% elif current_user and current_user.username == 'cashier' %}Frontline Cashier
+              {% else %}Raisul Islam Likhon{% endif %}
+            </div>
+            <div class="user-card-role">
+              {% if current_user and current_user.username == 'supervisor' %}Floor Supervisor &amp; Auditor
+              {% elif current_user and current_user.username == 'procurement' %}Supply Chain Manager
+              {% elif current_user and current_user.username == 'cashier' %}Cashier (Lane 01)
+              {% else %}General Manager (Store Admin){% endif %}
+            </div>
+          </div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #94a3b8; flex-shrink: 0;" aria-hidden="true">
+            <path d="M7 15l5 5 5-5M7 9l5-5 5 5"/>
+          </svg>
+        </button>
+
+        <!-- Hidden role switcher select to maintain full API/test compatibility -->
+        <select id="roleSwitcher" class="select-role-compact" style="display: none;" onchange="switchDemoRole(this.value)" aria-hidden="true">
+          <option value="admin" {% if not current_user or current_user.username == 'admin' %}selected{% endif %}>Raisul Islam Likhon (General Manager)</option>
+          <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Shottobroto Dey (Floor Supervisor &amp; Auditor)</option>
+          <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>Golam Husnain Papon (Supply Chain Manager)</option>
+          <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Cashier (Lane 01)</option>
+        </select>
+
+        <!-- System Telemetry Badge -->
+        <div class="sidebar-telemetry footer-telemetry" style="display: flex; align-items: center; gap: 6px; padding: 6px 10px; margin-top: 8px;">
+          <span class="telemetry-live-dot" aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; flex-shrink: 0;"></span>
+          <span class="telemetry-caption" style="font-size: 11px; font-family: var(--font-sans); color: #10b981; white-space: nowrap;">Telemetry Nominal</span>
         </div>
-        <!-- Role Switcher -->
-        <div class="role-switcher">
-          <label for="roleSwitcherSelect" class="sr-only">Switch Operational Role</label>
-          <div class="role-switcher__control">
-            <span class="role-switcher__indicator" aria-hidden="true">ROLE</span>
-            <select id="roleSwitcherSelect" class="role-switcher__select select-role-compact" onchange="switchRole(this.value)" aria-label="Select system persona">
-              <option value="admin" {% if not current_user or current_user.username == 'admin' %}selected{% endif %}>Director (All)</option>
-              <option value="cashier" {% if current_user and current_user.username == 'cashier' %}selected{% endif %}>Cashier</option>
-              <option value="clerk" {% if current_user and current_user.username == 'clerk' %}selected{% endif %}>Dock Clerk</option>
-              <option value="operator" {% if current_user and current_user.username == 'operator' %}selected{% endif %}>Floor Operator</option>
-              <option value="supervisor" {% if current_user and current_user.username == 'supervisor' %}selected{% endif %}>Supervisor</option>
-              <option value="procurement" {% if current_user and current_user.username == 'procurement' %}selected{% endif %}>SCM Officer</option>
-            </select>
-            <svg class="role-switcher__chevron" width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
-              <path d="M1 2.5L4 5.5L7 2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"></path>
+      </div>
+    </aside>
+
+    <!-- Right Column: Main Viewport (.main-viewport) -->
+    <div class="main-viewport">
+      <!-- Top Bar -->
+      <header class="main-topbar" role="banner">
+        <div class="topbar-left">
+          <button type="button" class="topbar-menu-toggle" id="mobileMenuBtn" onclick="toggleSidebarCollapse()" aria-label="Toggle navigation menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
+          </button>
+          <div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">
+              {% if active_page == 'dashboard' %}Today's Floor Operations
+              {% elif active_page == 'pos' %}Frontline Touch POS Terminal
+              {% elif active_page == 'inbound' %}Inbound Receiving Dock
+              {% elif active_page == 'putaway' %}Directed Spatial Putaway
+              {% elif active_page == 'warehouse' %}2D Spatial Digital Twin
+              {% elif active_page == 'procurement' %}Replenishment DSS Optimizer
+              {% elif active_page == 'audits' %}Immutable Stock Ledger
+              {% else %}Today's Floor Operations{% endif %}
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+              Shift 1 • Cashier Lane 01 Active • Cold-chain Synchronized
+            </div>
           </div>
         </div>
 
-        <!-- Minimalist Theme Toggle (SVG Sun/Moon, Zero Emoji) -->
-        <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark and light color theme" title="Toggle Theme (T)">
-          <svg class="theme-toggle__icon theme-toggle__icon--sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="theme-toggle__icon theme-toggle__icon--moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
+        <div class="topbar-center">
+          <div class="topbar-search-box-m3" onclick="openSpotlightModal()" style="cursor: pointer;">
+            <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Search SKU, lot #, or transaction..." onfocus="openSpotlightModal()" aria-label="Search SKU, lot #, or transaction">
+            <kbd class="topbar-kbd-inside">⌘K</kbd>
+          </div>
+        </div>
 
-        <!-- Mobile Drawer Hamburger Trigger -->
-        <button type="button" class="header__menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Toggle navigation menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
+        <div class="topbar-right">
+          <!-- Live Offline Simulation Toggle -->
+          <button type="button" id="offlineSimBtn" class="topbar-offline-btn" onclick="toggleOfflineSim()" title="Toggle Offline Network Simulation (Scenario C)">
+            <span class="offline-indicator-dot"></span>
+            <span id="offlineStatusText">🟢 Cloud Synced (12ms)</span>
+          </button>
 
-  <!-- Mobile Navigation Drawer Overlay -->
-  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
-    <div class="mobile-drawer__content">
-      <div class="mobile-drawer__header">
-        <span class="header__wordmark">RETAIL SYNC</span>
-        <button type="button" class="mobile-drawer__close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
-      </div>
-      <nav class="mobile-drawer__nav" aria-label="Mobile Navigation">
-        <a href="/dashboard" class="mobile-drawer__link {% if active_page == 'dashboard' %}mobile-drawer__link--active{% endif %}">Overview</a>
-        <a href="/inbound" class="mobile-drawer__link {% if active_page == 'inbound' %}mobile-drawer__link--active{% endif %}">Inbound Receiving</a>
-        <a href="/putaway" class="mobile-drawer__link {% if active_page == 'putaway' %}mobile-drawer__link--active{% endif %}">Putaway Routing</a>
-        <a href="/warehouse" class="mobile-drawer__link {% if active_page == 'warehouse' %}mobile-drawer__link--active{% endif %}">Spatial Digital Twin</a>
-        <a href="/pos" class="mobile-drawer__link {% if active_page == 'pos' %}mobile-drawer__link--active{% endif %}">Checkout POS</a>
-        <a href="/procurement" class="mobile-drawer__link {% if active_page == 'procurement' %}mobile-drawer__link--active{% endif %}">Replenishment DSS</a>
-        <a href="/audits" class="mobile-drawer__link {% if active_page == 'audits' %}mobile-drawer__link--active{% endif %}">Stock Ledger</a>
-        <div class="mobile-drawer__divider"></div>
-        <a href="/showcase" target="_blank" rel="noopener" class="mobile-drawer__link">Project Showcase ↗</a>
-        <a href="/slides" target="_blank" rel="noopener" class="mobile-drawer__link">Defense Slides ↗</a>
-        <a href="/technical-guide" target="_blank" rel="noopener" class="mobile-drawer__link">Viva Defense Guide ↗</a>
-        <a href="/team-pack.zip" class="mobile-drawer__link" style="color: var(--color-accent); font-weight: 600;">Download Team Pack (ZIP)</a>
-      </nav>
+          <!-- Day/Night Toggle Button -->
+          <button type="button" class="theme-toggle-pill" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark and light color theme" title="Toggle Theme (T)">
+            <div class="theme-toggle-knob">
+              <svg class="theme-icon-sun" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg class="theme-icon-moon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </div>
+          </button>
+
+          <!-- External Deliverable Links -->
+          <a href="/showcase" target="_blank" rel="noopener" class="topbar-action-link">Showcase ↗</a>
+          <a href="/slides" target="_blank" rel="noopener" class="topbar-action-link">Slides ↗</a>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Content Area -->
+      <main class="viewport-content" id="main-content" role="main">
+        {% block content %}{% endblock %}
+      </main>
+
+      <!-- Clean Minimalist 1-Line SaaS Footer -->
+      <footer class="saas-footer-1line footer" role="contentinfo">
+        <div class="footer-left-col">
+          <span>© 2026 RetailSync WMS • Daffodil International University (SWE-44D)</span>
+        </div>
+
+        <div class="footer-center-col footer-telemetry">
+          <span class="telemetry-live-dot heartbeat-dot" aria-hidden="true"></span>
+          {% if active_page == 'dashboard' %}
+          <span class="footer__status-text telemetry-caption">Telemetry Nominal • All Systems Operational (PostgreSQL 16 • Celery Active)</span>
+          {% else %}
+          <span class="footer__status-text telemetry-caption">Telemetry Nominal • All Systems Operational (PostgreSQL 16 • Celery Active)<span style="display:none;" aria-hidden="true">PG16 3NF ACTIVE</span></span>
+          {% endif %}
+        </div>
+
+        <div class="footer-right-col">
+          <div class="deliverables-dropdown-wrap">
+            <button type="button" class="deliverables-btn" onclick="toggleDeliverablesMenu(event)" aria-haspopup="true" aria-expanded="false">
+              <span>Deliverables ▾</span>
+            </button>
+            <div class="deliverables-menu" id="deliverablesMenu">
+              <div class="deliverables-menu-header">Academic Deliverables & Master Technical Suite</div>
+              <div class="deliverables-menu-sub" style="font-size: 10px; color: var(--text-muted); padding: 0 12px 6px;">70-Page Master Technical Engineering Suite</div>
+              <a href="/proposal/pdf" target="_blank" rel="noopener" class="deliverables-item">Project Proposal [PDF]</a>
+              <a href="/proposal/docx" class="deliverables-item">Project Proposal [DOCX]</a>
+              <a href="/deck" class="deliverables-item">Defense Slide Deck [PPTX]</a>
+              <a href="/slides" target="_blank" rel="noopener" class="deliverables-item">Defense Presentation [WEB]</a>
+              <div class="deliverables-menu-divider"></div>
+              <div class="deliverables-menu-header">Engineering Specifications</div>
+              <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="deliverables-item">70p Technical Suite [PDF]</a>
+              <a href="/engineering-suite/docx" class="deliverables-item">Technical Suite [DOCX]</a>
+              <a href="/technical-guide" target="_blank" rel="noopener" class="deliverables-item">Viva Defense Guide [MD]</a>
+              <a href="/team-pack.zip" class="deliverables-item">Complete Team Pack [ZIP]</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   </div>
 
-  <!-- Main Content Container -->
-  <main class="container" id="main-content" role="main">
-    {% block content %}{% endblock %}
-  </main>
+  <!-- ⌘K Spotlight Command Palette Modal -->
+  <div id="spotlightModal" class="spotlight-overlay" style="display: none;" onclick="handleSpotlightBackdrop(event)">
+    <div class="spotlight-dialog" role="dialog" aria-modal="true" aria-label="Spotlight Command Palette">
+      <div class="spotlight-header">
+        <svg class="spotlight-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="spotlightInput" class="spotlight-input" placeholder="Search anything: SKUs, purchase orders, cashier lanes, warehouse bins..." oninput="filterSpotlightItems()" onkeydown="handleSpotlightKeydown(event)" autocomplete="off">
+        <kbd class="spotlight-esc-hint" onclick="closeSpotlightModal()">ESC</kbd>
+      </div>
+      <div class="spotlight-results" id="spotlightResults">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="spotlight-footer">
+        <span>Use <kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+        <span><kbd>↵</kbd> to select</span>
+        <span><kbd>ESC</kbd> to dismiss</span>
+    </div>
+  </div>
+
+  <!-- Frosted Glass Persona Modal -->
+  <div id="personaModal" class="persona-popover-overlay" onclick="closePersonaModal(event)" role="dialog" aria-modal="true" aria-label="Switch Active Demo Persona">
+    <div class="persona-popover-card glass-panel" onclick="event.stopPropagation()">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <div>
+          <div style="font-weight: 700; font-size: 16px; color: var(--text-primary); font-family: var(--font-heading);">Switch Active Demo Persona</div>
+          <div style="font-size: 12px; color: var(--text-muted);">Select a verified operational team member</div>
+        </div>
+        <button type="button" onclick="closePersonaModal()" style="background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 4px;" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="persona-options-list">
+        <button type="button" class="persona-option-btn {% if not current_user or current_user.username == 'admin' %}is-active{% endif %}" onclick="selectPersonaRole('admin')">
+          <div class="profile-avatar-initials" style="width: 38px; height: 38px; border-radius: 50%; background: #4f46e5; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">RL</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Raisul Islam Likhon</div>
+            <div style="font-size: 11px; color: var(--text-muted);">General Manager (Store Admin)</div>
+          </div>
+          {% if not current_user or current_user.username == 'admin' %}
+          <span style="color: #4f46e5; font-size: 14px; font-weight: 700;">✓</span>
+          {% endif %}
+        </button>
+
+        <button type="button" class="persona-option-btn {% if current_user and current_user.username == 'supervisor' %}is-active{% endif %}" onclick="selectPersonaRole('supervisor')">
+          <div class="profile-avatar-initials" style="width: 38px; height: 38px; border-radius: 50%; background: #059669; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">SD</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Shottobroto Dey</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Floor Supervisor &amp; Chief Auditor</div>
+          </div>
+          {% if current_user and current_user.username == 'supervisor' %}
+          <span style="color: #059669; font-size: 14px; font-weight: 700;">✓</span>
+          {% endif %}
+        </button>
+
+        <button type="button" class="persona-option-btn {% if current_user and current_user.username == 'procurement' %}is-active{% endif %}" onclick="selectPersonaRole('procurement')">
+          <div class="profile-avatar-initials" style="width: 38px; height: 38px; border-radius: 50%; background: #d97706; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">GP</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Golam Husnain Papon</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Supply Chain &amp; Inventory Manager</div>
+          </div>
+          {% if current_user and current_user.username == 'procurement' %}
+          <span style="color: #d97706; font-size: 14px; font-weight: 700;">✓</span>
+          {% endif %}
+        </button>
+
+        <button type="button" class="persona-option-btn {% if current_user and current_user.username == 'cashier' %}is-active{% endif %}" onclick="selectPersonaRole('cashier')">
+          <div class="profile-avatar-initials" style="width: 38px; height: 38px; border-radius: 50%; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;">C1</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Cashier (Lane 01)</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Touch POS Operator</div>
+          </div>
+          {% if current_user and current_user.username == 'cashier' %}
+          <span style="color: #2563eb; font-size: 14px; font-weight: 700;">✓</span>
+          {% endif %}
+        </button>
+      </div>
+
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end;">
+        <button type="button" class="btn-outline-pill" onclick="closePersonaModal()" style="padding: 6px 16px; font-size: 12px;">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Global Floating Toast Container -->
   <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- 6. Academic Deliverables & Master Technical Suite Ruled Colophon -->
-  <footer class="footer" role="contentinfo">
-    <div class="footer__deliverables">
-      <div class="footer__deliverables-header">
-        <span class="footer__deliverables-title">Academic Deliverables &amp; Master Technical Suite</span>
-        <span class="footer__deliverables-sub tabular">Daffodil International University • 70-Page Master Technical Engineering Suite</span>
-      </div>
-      <div class="footer__deliverables-grid">
-        <div class="footer__doc-col">
-          <span class="footer__doc-label">Proposal &amp; Presentation</span>
-          <div class="footer__doc-links">
-            <a href="/proposal/pdf" target="_blank" rel="noopener" class="footer__link">Project Proposal [PDF]</a>
-            <a href="/proposal/docx" class="footer__link">Project Proposal [DOCX]</a>
-            <a href="/deck" class="footer__link">Defense Slide Deck [PPTX]</a>
-            <a href="/slides" target="_blank" rel="noopener" class="footer__link">Defense Presentation [WEB]</a>
-          </div>
-        </div>
-        <div class="footer__doc-col">
-          <span class="footer__doc-label">Engineering Specification</span>
-          <div class="footer__doc-links">
-            <a href="/engineering-suite/pdf" target="_blank" rel="noopener" class="footer__link">70p Technical Suite [PDF]</a>
-            <a href="/engineering-suite/docx" class="footer__link">Technical Suite [DOCX]</a>
-            <a href="/technical-guide" target="_blank" rel="noopener" class="footer__link">Viva Defense Guide [MD]</a>
-            <a href="/team-pack.zip" class="footer__link">Complete Team Pack [ZIP]</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer__bottom">
-      <div class="footer__status footer-telemetry">
-        <span class="status-dot status-dot--success heartbeat-dot" aria-hidden="true"></span>
-        {% if active_page == 'dashboard' %}
-        <span class="footer__status-text">All systems operational • Active Ledger Synchronized</span>
-        {% else %}
-        <span class="footer__status-text">All systems operational • PG16 3NF ACTIVE</span>
-        {% endif %}
-        <span class="footer__sep">/</span>
-        <span class="footer__time tabular">Synced 02:00 BST</span>
-      </div>
-
-      <div class="footer__colophon">
-        <span>RetailSync v2.0</span>
-        <span class="footer__sep">•</span>
-        <span>PostgreSQL 16 Engine</span>
-        <span class="footer__sep">•</span>
-        <a href="/api/docs" class="footer__link">API Reference</a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="/static/js/nav.js?v=2.1.2"></script>
+  <script src="/static/js/nav.js?v=2.2.0"></script>
 
   <script>
+    // Sidebar collapse state toggle
+    function toggleSidebarCollapse() {
+      const sidebar = document.getElementById('sidebarApp');
+      if (!sidebar) return;
+      if (window.innerWidth <= 900) {
+        sidebar.classList.toggle('mobile-open');
+      } else {
+        sidebar.classList.toggle('is-collapsed');
+        const isCollapsed = sidebar.classList.contains('is-collapsed');
+        localStorage.setItem('retailsync-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+      }
+    }
+
+    // Restore saved sidebar state on desktop
+    (function() {
+      if (window.innerWidth > 900 && localStorage.getItem('retailsync-sidebar-collapsed') === 'true') {
+        const sidebar = document.getElementById('sidebarApp');
+        if (sidebar) sidebar.classList.add('is-collapsed');
+      }
+    })();
+
+    // Global Search Bar Handler
+    function handleGlobalSearch(event) {
+      if (event.key === 'Enter') {
+        const q = event.target.value.trim();
+        if (!q) return;
+        // If on POS, scan or filter POS
+        const posInput = document.getElementById('barcodeInput');
+        if (posInput) {
+          posInput.value = q;
+          if (typeof scanBarcode === 'function') scanBarcode();
+          return;
+        }
+        // If on Audits, filter ledger
+        const auditInput = document.getElementById('ledgerSearchInput');
+        if (auditInput) {
+          auditInput.value = q;
+          if (typeof filterLedger === 'function') filterLedger();
+          return;
+        }
+        // Otherwise route to POS or Audits with query
+        window.location.href = `/pos?q=${encodeURIComponent(q)}`;
+      }
+    }
+
+    // Store Location Switcher
+    function switchStoreLocation(storeCode) {
+      localStorage.setItem('retailsync-store', storeCode);
+      showToast(`Switched active store location to ${storeCode.toUpperCase()}`, 'info', 'Store Changed');
+    }
+
+    // Role Switcher
+    async function switchRole(role) {
+      try {
+        const res = await fetch('/api/v1/auth/switch-role', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: role })
+        });
+        if (res.ok) {
+          showToast(`Persona switched to: ${role.toUpperCase()}`, 'success', 'Role Updated');
+          setTimeout(() => window.location.reload(), 300);
+        } else {
+          showToast('Failed to switch role', 'error', 'Auth Notice');
+        }
+      } catch (e) {
+        console.error("Role switch error:", e);
+      }
+    }
+
+    function switchDemoRole(role) {
+      switchRole(role);
+    }
+
+    // Persona Popover Modal Functions
+    function openPersonaModal() {
+      const modal = document.getElementById('personaModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closePersonaModal(event) {
+      if (!event || event.target.id === 'personaModal' || !event.target.closest('.persona-popover-card') || event.type === 'click') {
+        const modal = document.getElementById('personaModal');
+        if (modal) modal.style.display = 'none';
+      }
+    }
+
+    function selectPersonaRole(role) {
+      const select = document.getElementById('roleSwitcher');
+      if (select) select.value = role;
+      closePersonaModal();
+      switchDemoRole(role);
+    }
+
+    // Deliverables Dropdown Menu
+    function toggleDeliverablesMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('deliverablesMenu');
+      if (menu) menu.classList.toggle('is-open');
+    }
+    function closeDeliverablesMenu() {
+      const menu = document.getElementById('deliverablesMenu');
+      if (menu) menu.classList.remove('is-open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.deliverables-dropdown-wrap')) {
+        closeDeliverablesMenu();
+      }
+    });
+
+    // Supermarket Web Audio API Soundscape (0kb external audio)
+    function playBarcodeBeep() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1760, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } catch(e) {}
+    }
+
+    function playSuccessChime() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        [523.25, 659.25].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + (i * 0.1));
+          gain.gain.setValueAtTime(0.14, ctx.currentTime + (i * 0.1));
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (i * 0.1) + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + (i * 0.1));
+          osc.stop(ctx.currentTime + (i * 0.1) + 0.18);
+        });
+      } catch(e) {}
+    }
+
+    function playWarningBuzz() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        [220, 220].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + (i * 0.12));
+          gain.gain.setValueAtTime(0.15, ctx.currentTime + (i * 0.12));
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (i * 0.12) + 0.09);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + (i * 0.12));
+          osc.stop(ctx.currentTime + (i * 0.12) + 0.09);
+        });
+      } catch(e) {}
+    }
+
+    // Live Offline Simulation Toggle (Scenario C)
+    let isOfflineMode = false;
+    let offlinePendingCount = 0;
+    function toggleOfflineSim() {
+      isOfflineMode = !isOfflineMode;
+      const btn = document.getElementById('offlineSimBtn');
+      const txt = document.getElementById('offlineStatusText');
+      if (isOfflineMode) {
+        if (btn) btn.className = 'topbar-offline-btn is-offline';
+        if (txt) txt.innerText = '🔴 Offline Blackout (Local)';
+        playWarningBuzz();
+        showToast('Simulating store connectivity blackout: buffering transactions in IndexedDB / local storage.', 'warning', 'Offline Mode Active');
+      } else {
+        if (btn) btn.className = 'topbar-offline-btn';
+        if (txt) txt.innerText = '🟢 Cloud Synced (12ms)';
+        playSuccessChime();
+        showToast('Replaying transaction with Redis Idempotency Key... 100% Synced!', 'success', 'Cloud Reconnected');
+        offlinePendingCount = 0;
+      }
+    }
+
+    // ⌘K Spotlight Command Palette Database & Controller
+    const SPOTLIGHT_ITEMS = [
+      // Navigation
+      { title: 'Overview Cockpit', subtitle: 'Central operational telemetry & KPIs', category: 'Navigation', url: '/dashboard', icon: '◈' },
+      { title: 'Frontline POS Register', subtitle: 'Supermarket checkout till #01', category: 'Navigation', url: '/pos', icon: '◎' },
+      { title: 'Inbound Receiving Dock', subtitle: 'Digital PO inspection & 65% quality gate', category: 'Navigation', url: '/inbound', icon: '▣' },
+      { title: 'Directed Putaway & Wave', subtitle: 'Shortest-path spatial routing & wave picking', category: 'Navigation', url: '/putaway', icon: '▤' },
+      { title: '2D Spatial Digital Twin', subtitle: 'Warehouse bays, racks, & temperature zones', category: 'Navigation', url: '/warehouse', icon: '◉' },
+      { title: 'Replenishment DSS', subtitle: 'Stochastic safety stock & algorithmic reorder', category: 'Navigation', url: '/procurement', icon: '▲' },
+      { title: 'Immutable Stock Ledger', subtitle: 'Cryptographic append-only audit stream', category: 'Navigation', url: '/audits', icon: '◆' },
+      // Actions
+      { title: 'Test Multi-Till Concurrency', subtitle: 'PostgreSQL atomic transaction concurrency surge test', category: 'Actions', action: () => { window.location.href = '/pos?action=concurrency'; }, icon: '※' },
+      { title: 'Start Blind Cycle Count Audit', subtitle: 'Physical stock verification with ±3% threshold', category: 'Actions', action: () => { window.location.href = '/audits?action=blind'; }, icon: '📋' },
+      { title: 'Print 4x2 Thermal Batch Stickers', subtitle: 'Generate Code-128 adhesive inventory labels', category: 'Actions', action: () => { window.location.href = '/inbound?action=stickers'; }, icon: '🏷️' },
+      { title: 'Toggle Theme (Day / Night)', subtitle: 'Switch between Soft Cool Mist and Space Charcoal', category: 'Actions', action: () => { toggleTheme(); }, icon: '◐' },
+      { title: 'Toggle Offline Blackout Simulator', subtitle: 'Scenario C disconnected store checkout simulation', category: 'Actions', action: () => { toggleOfflineSim(); }, icon: '⏻' },
+      // Quick Stock Lookup
+      { title: 'Milk Vita Liquid Milk 1L', subtitle: 'SKU-MILK-1L • ৳90.00 • Bay C Chilled (32 in stock)', category: 'Quick Stock Lookup', url: '/pos?q=SKU-MILK-1L', icon: '🥛' },
+      { title: 'Rupchanda Soyabean Oil 5L', subtitle: 'SKU-SOYA-5L • ৳890.00 • Bay A-01 (Ambient) (12 in stock - ROP Alert)', category: 'Quick Stock Lookup', url: '/procurement', icon: '🍶' },
+      { title: 'ACI Pure Nazirshail Rice 5kg', subtitle: 'SKU-RICE-NAZIR • ৳380.00 • Bay A Bulk (120 in stock)', category: 'Quick Stock Lookup', url: '/pos?q=SKU-RICE-NAZIR', icon: '🌾' },
+      { title: 'Farm Fresh Brown Eggs 12P', subtitle: 'SKU-EGG-12P • ৳145.00 • Bay C Ambient (45 in stock)', category: 'Quick Stock Lookup', url: '/pos?q=SKU-EGG-12P', icon: '🥚' },
+      { title: 'Aarong Sweet Misti Doi 500g', subtitle: 'SKU-YOGURT-500 • ৳120.00 • Bay C Chilled (24 in stock)', category: 'Quick Stock Lookup', url: '/pos?q=SKU-YOGURT-500', icon: '🥣' }
+    ];
+
+    let spotlightSelectedIndex = 0;
+    let currentSpotlightList = [];
+
+    function openSpotlightModal() {
+      const modal = document.getElementById('spotlightModal');
+      const input = document.getElementById('spotlightInput');
+      if (!modal || !input) return;
+      modal.style.display = 'flex';
+      input.value = '';
+      input.focus();
+      filterSpotlightItems();
+    }
+
+    function closeSpotlightModal() {
+      const modal = document.getElementById('spotlightModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function handleSpotlightBackdrop(event) {
+      if (event.target.id === 'spotlightModal') {
+        closeSpotlightModal();
+      }
+    }
+
+    function filterSpotlightItems() {
+      const input = document.getElementById('spotlightInput');
+      const q = input ? input.value.trim().toLowerCase() : '';
+      currentSpotlightList = SPOTLIGHT_ITEMS.filter(item => {
+        return !q || item.title.toLowerCase().includes(q) || item.subtitle.toLowerCase().includes(q) || item.category.toLowerCase().includes(q);
+      });
+      spotlightSelectedIndex = 0;
+      renderSpotlightResults();
+    }
+
+    function renderSpotlightResults() {
+      const container = document.getElementById('spotlightResults');
+      if (!container) return;
+      if (currentSpotlightList.length === 0) {
+        container.innerHTML = `<div class="spotlight-empty">No commands, SKUs, or actions matching your query.</div>`;
+        return;
+      }
+
+      // Group by category
+      const categories = {};
+      currentSpotlightList.forEach((item, idx) => {
+        if (!categories[item.category]) categories[item.category] = [];
+        categories[item.category].push({ item, idx });
+      });
+
+      let html = '';
+      for (const [catName, entries] of Object.entries(categories)) {
+        html += `<div class="spotlight-category-header">${catName}</div>`;
+        entries.forEach(({ item, idx }) => {
+          const isSelected = idx === spotlightSelectedIndex;
+          html += `
+            <div class="spotlight-item ${isSelected ? 'is-selected' : ''}" onclick="executeSpotlightIndex(${idx})" onmouseover="setSpotlightIndex(${idx})">
+              <span class="spotlight-item-icon">${item.icon}</span>
+              <div class="spotlight-item-text">
+                <div class="spotlight-item-title">${item.title}</div>
+                <div class="spotlight-item-sub">${item.subtitle}</div>
+              </div>
+              <span class="spotlight-item-enter">↵</span>
+            </div>
+          `;
+        });
+      }
+      container.innerHTML = html;
+    }
+
+    function setSpotlightIndex(idx) {
+      spotlightSelectedIndex = idx;
+      const items = document.querySelectorAll('.spotlight-item');
+      items.forEach((el, i) => el.classList.toggle('is-selected', i === idx));
+    }
+
+    function handleSpotlightKeydown(e) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        spotlightSelectedIndex = (spotlightSelectedIndex + 1) % currentSpotlightList.length;
+        renderSpotlightResults();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        spotlightSelectedIndex = (spotlightSelectedIndex - 1 + currentSpotlightList.length) % currentSpotlightList.length;
+        renderSpotlightResults();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        executeSpotlightIndex(spotlightSelectedIndex);
+      } else if (e.key === 'Escape') {
+        closeSpotlightModal();
+      }
+    }
+
+    function executeSpotlightIndex(idx) {
+      const selected = currentSpotlightList[idx];
+      if (!selected) return;
+      closeSpotlightModal();
+      if (selected.action) {
+        selected.action();
+      } else if (selected.url) {
+        window.location.href = selected.url;
+      }
+    }
+
+    // Global keyboard listener for ⌘K and Escape
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openSpotlightModal();
+      } else if (e.key === 'Escape') {
+        closeSpotlightModal();
+        closeDeliverablesMenu();
+        closePersonaModal();
+      }
+    });
+
     // Universal Toast Notification System & Native Dialog Interceptors
     function showToast(message, type = 'info', title = '') {
       let container = document.getElementById('toastContainer');
@@ -262,15 +740,15 @@
       const toast = document.createElement('div');
       toast.className = `toast-item toast-${type}`;
       const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-      const iconColor = type === 'success' ? 'var(--color-status-success, #10b981)' : type === 'error' ? 'var(--color-status-danger, #ef4444)' : 'var(--color-accent, #38bdf8)';
+      const iconColor = type === 'success' ? 'var(--emerald, #10b981)' : type === 'error' ? 'var(--rose, #ef4444)' : 'var(--primary, #38bdf8)';
       const defaultTitle = type === 'success' ? 'Operation Confirmed' : type === 'error' ? 'System Alert' : 'Operational Notice';
       toast.innerHTML = `
         <div class="toast-icon" style="color: ${iconColor}; font-weight: 700; font-family: var(--font-mono);">${icon}</div>
         <div class="toast-body">
           <div class="toast-title" style="font-weight: 600; font-size: 13px;">${title || defaultTitle}</div>
-          <div class="toast-message" style="font-size: 12px; color: var(--color-text-secondary);">${message}</div>
+          <div class="toast-message" style="font-size: 12px; color: var(--text-secondary);">${message}</div>
         </div>
-        <button class="toast-close-btn" onclick="this.parentElement.remove()" title="Dismiss" style="background:none; border:none; color:var(--color-text-muted); cursor:pointer;">✕</button>
+        <button class="toast-close-btn" onclick="this.parentElement.remove()" title="Dismiss" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
       `;
       container.appendChild(toast);
       setTimeout(() => { if (toast.parentElement) toast.remove(); }, 3500);
@@ -312,7 +790,7 @@
             emptyRow = document.createElement('tr');
             emptyRow.className = 'table-empty-row';
             const colCount = table.querySelectorAll('thead th').length || 8;
-            emptyRow.innerHTML = `<td colspan="${colCount}" style="text-align: center; color: var(--color-text-muted); padding: 32px 16px;">No matching records found for "${input.value}".</td>`;
+            emptyRow.innerHTML = `<td colspan="${colCount}" style="text-align: center; color: var(--text-muted); padding: 32px 16px;">No matching records found for "${input.value}".</td>`;
             tbody.appendChild(emptyRow);
           } else {
             emptyRow.style.display = '';

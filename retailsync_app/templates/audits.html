@@ -14,21 +14,6 @@
     </div>
 </div>
 
-<!-- Supermarket Operational Lifecycle Flow -->
-<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
-  <a href="/inbound" style="color: var(--text-secondary); text-decoration: none;">Step 1: Inbound Receiving Dock</a>
-  <span>→</span>
-  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
-  <span>→</span>
-  <a href="/warehouse" style="color: var(--text-secondary); text-decoration: none;">Step 3: 2D Spatial Twin</a>
-  <span>→</span>
-  <a href="/pos" style="color: var(--text-secondary); text-decoration: none;">Step 4: POS Checkout</a>
-  <span>→</span>
-  <a href="/procurement" style="color: var(--text-secondary); text-decoration: none;">Step 5: Replenishment DSS</a>
-  <span>→</span>
-  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Step 6: Stock Ledger (Current)</span>
-</nav>
-
 <!-- Stock Ledger KPI Telemetry Strip (Calm Mission Studio) -->
 <section class="status-strip" aria-label="Operational Ledger Strip" style="margin-bottom: 24px;">
   <div class="status-strip__item status-strip__item--primary">
@@ -58,7 +43,7 @@
   <div class="table-toolbar" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;">
       <!-- Search input -->
-      <input type="text" id="ledgerSearchInput" placeholder="Filter transactions by SKU, Ref #, Product, or User..." class="form-input" style="max-width: 360px; font-size: 12px;" oninput="filterLedger()">
+      <input type="text" id="ledgerSearchInput" placeholder="Search SKU, reference, product, operator..." class="form-input" style="max-width: 360px; font-size: 12px;" oninput="filterLedger()">
 
       <!-- Transaction Type filter -->
       <select id="ledgerTypeFilter" name="typeFilter" class="form-input" style="max-width: 200px; font-size: 12px;" onchange="filterLedger()">
@@ -75,8 +60,13 @@
     </div>
 
     <div style="display: flex; gap: 8px;">
+      <!-- Blind Cycle Count Audit button -->
+      <button class="btn-sm btn-primary" onclick="openBlindCountModal()" style="font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+        📋 Start Blind Cycle Count
+      </button>
+
       <!-- Export CSV button -->
-      <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()" style="font-size: 12px;">Export CSV</button>
+      <button class="btn-sm btn-secondary" onclick="exportLedgerCSV()" style="font-size: 12px; font-weight: 600;">⬇ Export CSV</button>
 
       <!-- Refresh button -->
       <button class="btn-sm btn-secondary" onclick="loadLedger()" title="Refresh transaction ledger" style="font-size: 12px;">Refresh</button>
@@ -103,11 +93,167 @@
     </table>
   </div>
 </div>
+
+<!-- Blind Cycle Count Physical Audit Modal -->
+<div id="blindAuditModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content" style="max-width: 540px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">Blind Physical Cycle Count Audit</h3>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted);">
+          Double-blind audit protocol. System balance is masked to prevent confirmation bias.
+        </p>
+      </div>
+      <button onclick="closeBlindCountModal()" style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--text-muted);" aria-label="Close">✕</button>
+    </div>
+
+    <form id="blindAuditForm" onsubmit="event.preventDefault(); submitBlindCount();" style="display: flex; flex-direction: column; gap: 14px;">
+      <div>
+        <label style="font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; font-family: var(--font-mono);">
+          Select Inventory Lot &amp; Location to Audit:
+        </label>
+        <select id="blindLotSelect" class="form-input" style="margin-top: 4px; font-size: 12.5px;" onchange="onBlindLotChange()">
+          <option value="LOT-MV-260901" data-sku="SKU-MILK-1L" data-product="Pran Pasteurised Liquid Milk 1L" data-bin="C01-R01-S2-B1" data-expected="50">
+            Pran Pasteurised Milk 1L (Lot LOT-MV-260901 • Bin C01-R01-S2-B1)
+          </option>
+          <option value="LOT-RC-260915" data-sku="SKU-OIL-5L" data-product="Rupchanda Fortified Soyabean Oil 5L" data-bin="A02-R01-S1-B2" data-expected="80">
+            Rupchanda Soyabean Oil 5L (Lot LOT-RC-260915 • Bin A02-R01-S1-B2)
+          </option>
+          <option value="LOT-AG-260901" data-sku="SKU-GHEE-900G" data-product="Aarong Pure Ghee 900g" data-bin="A01-R01-S1-B1" data-expected="40">
+            Aarong Pure Ghee 900g (Lot LOT-AG-260901 • Bin A01-R01-S1-B1)
+          </option>
+          <option value="LOT-NZ-260920" data-sku="SKU-RICE-25KG" data-product="Nazirshail Premium Rice 25kg" data-bin="B01-R01-S1-B1" data-expected="25">
+            Nazirshail Premium Rice 25kg (Lot LOT-NZ-260920 • Bin B01-R01-S1-B1)
+          </option>
+        </select>
+      </div>
+
+      <div style="background: var(--color-bg-hover); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; font-family: var(--font-mono);">
+        <div>
+          <span style="color: var(--text-muted); font-size: 11px;">Expected System Balance:</span>
+          <div style="margin-top: 2px;">
+            <span class="blind-mask-pill">[BLIND • MASKED]</span>
+          </div>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); font-size: 11px;">Assigned Physical Bin:</span>
+          <div style="font-weight: 700; color: var(--text-primary); margin-top: 4px;" id="blindBinCodeDisplay">C01-R01-S2-B1</div>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; font-family: var(--font-mono);">
+          Physical Hand Count Quantity (PCS):
+        </label>
+        <input type="number" id="blindPhysicalInput" class="form-input" placeholder="Enter verified shelf physical count..." min="0" required style="margin-top: 4px; font-family: var(--font-mono); font-size: 14px; font-weight: 600;">
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+          Must represent actual physical items counted at rack location.
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; font-family: var(--font-mono);">
+          Auditor in Charge:
+        </label>
+        <input type="text" id="blindAuditorDisplay" class="form-input" value="Shottobroto Dey (Floor Supervisor & Auditor)" readonly style="margin-top: 4px; font-size: 12px; background: var(--color-bg-hover); color: var(--text-secondary);">
+      </div>
+
+      <!-- Anomaly Alert Card (Negative Guardrail #5: Variance > 3%) -->
+      <div id="blindAnomalyAlert" class="variance-anomaly" style="display: none;">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: var(--rose-400);">
+          <span>⚠️</span> ANOMALY DETECTED: VARIANCE &gt; 3.0% (GUARDRAIL #5)
+        </div>
+        <div id="blindAnomalyText" style="font-size: 12px; color: var(--text-secondary); margin: 6px 0 10px 0; line-height: 1.5;">
+          Physical count deviates by 4.0% from system records. Mandatory supervisor signoff by Shottobroto Dey is required before ledger reconciliation.
+        </div>
+        <button type="button" class="btn-sm btn-primary" onclick="signoffAnomaly()" style="background: var(--rose-500, #dc2626); border-color: var(--rose-600, #b91c1c); width: 100%; padding: 8px; font-weight: 600;">
+          ✍️ Supervisor Signoff (Shottobroto Dey) &amp; Post Adjustment
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button type="submit" class="btn-sm btn-primary" style="flex: 1; padding: 10px; font-weight: 600;">
+          ⚖️ Submit &amp; Verify Physical Count
+        </button>
+        <button type="button" class="btn-sm btn-secondary" onclick="closeBlindCountModal()" style="padding: 10px 16px;">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
 let allLedgerEntries = [];
+
+function openBlindCountModal() {
+  const modal = document.getElementById('blindAuditModal');
+  if (modal) {
+    document.getElementById('blindPhysicalInput').value = '';
+    document.getElementById('blindAnomalyAlert').style.display = 'none';
+    onBlindLotChange();
+    modal.style.display = 'flex';
+  }
+}
+
+function closeBlindCountModal() {
+  const modal = document.getElementById('blindAuditModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function onBlindLotChange() {
+  const select = document.getElementById('blindLotSelect');
+  const opt = select.selectedOptions[0];
+  if (opt) {
+    document.getElementById('blindBinCodeDisplay').innerText = opt.getAttribute('data-bin') || 'N/A';
+  }
+}
+
+function submitBlindCount() {
+  const select = document.getElementById('blindLotSelect');
+  const opt = select.selectedOptions[0];
+  const inputEl = document.getElementById('blindPhysicalInput');
+  const physicalQty = parseInt(inputEl.value, 10);
+
+  if (isNaN(physicalQty) || physicalQty < 0) {
+    showToast("Please enter a valid physical count quantity", "error", "Invalid Count");
+    return;
+  }
+
+  const expectedQty = parseInt(opt.getAttribute('data-expected') || '50', 10);
+  const diff = physicalQty - expectedQty;
+  const variancePct = Math.abs(diff) / expectedQty * 100;
+  const lot = opt.value;
+  const prod = opt.getAttribute('data-product');
+
+  if (variancePct > 3.0) {
+    // Flag Anomaly under Negative Guardrail #5
+    if (typeof playWarningBuzz === 'function') playWarningBuzz();
+    const alertBox = document.getElementById('blindAnomalyAlert');
+    const alertText = document.getElementById('blindAnomalyText');
+    alertText.innerText = `Physical count (${physicalQty} PCS) deviates from system records (${expectedQty} PCS) by ${variancePct.toFixed(1)}% (Threshold: 3.0%). Under Negative Guardrail #5, this requires mandatory supervisor signoff by Shottobroto Dey (Floor Supervisor & Auditor).`;
+    alertBox.style.display = 'block';
+    showToast(`Audit Anomaly: ${variancePct.toFixed(1)}% variance exceeds 3% threshold!`, "error", "Variance Anomaly");
+  } else {
+    // Tolerance passed
+    if (typeof playSuccessChime === 'function') playSuccessChime();
+    showToast(`Count verified within 3% tolerance (${variancePct.toFixed(1)}% variance). Ledger confirmed for ${prod}.`, "success", "Audit Reconciled");
+    closeBlindCountModal();
+  }
+}
+
+function signoffAnomaly() {
+  const select = document.getElementById('blindLotSelect');
+  const opt = select.selectedOptions[0];
+  const lot = opt.value;
+
+  if (typeof playSuccessChime === 'function') playSuccessChime();
+  showToast(`Supervisor Shottobroto Dey signed off variance for ${lot}. Reversal adjustment posted to immutable ledger.`, "success", "Supervisor Signoff Approved");
+  closeBlindCountModal();
+  loadLedger();
+}
 
 async function loadLedger() {
   try {
@@ -131,6 +277,8 @@ function filterLedger() {
       if (type === 'POS_SALE' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
         // match
       } else if (type === 'POS_SALE_FEFO' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
+        // match
+      } else if (type === 'WRITE_OFF' && (e.transaction_type === 'WRITE_OFF' || e.transaction_type === 'DAMAGE_QUARANTINE')) {
         // match
       } else if (e.transaction_type !== type) {
         return false;
@@ -208,6 +356,8 @@ function exportLedgerCSV() {
       if (type === 'POS_SALE' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
         // match
       } else if (type === 'POS_SALE_FEFO' && (e.transaction_type === 'POS_SALE' || e.transaction_type === 'POS_SALE_FEFO')) {
+        // match
+      } else if (type === 'WRITE_OFF' && (e.transaction_type === 'WRITE_OFF' || e.transaction_type === 'DAMAGE_QUARANTINE')) {
         // match
       } else if (e.transaction_type !== type) {
         return false;

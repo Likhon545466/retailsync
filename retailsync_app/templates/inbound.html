@@ -6,31 +6,20 @@
 <div class="page-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
   <div>
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <h1 class="page-header__title" style="font-family: var(--font-sans); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0;">Inbound Receiving Dock &amp; Quality Gate</h1>
-      <span class="telemetry-item" style="font-size: 11px; font-family: var(--font-mono); color: var(--emerald-400); display: inline-flex; align-items: center; gap: 4px;">
-        <span class="telemetry-dot--pulsing" style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald-400); display: inline-block;"></span> BAY #02 ACTIVE
+      <h1 class="page-header__title" style="font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--text-primary); margin: 0;">Inbound Receiving Dock &amp; Quality Gate</h1>
+      <span style="font-size: 11.5px; font-weight: 600; color: var(--emerald); background: var(--emerald-soft); padding: 3px 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px;">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); display: inline-block;"></span>
+        Dock Gate #02 Active
       </span>
-      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); background: var(--color-bg-hover); padding: 1px 6px; border: 1px solid var(--border-subtle); border-radius: 2px;">DOCK GATE #02</span>
-      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--primary-500); background: rgba(56, 189, 248, 0.08); padding: 1px 6px; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 2px;">GRN ISSUANCE</span>
+      <span style="font-size: 11.5px; font-weight: 500; color: var(--text-muted); background: var(--bg-surface-elevated); padding: 3px 10px; border-radius: 9999px; border: 1px solid var(--border-subtle);">
+        Quality Gate: &ge; 65% Shelf-Life
+      </span>
     </div>
-    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Digital PO receipt verification, automated shelf-life threshold validation (&gt; 65%), and Goods Receipt Note (GRN) generation.</p>
+    <p class="page-header__subtitle" style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Digital PO receipt inspection, cold-chain temperature verification, and Goods Received Note (GRN) issuance.</p>
   </div>
 </div>
 
-<!-- Supermarket Operational Lifecycle Flow -->
-<nav class="flow-breadcrumb-strip" aria-label="Operational Lifecycle Step" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 11.5px; font-family: var(--font-mono); color: var(--text-muted); flex-wrap: wrap;">
-  <span style="color: var(--color-accent, var(--primary)); font-weight: 600; background: var(--color-bg-hover); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-subtle);">Step 1: Inbound Receiving Dock (Current)</span>
-  <span>→</span>
-  <a href="/putaway" style="color: var(--text-secondary); text-decoration: none;">Step 2: Directed Putaway</a>
-  <span>→</span>
-  <a href="/warehouse" style="color: var(--text-secondary); text-decoration: none;">Step 3: 2D Spatial Twin</a>
-  <span>→</span>
-  <a href="/pos" style="color: var(--text-secondary); text-decoration: none;">Step 4: POS Checkout</a>
-  <span>→</span>
-  <a href="/audits" style="color: var(--text-secondary); text-decoration: none;">Step 5: Stock Ledger</a>
-</nav>
-
-<!-- Inbound Dock KPI Telemetry Strip (Calm Mission Studio) -->
+<!-- Inbound Dock KPI Telemetry Strip -->
 <section class="status-strip" aria-label="Operational Inbound Strip" style="margin-bottom: 24px;">
   <div class="status-strip__item status-strip__item--primary">
     <span class="status-strip__label">Inbound POs in Queue</span>
@@ -39,77 +28,113 @@
   </div>
   <div class="status-strip__item">
     <span class="status-strip__label">Units Delivered Today</span>
-    <div class="status-strip__val tabular" style="color: var(--color-status-success);">450 Units</div>
+    <div class="status-strip__val tabular" style="color: var(--emerald);">450 Units</div>
     <span class="status-strip__sub">Receiving shift</span>
   </div>
   <div class="status-strip__item">
     <span class="status-strip__label">Quality Gate Pass Rate</span>
-    <div class="status-strip__val tabular" style="color: var(--color-accent);">94.2%</div>
+    <div class="status-strip__val tabular" style="color: var(--primary);">94.2%</div>
     <span class="status-strip__sub">Target &gt; 90%</span>
   </div>
   <div class="status-strip__item">
     <span class="status-strip__label">Gate Threshold</span>
-    <div class="status-strip__val tabular" style="color: var(--color-status-warning);">≥ 65% Freshness</div>
+    <div class="status-strip__val tabular" style="color: var(--amber);">≥ 65% Freshness</div>
     <span class="status-strip__sub">Shelf-life compliance</span>
   </div>
 </section>
 
-<div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;">
+<!-- 2-Column Quality Gate Workspace (Left: POs / Right: Quality Inspection Form) -->
+<div style="display: grid; grid-template-columns: 1fr 480px; gap: 24px;" class="dashboard-split-layout">
   <!-- Left: Open Purchase Orders List -->
-  <div class="glass-panel" style="padding: 20px;">
+  <div class="glass-panel" style="padding: 22px; border-radius: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0; font-family: var(--font-sans);">Open Purchase Orders Awaiting Delivery</h3>
-      <span class="badge badge-info" style="font-family: var(--font-mono);">INSPECTION QUEUE</span>
+      <div>
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin: 0; font-family: var(--font-heading);">Expected Delivery POs</h2>
+        <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Select a supplier PO to perform 3-step quality inspection</p>
+      </div>
+      <span class="badge badge-info" style="font-family: var(--font-mono); font-size: 11px;">INSPECTION QUEUE</span>
     </div>
     
     <div id="poListContainer">
-      <!-- Populated via JS -->
       <div style="text-align: center; color: var(--text-muted); padding: 30px;">Loading purchase orders...</div>
     </div>
   </div>
 
-  <!-- Right: Inbound Receiving Inspector Form -->
-  <div class="glass-panel" id="receivingFormPanel" style="display: flex; flex-direction: column; padding: 20px;">
-    <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-family: var(--font-sans);">Dock Quality Inspection</h3>
-    <div style="font-size: 12px; color: var(--color-accent, var(--cyan-400)); font-family: var(--font-mono); margin-bottom: 16px;" id="selectedPoHeader">
-      Select a PO from the left to start inspection
+  <!-- Right: Interactive Quality Verification Form -->
+  <div class="glass-panel" id="receivingFormPanel" style="display: flex; flex-direction: column; padding: 22px; border-radius: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+      <div>
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin: 0; font-family: var(--font-heading);">3-Step Quality Verification</h2>
+        <div style="font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px;" id="selectedPoHeader">
+          Select a PO from the left to start inspection
+        </div>
+      </div>
+      <span style="font-size: 10px; font-family: var(--font-mono); color: var(--emerald); background: rgba(16, 185, 129, 0.12); padding: 2px 8px; border-radius: 9999px;">Step 1 ➔ 2 ➔ 3</span>
     </div>
 
-    <div id="receivingFormBody" style="display: none; flex-direction: column; gap: 14px;">
-      <div>
-        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Product / SKU:</label>
-        <select id="recvProductSelect" class="form-input" style="margin-top: 4px; font-size: 12.5px;" onchange="updateProductContext()">
-          <!-- Populated from selected PO -->
-        </select>
+    <div id="receivingFormBody" style="display: flex; flex-direction: column; gap: 14px;">
+      <!-- Step 1: Cold-Chain Temperature Compliance Check -->
+      <div style="padding: 12px 14px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600; font-size: 12.5px; color: var(--text-primary);">1. Temperature Compliance</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Standard: 2°C – 6°C (Target: 4°C)</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" id="btnTempPass" class="filter-chip is-active" onclick="setTempCheck(true)" style="padding: 4px 10px; font-size: 11px;">✓ Pass (4°C)</button>
+            <button type="button" id="btnTempFail" class="filter-chip" onclick="setTempCheck(false)" style="padding: 4px 10px; font-size: 11px;">✕ Fail</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Freshness / Shelf-life Quality Gate -->
+      <div style="padding: 12px 14px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <div style="font-weight: 600; font-size: 12.5px; color: var(--text-primary);">2. Freshness / Shelf-Life Verification</div>
+            <div style="font-size: 11px; color: var(--text-muted);">&gt; 65% Remaining [Pass / Fail]</div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" id="btnFreshPass" class="filter-chip is-active" onclick="setFreshnessCheck(true)" style="padding: 4px 10px; font-size: 11px;">✓ Pass (&gt; 65%)</button>
+            <button type="button" id="btnFreshFail" class="filter-chip" onclick="setFreshnessCheck(false)" style="padding: 4px 10px; font-size: 11px;">✕ Fail</button>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Product SKU &amp; Batch:</label>
+          <select id="recvProductSelect" class="form-input" style="width: 100%; font-size: 12.5px; height: 38px; border-radius: 10px; margin-top: 4px;" onchange="updateProductContext()">
+            <!-- Populated from selected PO -->
+          </select>
+        </div>
+      </div>
+
+      <div style="grid-template-columns: 1fr 1fr; gap: 10px; display: grid;">
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manufacturer Lot #:</label>
+          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px; border-radius: 10px;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Verified Quantity Received:</label>
+          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px; border-radius: 10px;">
+        </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Manufacturer Lot #:</label>
-          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px;">
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Mfg Date:</label>
+          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 4px; font-size: 12px; border-radius: 10px;">
         </div>
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Quantity Delivered:</label>
-          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px;">
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Mfg Date:</label>
-          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 4px; font-size: 12.5px;">
-        </div>
-        <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Expiry Date:</label>
-          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 4px; font-size: 12.5px;" onchange="validateShelfLife()">
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Expiry Date:</label>
+          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 4px; font-size: 12px; border-radius: 10px;" onchange="validateShelfLife()">
         </div>
       </div>
 
       <!-- Segmented Shelf-Life Quality Check Indicator -->
-      <div id="shelfLifeIndicator" class="shelflife-tracker" style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm, 4px); padding: 12px; background: var(--color-bg-hover);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-          <span style="font-weight: 600; font-size: 13px; color: var(--text-primary); font-family: var(--font-sans);">Remaining Shelf Life:</span>
-          <span id="shelfLifePct" style="font-weight: 600; font-size: 13px; color: var(--color-accent, var(--primary-500)); font-family: var(--font-mono);">Select expiry date</span>
+      <div id="shelfLifeIndicator" class="shelflife-tracker" style="border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; background: var(--bg-surface-elevated);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-weight: 600; font-size: 12.5px; color: var(--text-primary);">Shelf-Life Verification:</span>
+          <span id="shelfLifePct" style="font-weight: 700; font-size: 12.5px; color: var(--emerald);">Select expiry date</span>
         </div>
 
         <!-- Visual Segmented Progress Bar with 65% Quality Gate Marker -->
@@ -117,7 +142,7 @@
           <div class="shelflife-bar-track">
             <div class="shelflife-zone-quarantine" title="Quarantine Zone (< 65%)"></div>
             <div class="shelflife-zone-approved" title="Approved Zone (≥ 65%)"></div>
-            <div id="shelfLifeFill" class="shelflife-fill" style="width: 0%; background: var(--emerald-400);"></div>
+            <div id="shelfLifeFill" class="shelflife-fill" style="width: 0%; background: var(--emerald);"></div>
           </div>
           <div class="shelflife-marker-65"></div>
           <div class="shelflife-marker-label">65% QUALITY GATE</div>
@@ -125,47 +150,95 @@
 
         <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; font-family: var(--font-mono);">
           <span>0% Expired</span>
-          <span style="color: var(--rose-400); font-weight: 600;">Quarantine &lt; 65%</span>
-          <span style="color: var(--emerald-400); font-weight: 600;">Approved ≥ 65%</span>
+          <span style="color: var(--rose); font-weight: 600;">Quarantine &lt; 65%</span>
+          <span style="color: var(--emerald); font-weight: 600;">Approved ≥ 65%</span>
           <span>100% Fresh</span>
         </div>
 
         <div style="font-size: 11.5px; color: var(--text-secondary);" id="shelfLifeNote">
-          Batches with &lt; 65% remaining shelf-life will automatically be quarantined.
+          Batches with &ge; 65% remaining shelf-life pass the quality gate for warehouse storage.
         </div>
       </div>
 
-      <div>
-        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Damaged / Crushed Cartons:</label>
-        <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px;">
+      <!-- Step 3: Damaged Inspection & Acceptance -->
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Damaged Units:</label>
+          <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px; border-radius: 10px;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manifest Notes:</label>
+          <input type="text" id="recvNotes" class="form-input" style="margin-top: 4px; font-size: 12.5px; border-radius: 10px;" placeholder="Seal #, carrier verification...">
+        </div>
       </div>
 
-      <div>
-        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Receiving Manifest Notes:</label>
-        <textarea id="recvNotes" class="form-input" style="margin-top: 4px; height: 60px; font-size: 12.5px;" placeholder="Dock delivery notes, seal number..."></textarea>
-      </div>
-
-      <button class="btn-sm btn-primary" onclick="submitGoodsReceipt()" style="padding: 10px 16px; font-size: 13px; font-weight: 600; margin-top: 8px; width: 100%; height: 42px;">
-        Accept Shipment &amp; Issue GRN
+      <!-- Clean Action Button -->
+      <button class="btn-gradient-pill" onclick="submitGoodsReceipt()" style="width: 100%; justify-content: center; padding: 13px; font-size: 13px; font-weight: 700; margin-top: 6px; border-radius: 9999px;">
+        Accept &amp; Issue Goods Received Note (GRN)
       </button>
     </div>
 
     <!-- Post-Receipt Workflow Handshake: Immediate Direct Action -->
-    <div id="grnSuccessBanner" style="display: none; margin-top: 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid var(--emerald-400); border-radius: var(--radius-sm, 4px); padding: 16px;">
-      <div style="display: flex; align-items: center; gap: 8px; color: var(--emerald-400); font-weight: 600; font-size: 13.5px;">
+    <div id="grnSuccessBanner" style="display: none; margin-top: 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid var(--emerald); border-radius: 14px; padding: 16px;">
+      <div style="display: flex; align-items: center; gap: 8px; color: var(--emerald); font-weight: 700; font-size: 13.5px;">
         <span style="font-size: 16px;">✓</span> <span id="grnSuccessTitle">GRN Issued Successfully</span>
       </div>
-      <p id="grnSuccessMessage" style="font-size: 12px; color: var(--text-secondary); margin: 8px 0 14px 0; line-height: 1.5;">
+      <p id="grnSuccessMessage" style="font-size: 12px; color: var(--text-secondary); margin: 6px 0 12px 0; line-height: 1.5;">
         Cartons received into dock staging buffer. Follow warehouse routing directive to allocate rack slots.
       </p>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="/putaway" class="btn-sm btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <a href="/putaway" class="btn-gradient-pill" style="text-decoration: none; padding: 8px 14px; font-size: 12px;">
           Proceed to Directed Putaway →
         </a>
-        <a href="/audits" class="btn-sm btn-secondary" style="text-decoration: none;">
+        <button type="button" class="btn-outline-pill" onclick="openStickerModal()" style="font-size: 12px; padding: 8px 14px;">
+          🏷️ Print 4x2 Batch Stickers
+        </button>
+        <a href="/audits" class="btn-outline-pill" style="text-decoration: none; font-size: 12px; padding: 8px 14px;">
           View in Stock Ledger
         </a>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Digital 4x2 Thermal Barcode Label Generator Modal -->
+<div id="stickerModal" class="modal-overlay" style="display: none;">
+  <div class="modal-content glass-panel" style="max-width: 480px; border-radius: 24px; padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">Digital 4x2 Thermal Barcode Label</h3>
+      <button onclick="closeStickerModal()" style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--text-muted);" aria-label="Close">✕</button>
+    </div>
+
+    <!-- 4x2 Adhesive Sticker Physical Preview -->
+    <div style="display: flex; justify-content: center; margin: 16px 0;">
+      <div class="thermal-sticker-preview" id="stickerPrintArea">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #000; padding-bottom: 4px;">
+          <span style="font-weight: 800; font-size: 11px; letter-spacing: 0.05em;">RETAILSYNC WMS • RECEIVING</span>
+          <span style="font-size: 10px; font-weight: 700; background: #e0f2fe; color: #0369a1; padding: 1px 6px; border-radius: 2px;" id="stickerTempBadge">CHILLED (4°C)</span>
+        </div>
+        <div style="margin: 6px 0;">
+          <div style="font-size: 14px; font-weight: 800; color: #000;" id="stickerProductName">Milk Vita Liquid Milk 1L</div>
+          <div style="font-size: 11px; font-weight: 600; color: #334155;" id="stickerSku">SKU-MILK-1L • LOT-MV-260901</div>
+        </div>
+        <!-- Code-128 Visual Barcode -->
+        <div style="text-align: center; margin: 4px 0;">
+          <div style="font-size: 26px; font-family: var(--font-mono); letter-spacing: 4px; line-height: 1; color: #000;">||| |||| | ||| || |||| | |||</div>
+          <div style="font-size: 10px; font-family: var(--font-mono); letter-spacing: 2px;" id="stickerBarcodeText">*8941100123451*</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px solid #000; padding-top: 4px; font-size: 11px;">
+          <div><b>QTY:</b> <span id="stickerQty">50 UNITS</span></div>
+          <div style="font-size: 12px; font-weight: 800; color: #b91c1c;">EXP: <span id="stickerExpDate">28 OCT 2026</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button type="button" class="btn-gradient-pill" onclick="window.print()" style="flex: 1; justify-content: center; padding: 10px; font-size: 12px;">
+        🖨️ Print 4x2 Labels (Adhesive Roll)
+      </button>
+      <button type="button" class="btn-outline-pill" onclick="closeStickerModal()" style="padding: 10px 18px; font-size: 12px;">
+        Close
+      </button>
     </div>
   </div>
 </div>
@@ -175,12 +248,35 @@
 <script>
 let openPOs = [];
 let selectedPO = null;
+let tempCompliance = true;
+let freshnessCompliance = true;
+
+function setTempCheck(passed) {
+  tempCompliance = passed;
+  document.getElementById('btnTempPass').classList.toggle('is-active', passed);
+  document.getElementById('btnTempFail').classList.toggle('is-active', !passed);
+  if (!passed) {
+    showToast("Temperature breach noted. Quality inspection will flag this lot for manager signoff.", "warning", "Cold-Chain Notice");
+  }
+}
+
+function setFreshnessCheck(passed) {
+  freshnessCompliance = passed;
+  document.getElementById('btnFreshPass').classList.toggle('is-active', passed);
+  document.getElementById('btnFreshFail').classList.toggle('is-active', !passed);
+  if (!passed) {
+    showToast("Remaining shelf-life < 65%. Quality gate will flag this lot for quarantine review.", "warning", "Shelf-Life Notice");
+  }
+}
 
 async function loadOpenPOs() {
   try {
     const res = await fetch('/api/v1/inbound/open-pos');
     openPOs = await res.json();
     renderPOList();
+    if (openPOs.length > 0 && !selectedPO) {
+      selectPO(openPOs[0].po_id);
+    }
   } catch (e) {
     console.error("Error loading POs:", e);
     showToast("Failed to load open purchase orders", "error", "Data Error");
@@ -195,21 +291,21 @@ function renderPOList() {
   }
 
   container.innerHTML = openPOs.map(po => `
-    <div style="background: var(--color-bg-surface, var(--bg-surface)); border: 1px solid var(--color-border, var(--border-subtle)); border-radius: var(--radius-sm, 4px); padding: 14px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.15s ease;"
-         onclick="selectPO(${po.po_id})" onmouseover="this.style.borderColor='var(--color-accent, var(--primary-500))'" onmouseout="this.style.borderColor='var(--color-border, var(--border-subtle))'">
+    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s ease;"
+         onclick="selectPO(${po.po_id})" onmouseover="this.style.borderColor='#4f46e5'" onmouseout="this.style.borderColor='var(--border-subtle)'">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <span style="font-family: var(--font-mono); font-weight: 600; color: var(--color-accent, var(--primary-500)); font-size: 12px;">${po.po_number}</span>
+        <span style="font-family: var(--font-mono); font-weight: 700; color: #4f46e5; font-size: 12px;">${po.po_number}</span>
         <span class="badge ${po.status === 'ISSUED' ? 'badge-info' : 'badge-warning'}">${po.status}</span>
       </div>
-      <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); font-family: var(--font-sans);">${po.supplier_name}</div>
-      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-sans);">
-        Expected: <b style="color: var(--text-primary);">${po.expected_delivery_date}</b> • Total: <b style="font-family: var(--font-mono); color: var(--text-primary);">৳${po.total_amount_bdt.toFixed(2)}</b>
+      <div style="font-size: 13.5px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">${po.supplier_name}</div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+        Expected: <b style="color: var(--text-primary);">${po.expected_delivery_date}</b> • Total: <b class="price" style="color: var(--text-primary);">৳${po.total_amount_bdt.toFixed(2)}</b>
       </div>
       <div style="margin-top: 8px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
         ${po.items.map(i => `
           <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-secondary); margin-bottom: 2px;">
             <span>${i.product_name}</span>
-            <span style="font-family: var(--font-mono); font-variant-numeric: tabular-nums;">Ordered: ${i.ordered_quantity} | Recv: ${i.received_quantity}</span>
+            <span style="font-family: var(--font-mono);">Ordered: ${i.ordered_quantity} | Recv: ${i.received_quantity}</span>
           </div>
         `).join('')}
       </div>
@@ -224,7 +320,7 @@ function selectPO(poId) {
   const banner = document.getElementById('grnSuccessBanner');
   if (banner) banner.style.display = 'none';
 
-  document.getElementById('selectedPoHeader').innerText = `Active PO: ${selectedPO.po_number} (${selectedPO.supplier_name})`;
+  document.getElementById('selectedPoHeader').innerText = `Active PO: ${selectedPO.po_number} • ${selectedPO.supplier_name}`;
   document.getElementById('receivingFormBody').style.display = 'flex';
 
   const select = document.getElementById('recvProductSelect');
@@ -270,30 +366,30 @@ function validateShelfLife() {
 
   if (isNaN(ratio) || ratio <= 0) {
     pctEl.innerText = "EXPIRED (0%)";
-    pctEl.style.color = "var(--rose-400)";
+    pctEl.style.color = "var(--rose)";
     if (fillEl) {
       fillEl.style.width = "0%";
-      fillEl.style.backgroundColor = "var(--rose-400)";
+      fillEl.style.backgroundColor = "var(--rose)";
     }
-    noteEl.innerHTML = "<b style='color: var(--rose-400);'>❌ Batch is expired. System will automatically quarantine.</b>";
+    noteEl.innerHTML = "<b style='color: var(--rose);'>❌ Batch is expired. System will automatically quarantine.</b>";
   } else if (ratio < 0.65) {
     const pct = Math.round(ratio * 100);
     pctEl.innerText = `${pct}% (Quality Gate Breach)`;
-    pctEl.style.color = "var(--rose-400)";
+    pctEl.style.color = "var(--rose)";
     if (fillEl) {
       fillEl.style.width = `${Math.min(pct, 100)}%`;
-      fillEl.style.backgroundColor = "var(--rose-400)";
+      fillEl.style.backgroundColor = "var(--rose)";
     }
-    noteEl.innerHTML = `<b style='color: var(--rose-400);'>⚠️ Critical: Only ${pct}% shelf-life remaining (&lt; 65% threshold). System will place in QUARANTINE.</b>`;
+    noteEl.innerHTML = `<b style='color: var(--rose);'>⚠️ Critical: Only ${pct}% shelf-life remaining (&lt; 65% threshold). System will place in QUARANTINE.</b>`;
   } else {
     const pct = Math.round(ratio * 100);
     pctEl.innerText = `${pct}% (Quality Approved)`;
-    pctEl.style.color = "var(--emerald-400)";
+    pctEl.style.color = "var(--emerald)";
     if (fillEl) {
       fillEl.style.width = `${Math.min(pct, 100)}%`;
-      fillEl.style.backgroundColor = "var(--emerald-400)";
+      fillEl.style.backgroundColor = "var(--emerald)";
     }
-    noteEl.innerHTML = `<b style='color: var(--emerald-400);'>✓ Quality Approved (${pct}% remaining). Meets 65% quality gate for putaway & distribution.</b>`;
+    noteEl.innerHTML = `<b style='color: var(--emerald);'>✓ Quality Approved (${pct}% remaining). Meets 65% quality gate for putaway &amp; distribution.</b>`;
   }
 }
 
@@ -305,7 +401,7 @@ async function submitGoodsReceipt() {
 
   const payload = {
     po_id: selectedPO.po_id,
-    notes: document.getElementById('recvNotes').value,
+    notes: document.getElementById('recvNotes').value + (tempCompliance ? " [Cold-chain 4°C Passed]" : " [Temp Breach Flagged]"),
     items: [
       {
         product_id: parseInt(select.value),
@@ -345,6 +441,25 @@ async function submitGoodsReceipt() {
   } catch (e) {
     showToast("Network error: " + e.message, "error", "Network Error");
   }
+}
+
+function openStickerModal() {
+  const lot = document.getElementById('recvLotNumber')?.value || 'LOT-MV-260901';
+  const exp = document.getElementById('recvExpDate')?.value || '28 OCT 2026';
+  const qty = document.getElementById('recvQuantity')?.value || '50';
+  const sel = document.getElementById('recvProductSelect');
+  const prodName = sel?.options[sel.selectedIndex]?.text || 'Milk Vita Liquid Milk 1L';
+
+  document.getElementById('stickerSku').innerText = `SKU-MILK-1L • ${lot}`;
+  document.getElementById('stickerProductName').innerText = prodName;
+  document.getElementById('stickerExpDate').innerText = exp;
+  document.getElementById('stickerQty').innerText = `${qty} UNITS`;
+
+  document.getElementById('stickerModal').style.display = 'flex';
+}
+
+function closeStickerModal() {
+  document.getElementById('stickerModal').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', loadOpenPOs);
