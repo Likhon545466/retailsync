@@ -7,6 +7,9 @@ class LoginRequest(BaseModel):
     username_or_email: str
     password: str
 
+class RoleSwitchRequest(BaseModel):
+    role: str
+
 class UserResponse(BaseModel):
     user_id: int
     username: str

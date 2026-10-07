@@ -61,7 +61,59 @@ def get_current_user_profile(user: models.User = Depends(auth.get_current_user))
         role=user.role.value if hasattr(user.role, "value") else str(user.role)
     )
 
+@router.post("/switch-role")
+def switch_role(request: schemas.RoleSwitchRequest, response: Response, db: Session = Depends(get_db)):
+    role_target = request.role.lower().strip()
+    user_map = {
+        "admin": "admin",
+        "manager": "admin",
+        "store_manager": "admin",
+        "supervisor": "supervisor",
+        "procurement": "procurement",
+        "cashier": "cashier",
+        "clerk": "clerk",
+        "operator": "operator",
+    }
+    target_username = user_map.get(role_target, role_target)
+    user = db.query(models.User).filter(models.User.username == target_username).first()
+    if not user:
+        try:
+            role_enum = models.UserRole[role_target.upper()]
+            user = db.query(models.User).filter(models.User.role == role_enum).first()
+        except (KeyError, ValueError):
+            pass
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid persona or role '{request.role}' specified."
+        )
+
+    access_token = auth.create_access_token(
+        data={"sub": user.username, "role": user.role.value if hasattr(user.role, "value") else str(user.role)}
+    )
+
+    response.set_cookie(
+        key="retailsync_token",
+        value=access_token,
+        httponly=True,
+        max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        samesite="lax"
+    )
+
+    return {
+        "status": "SUCCESS",
+        "message": f"Active persona switched to {user.full_name} ({user.role.value if hasattr(user.role, 'value') else str(user.role)})",
+        "user": {
+            "user_id": user.user_id,
+            "username": user.username,
+            "full_name": user.full_name,
+            "role": user.role.value if hasattr(user.role, "value") else str(user.role)
+        }
+    }
+
 @router.post("/logout")
 def logout(response: Response):
     response.delete_cookie(key="retailsync_token")
     return {"status": "SUCCESS", "message": "Logged out successfully"}
+

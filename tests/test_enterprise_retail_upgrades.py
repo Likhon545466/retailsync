@@ -161,3 +161,48 @@ def test_write_off_endpoint_execution():
         db.commit()
     finally:
         db.close()
+
+
+def test_auth_switch_role_endpoint():
+    """Verify POST /api/v1/auth/switch-role works for all personas and sets session cookie."""
+    roles = ["admin", "supervisor", "procurement", "cashier"]
+    for role in roles:
+        res = client.post("/api/v1/auth/switch-role", json={"role": role})
+        assert res.status_code == 200
+        data = res.json()
+        assert data["status"] == "SUCCESS"
+        assert data["user"]["role"] in ["ADMIN", "SUPERVISOR", "PROCUREMENT", "OPERATOR"]
+        assert "retailsync_token" in res.cookies
+
+    # Invalid role returns 400
+    res_invalid = client.post("/api/v1/auth/switch-role", json={"role": "hacker"})
+    assert res_invalid.status_code == 400
+
+
+def test_manager_executive_suite_and_text_consistency():
+    """Verify manager executive strip, dialog, bento copy, and product text consistency."""
+    # Dashboard check
+    res_dash = client.get("/dashboard")
+    assert res_dash.status_code == 200
+    html_dash = res_dash.text
+    assert "Store Manager Executive Operations" in html_dash
+    assert "Executive Controls" in html_dash
+    assert "2 near-expiry batches, 1 stockout trigger" in html_dash
+
+    # Putaway check
+    res_putaway = client.get("/putaway")
+    assert res_putaway.status_code == 200
+    assert "Milk Vita Pasteurised Liquid Milk 1L" in res_putaway.text
+    assert "Pran Pasteurised Liquid Milk 1L" not in res_putaway.text
+
+    # Audits check
+    res_audits = client.get("/audits")
+    assert res_audits.status_code == 200
+    assert 'data-expected="32"' in res_audits.text
+    assert "SKU-SOYA-5L" in res_audits.text
+
+    # CSS sizing scale-up check
+    res_css = client.get("/static/css/app.css")
+    assert res_css.status_code == 200
+    assert "font-size: 15px;" in res_css.text
+

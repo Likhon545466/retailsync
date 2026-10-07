@@ -233,6 +233,16 @@
         </div>
 
         <div class="topbar-right">
+          <!-- Manager Executive Controls Suite Button -->
+          {% if not current_user or current_user.username == 'admin' %}
+          <button type="button" class="btn-gradient-pill topbar-manager-btn" id="btnExecutiveControlsTrigger" onclick="openExecutiveControlsModal()" title="Store Manager Executive Controls (M)" style="font-size: 12.5px; padding: 7px 14px; font-weight: 700; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <span>Executive Controls</span>
+          </button>
+          {% endif %}
+
           <!-- Live Offline Simulation Toggle -->
           <button type="button" id="offlineSimBtn" class="topbar-offline-btn" onclick="toggleOfflineSim()" title="Toggle Offline Network Simulation (Scenario C)">
             <span class="offline-indicator-dot"></span>
@@ -394,6 +404,68 @@
     </div>
   </div>
 
+  <!-- Store Manager Executive Operations Modal -->
+  <div id="executiveControlsModal" class="modal-overlay" style="display: none;" onclick="closeExecutiveControlsModal(event)">
+    <div class="modal-content glass-panel" style="max-width: 600px; border-radius: 24px; padding: 24px;" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #4f46e5; display: inline-block;"></span>
+            <h3 style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin: 0; font-family: var(--font-heading);">Store Manager Executive Controls</h3>
+          </div>
+          <p style="font-size: 12.5px; color: var(--text-muted); margin: 4px 0 0 0;">Authorized general manager floor operations and override controls</p>
+        </div>
+        <button type="button" onclick="closeExecutiveControlsModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);" aria-label="Close">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <!-- Control 1: Emergency Floor Markdown -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px; gap: 12px;">
+          <div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Emergency Floor Markdown</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Apply store-wide 20% discount on near-expiry FEFO batches</div>
+          </div>
+          <button type="button" class="btn-gradient-pill" onclick="managerAuthorizeMarkdown()">Authorize 20%</button>
+        </div>
+
+        <!-- Control 2: Emergency Bulk PO Sign-off -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px; gap: 12px;">
+          <div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Open Purchase Order Sign-off</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Fast-approve pending procurement orders to unblock dock receiving</div>
+          </div>
+          <button type="button" class="btn-outline-pill" onclick="managerFastApprovePOs()">Fast-Approve POs</button>
+        </div>
+
+        <!-- Control 3: Till Cash Drawer Reconciliation -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px; gap: 12px;">
+          <div>
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Cash Till Reconciliation</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Verify Lane #01 drawer float and execute end-of-shift cash sign-off</div>
+          </div>
+          <button type="button" class="btn-outline-pill" onclick="managerReconcileTill()">Reconcile Float</button>
+        </div>
+
+        <!-- Control 4: Store Operational Mode -->
+        <div style="padding: 14px 16px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Store Operational State</div>
+            <span id="storeModeBadge" style="font-size: 11px; font-family: var(--font-mono); font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.12); padding: 3px 8px; border-radius: 6px;">NORMAL OPEN</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="filter-chip is-active" id="modeNormal" onclick="setStoreMode('NORMAL OPEN', this)">Normal Open</button>
+            <button type="button" class="filter-chip" id="modeRush" onclick="setStoreMode('PEAK RUSH', this)">Peak Rush</button>
+            <button type="button" class="filter-chip" id="modeEod" onclick="setStoreMode('EOD RECONCILE', this)">EOD Reconcile</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+        <button type="button" class="btn-outline-pill" onclick="closeExecutiveControlsModal()">Close Controls</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Global Floating Toast Container -->
   <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
@@ -492,6 +564,48 @@
       if (select) select.value = role;
       closePersonaModal();
       switchDemoRole(role);
+    }
+
+    // Executive Controls Modal Functions
+    function openExecutiveControlsModal() {
+      const modal = document.getElementById('executiveControlsModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeExecutiveControlsModal(event) {
+      if (!event || event.target.id === 'executiveControlsModal' || !event.target.closest('.modal-content') || event.type === 'click') {
+        const modal = document.getElementById('executiveControlsModal');
+        if (modal) modal.style.display = 'none';
+      }
+    }
+
+    function managerAuthorizeMarkdown() {
+      const markdowns = {
+        'SKU-MILK-1L': true,
+        'SKU-YOGURT-500': true
+      };
+      localStorage.setItem('retailsync_fefo_markdown', JSON.stringify(markdowns));
+      showToast('Store-wide 20% markdown authorized for near-expiry dairy batches.', 'success', 'Executive Authorization');
+      closeExecutiveControlsModal();
+      setTimeout(() => window.location.reload(), 400);
+    }
+
+    function managerFastApprovePOs() {
+      showToast('All open purchase orders fast-approved for immediate dock unloading.', 'success', 'PO Fast-Approval');
+      closeExecutiveControlsModal();
+    }
+
+    function managerReconcileTill() {
+      showToast('Lane 01 till cash drawer reconciled. Closing float: ৳14,250.00 confirmed.', 'success', 'Till Reconciled');
+      closeExecutiveControlsModal();
+    }
+
+    function setStoreMode(mode, btn) {
+      document.querySelectorAll('#executiveControlsModal .filter-chip').forEach(c => c.classList.remove('is-active'));
+      if (btn) btn.classList.add('is-active');
+      const b = document.getElementById('storeModeBadge');
+      if (b) b.innerText = mode;
+      showToast(`Store operational status set to: ${mode}`, 'info', 'Mode Updated');
     }
 
     // Deliverables Dropdown Menu
