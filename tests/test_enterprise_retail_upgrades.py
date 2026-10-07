@@ -256,3 +256,30 @@ def test_layout_alignments_and_box_harmony():
     assert "vertical-align: middle !important;" in css
 
 
+def test_typography_google_sans_and_badge_unclipped():
+    """Verify Plus Jakarta Sans / Google Sans typography and unclipped v2.0 badge."""
+    res_css = client.get("/static/css/app.css")
+    assert res_css.status_code == 200
+    assert "Plus Jakarta Sans" in res_css.text
+
+    res_dash = client.get("/dashboard")
+    assert res_dash.status_code == 200
+    html = res_dash.text
+    assert 'class="brand-badge tabular"' in html
+    assert 'v2.0</span>' in html
+    assert 'title="v2.0-RELEASE"' in html
+
+
+def test_warehouse_3d_digital_twin_container():
+    """Verify 3D digital twin warehouse canvas, view toggle, and Three.js integration."""
+    res = client.get("/warehouse")
+    assert res.status_code == 200
+    html = res.text
+    assert 'id="warehouse3DWrapper"' in html
+    assert 'id="warehouse3DCanvas"' in html
+    assert 'id="btnView3D"' in html
+    assert 'switchWarehouseView' in html
+    assert 'three.min.js' in html
+
+
+

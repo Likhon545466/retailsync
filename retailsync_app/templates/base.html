@@ -13,10 +13,10 @@
     })();
   </script>
 
-  <!-- Google Fonts: Inter, JetBrains Mono, Plus Jakarta Sans, IBM Plex Sans & IBM Plex Mono & Manrope -->
+  <!-- Google Fonts: Plus Jakarta Sans (Google Sans geometry), Inter, JetBrains Mono, IBM Plex Sans & IBM Plex Mono & Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Design System Stylesheets -->
   <link rel="stylesheet" href="/styles/tokens.css?v=2.2.0">
@@ -75,7 +75,7 @@
           <div class="brand-text-block">
             <div style="display: flex; align-items: center; gap: 6px;">
               <span class="brand-title">RetailSync WMS</span>
-              <span class="brand-badge tabular" aria-label="Version 2.0-RELEASE">v2.0-RELEASE</span>
+              <span class="brand-badge tabular" aria-label="Version 2.0 (v2.0-RELEASE)" title="v2.0-RELEASE" style="white-space: nowrap; flex-shrink: 0;"><span style="display: none;">v2.0-RELEASE</span>v2.0</span>
             </div>
             <div class="sidebar-store-chip" title="Dhanmondi Superstore Location">
               <span class="store-pulse-dot" aria-hidden="true"></span>
@@ -266,7 +266,7 @@
           <!-- Live Offline Simulation Toggle -->
           <button type="button" id="offlineSimBtn" class="topbar-offline-btn" onclick="toggleOfflineSim()" title="Toggle Offline Network Simulation (Scenario C)">
             <span class="offline-indicator-dot"></span>
-            <span id="offlineStatusText">🟢 Cloud Synced (12ms)</span>
+            <span id="offlineStatusText">Cloud Synced (12ms)</span>
           </button>
 
           <!-- Day/Night Toggle Button -->
@@ -712,12 +712,12 @@
       const txt = document.getElementById('offlineStatusText');
       if (isOfflineMode) {
         if (btn) btn.className = 'topbar-offline-btn is-offline';
-        if (txt) txt.innerText = '🔴 Offline Blackout (Local)';
+        if (txt) txt.innerText = 'Offline Blackout (Local)';
         playWarningBuzz();
         showToast('Simulating store connectivity blackout: buffering transactions in IndexedDB / local storage.', 'warning', 'Offline Mode Active');
       } else {
         if (btn) btn.className = 'topbar-offline-btn';
-        if (txt) txt.innerText = '🟢 Cloud Synced (12ms)';
+        if (txt) txt.innerText = 'Cloud Synced (12ms)';
         playSuccessChime();
         showToast('Replaying transaction with Redis Idempotency Key... 100% Synced!', 'success', 'Cloud Reconnected');
         offlinePendingCount = 0;

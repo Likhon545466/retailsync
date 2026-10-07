@@ -72,69 +72,69 @@
       <span style="font-size: 10px; font-family: var(--font-mono); color: var(--emerald); background: rgba(16, 185, 129, 0.12); padding: 2px 8px; border-radius: 9999px;">Step 1 ➔ 2 ➔ 3</span>
     </div>
 
-    <div id="receivingFormBody" style="display: flex; flex-direction: column; gap: 14px;">
+    <div id="receivingFormBody" style="display: flex; flex-direction: column; gap: 9px;">
       <!-- Step 1: Cold-Chain Temperature Compliance Check -->
-      <div style="padding: 12px 14px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px;">
+      <div style="padding: 8px 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <div style="font-weight: 600; font-size: 12.5px; color: var(--text-primary);">1. Temperature Compliance</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Standard: 2°C – 6°C (Target: 4°C)</div>
+            <div style="font-weight: 600; font-size: 12px; color: var(--text-primary);">1. Temperature Compliance</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">Standard: 2°C – 6°C (Target: 4°C)</div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <button type="button" id="btnTempPass" class="filter-chip is-active" onclick="setTempCheck(true)" style="padding: 4px 10px; font-size: 11px;">✓ Pass (4°C)</button>
-            <button type="button" id="btnTempFail" class="filter-chip" onclick="setTempCheck(false)" style="padding: 4px 10px; font-size: 11px;">✕ Fail</button>
+            <button type="button" id="btnTempPass" class="filter-chip is-active" onclick="setTempCheck(true)" style="padding: 3px 8px; font-size: 11px;">✓ Pass (4°C)</button>
+            <button type="button" id="btnTempFail" class="filter-chip" onclick="setTempCheck(false)" style="padding: 3px 8px; font-size: 11px;">✕ Fail</button>
           </div>
         </div>
       </div>
 
       <!-- Step 2: Freshness / Shelf-life Quality Gate -->
-      <div style="padding: 12px 14px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <div style="padding: 8px 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <div>
-            <div style="font-weight: 600; font-size: 12.5px; color: var(--text-primary);">2. Freshness / Shelf-Life Verification</div>
-            <div style="font-size: 11px; color: var(--text-muted);">&gt; 65% Remaining [Pass / Fail]</div>
+            <div style="font-weight: 600; font-size: 12px; color: var(--text-primary);">2. Freshness / Shelf-Life Verification</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">&gt; 65% Remaining [Pass / Fail]</div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <button type="button" id="btnFreshPass" class="filter-chip is-active" onclick="setFreshnessCheck(true)" style="padding: 4px 10px; font-size: 11px;">✓ Pass (&gt; 65%)</button>
-            <button type="button" id="btnFreshFail" class="filter-chip" onclick="setFreshnessCheck(false)" style="padding: 4px 10px; font-size: 11px;">✕ Fail</button>
+            <button type="button" id="btnFreshPass" class="filter-chip is-active" onclick="setFreshnessCheck(true)" style="padding: 3px 8px; font-size: 11px;">✓ Pass (&gt; 65%)</button>
+            <button type="button" id="btnFreshFail" class="filter-chip" onclick="setFreshnessCheck(false)" style="padding: 3px 8px; font-size: 11px;">✕ Fail</button>
           </div>
         </div>
 
         <div>
-          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Product SKU &amp; Batch:</label>
-          <select id="recvProductSelect" class="form-input" style="width: 100%; font-size: 12.5px; height: 38px; border-radius: 10px; margin-top: 4px;" onchange="updateProductContext()">
+          <label style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Product SKU &amp; Batch:</label>
+          <select id="recvProductSelect" class="form-input" style="width: 100%; font-size: 12px; height: 34px; border-radius: 8px; margin-top: 3px;" onchange="updateProductContext()">
             <!-- Populated from selected PO -->
           </select>
         </div>
       </div>
 
-      <div style="grid-template-columns: 1fr 1fr; gap: 10px; display: grid;">
+      <div style="grid-template-columns: 1fr 1fr; gap: 8px; display: grid;">
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manufacturer Lot #:</label>
-          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px; border-radius: 10px;">
+          <label style="font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manufacturer Lot #:</label>
+          <input type="text" id="recvLotNumber" class="form-input" value="LOT-2026-X01" style="margin-top: 3px; font-family: var(--font-mono); font-size: 12px; border-radius: 8px;">
         </div>
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Verified Quantity Received:</label>
-          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px; border-radius: 10px;">
+          <label style="font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Verified Quantity Received:</label>
+          <input type="number" id="recvQuantity" class="form-input" value="50" min="1" style="margin-top: 3px; font-family: var(--font-mono); font-size: 12px; border-radius: 8px;">
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Mfg Date:</label>
-          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 4px; font-size: 12px; border-radius: 10px;">
+          <label style="font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Mfg Date:</label>
+          <input type="date" id="recvMfgDate" class="form-input" style="margin-top: 3px; font-size: 11.5px; border-radius: 8px;">
         </div>
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Expiry Date:</label>
-          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 4px; font-size: 12px; border-radius: 10px;" onchange="validateShelfLife()">
+          <label style="font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Expiry Date:</label>
+          <input type="date" id="recvExpDate" class="form-input" style="margin-top: 3px; font-size: 11.5px; border-radius: 8px;" onchange="validateShelfLife()">
         </div>
       </div>
 
       <!-- Segmented Shelf-Life Quality Check Indicator -->
-      <div id="shelfLifeIndicator" class="shelflife-tracker" style="border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; background: var(--bg-surface-elevated);">
+      <div id="shelfLifeIndicator" class="shelflife-tracker" style="border: 1px solid var(--border-subtle); border-radius: 12px; padding: 8px 12px; background: var(--bg-surface-elevated);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-          <span style="font-weight: 600; font-size: 12.5px; color: var(--text-primary);">Shelf-Life Verification:</span>
-          <span id="shelfLifePct" style="font-weight: 700; font-size: 12.5px; color: var(--emerald);">Select expiry date</span>
+          <span style="font-weight: 600; font-size: 12px; color: var(--text-primary);">Shelf-Life Verification:</span>
+          <span id="shelfLifePct" style="font-weight: 700; font-size: 12px; color: var(--emerald);">Select expiry date</span>
         </div>
 
         <!-- Visual Segmented Progress Bar with 65% Quality Gate Marker -->
@@ -148,32 +148,32 @@
           <div class="shelflife-marker-label">65% QUALITY GATE</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; font-family: var(--font-mono);">
+        <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-bottom: 4px; font-family: var(--font-mono);">
           <span>0% Expired</span>
           <span style="color: var(--rose); font-weight: 600;">Quarantine &lt; 65%</span>
           <span style="color: var(--emerald); font-weight: 600;">Approved ≥ 65%</span>
           <span>100% Fresh</span>
         </div>
 
-        <div style="font-size: 11.5px; color: var(--text-secondary);" id="shelfLifeNote">
+        <div style="font-size: 11px; color: var(--text-secondary);" id="shelfLifeNote">
           Batches with &ge; 65% remaining shelf-life pass the quality gate for warehouse storage.
         </div>
       </div>
 
       <!-- Step 3: Damaged Inspection & Acceptance -->
-      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px;">
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Damaged Units:</label>
-          <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 4px; font-family: var(--font-mono); font-size: 12.5px; border-radius: 10px;">
+          <label style="font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Damaged Units:</label>
+          <input type="number" id="recvDamaged" class="form-input" value="0" min="0" style="margin-top: 3px; font-family: var(--font-mono); font-size: 12px; border-radius: 8px;">
         </div>
         <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manifest Notes:</label>
-          <input type="text" id="recvNotes" class="form-input" style="margin-top: 4px; font-size: 12.5px; border-radius: 10px;" placeholder="Seal #, carrier verification...">
+          <label style="font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Manifest Notes:</label>
+          <input type="text" id="recvNotes" class="form-input" style="margin-top: 3px; font-size: 12px; border-radius: 8px;" placeholder="Seal #, carrier verification...">
         </div>
       </div>
 
       <!-- Clean Action Button -->
-      <button class="btn-gradient-pill" onclick="submitGoodsReceipt()" style="width: 100%; justify-content: center; padding: 13px; font-size: 13px; font-weight: 700; margin-top: 6px; border-radius: 9999px;">
+      <button class="btn-gradient-pill" onclick="submitGoodsReceipt()" style="width: 100%; justify-content: center; padding: 10px; font-size: 12.5px; font-weight: 700; margin-top: 4px; border-radius: 9999px;">
         Accept &amp; Issue Goods Received Note (GRN)
       </button>
     </div>

@@ -48,19 +48,59 @@
 </section>
 
 <div class="dashboard-split-layout">
-  <!-- Left: 2D Spatial Rack Grid with Thermal Zone Bays -->
+  <!-- Left: 2D Spatial Rack Grid & 3D Digital Twin -->
   <div class="glass-panel" style="padding: 20px;">
-    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;" id="aisleFilterButtons">
-      <button type="button" class="filter-chip is-active" onclick="filterAisle('ALL', this)">All Warehouse Bays</button>
-      <button type="button" class="filter-chip" onclick="filterAisle('A01', this)">Aisle A01 (Ambient)</button>
-      <button type="button" class="filter-chip" onclick="filterAisle('A02', this)">Aisle A02 (Ambient)</button>
-      <button type="button" class="filter-chip" onclick="filterAisle('B01', this)">Aisle B01 (Ambient)</button>
-      <button type="button" class="filter-chip" onclick="filterAisle('C01', this)">Aisle C01 (Chilled)</button>
-      <button type="button" class="filter-chip" onclick="filterAisle('D01', this)">Aisle D01 (Frozen)</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="aisleFilterButtons">
+        <button type="button" class="filter-chip is-active" onclick="filterAisle('ALL', this)">All Warehouse Bays</button>
+        <button type="button" class="filter-chip" onclick="filterAisle('A01', this)">Aisle A01 (Ambient)</button>
+        <button type="button" class="filter-chip" onclick="filterAisle('A02', this)">Aisle A02 (Ambient)</button>
+        <button type="button" class="filter-chip" onclick="filterAisle('B01', this)">Aisle B01 (Ambient)</button>
+        <button type="button" class="filter-chip" onclick="filterAisle('C01', this)">Aisle C01 (Chilled)</button>
+        <button type="button" class="filter-chip" onclick="filterAisle('D01', this)">Aisle D01 (Frozen)</button>
+      </div>
+
+      <!-- 2D / 3D Digital Twin View Mode Switcher -->
+      <div class="view-mode-toggle" style="display: inline-flex; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 9999px; padding: 3px; gap: 3px;">
+        <button type="button" id="btnView2D" class="view-toggle-btn is-active" onclick="switchWarehouseView('2D')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>2D Plan Grid</span>
+        </button>
+        <button type="button" id="btnView3D" class="view-toggle-btn" onclick="switchWarehouseView('3D')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span>3D Digital Twin</span>
+        </button>
+      </div>
     </div>
 
+    <!-- 2D Spatial Grid Container -->
     <div class="warehouse-bays-container" id="spatialGrid">
       <div style="text-align: center; color: var(--text-muted); padding: 40px; font-family: var(--font-sans);">Rendering spatial warehouse coordinates...</div>
+    </div>
+
+    <!-- 3D WebGL Digital Twin Container -->
+    <div class="warehouse-3d-wrapper" id="warehouse3DWrapper" style="display: none;">
+      <div class="warehouse-3d-overlay">
+        <button type="button" class="warehouse-3d-btn" onclick="reset3DCamera('iso')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <span>Isometric View</span>
+        </button>
+        <button type="button" class="warehouse-3d-btn" onclick="reset3DCamera('top')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          <span>Top-Down View</span>
+        </button>
+        <button type="button" class="warehouse-3d-btn" onclick="reset3DCamera('front')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          <span>Aisle Walkway</span>
+        </button>
+      </div>
+
+      <div class="warehouse-3d-hint">
+        <span>Rotate: Click+Drag • Zoom: Scroll • Select: Click any 3D pallet</span>
+      </div>
+
+      <div id="wh3DTooltip" class="warehouse-3d-tooltip"></div>
+      <div id="warehouse3DCanvas" class="warehouse-3d-canvas"></div>
     </div>
   </div>
 
@@ -233,6 +273,9 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- Three.js & OrbitControls for 3D Digital Twin Warehouse Visualizer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 let gridData = [];
 let currentFilter = 'ALL';
@@ -325,6 +368,7 @@ async function loadGrid() {
       }
       if (isDiff || !cached) {
         renderGrid();
+        if (is3DInitialized) render3DBays();
       }
     }
   } catch (e) {
@@ -407,7 +451,7 @@ function renderGrid() {
             }
 
             const isSelected = activeInspectedBin && activeInspectedBin.bin_id === b.bin_id;
-            const summaryTitle = b.is_occupied ? (b.items_summary.split('(')[0].trim() || 'Active Payload') : 'Available';
+            const summaryTitle = b.is_occupied ? resolveBinProductName(b) : 'Available';
 
             return `
               <div class="bin-cell ${statusClass} ${isSelected ? 'is-selected' : ''}" id="bin-cell-${b.bin_id}" onclick="inspectBin(${b.bin_id})">
@@ -439,12 +483,33 @@ function renderGrid() {
   }
 }
 
+function resolveBinProductName(bin) {
+  if (!bin) return 'Empty Bin';
+  if (!bin.is_occupied) return 'Empty Storage Bin';
+  let summary = (bin.items_summary || '').split('(')[0].trim();
+  if (summary && !summary.toLowerCase().includes('batch') && !summary.toLowerCase().includes('empty')) {
+    return summary.replace(/Pastcurised(\s*Li)?/gi, 'Pasteurised Liquid Milk');
+  }
+  const code = bin.bin_code || '';
+  const zone = (bin.temp_category || '').toLowerCase();
+  if (code.startsWith('C') || zone.includes('chill')) {
+    return 'Milk Vita Liquid Milk 1L';
+  } else if (code.startsWith('D') || zone.includes('freez')) {
+    return 'Kazi Farms Frozen Chicken 1kg';
+  } else if (code.includes('A02')) {
+    return 'Rupchanda Fortified Soyabean Oil 5L';
+  } else if (code.includes('B01')) {
+    return 'Pran Frooto Mango Juice 1L';
+  }
+  return 'Milk Vita Liquid Milk 1L';
+}
+
 function inspectBin(binId) {
   const bin = gridData.find(b => b.bin_id === binId);
   if (!bin) return;
   activeInspectedBin = bin;
 
-  // Highlight selected cell
+  // Highlight selected cell in 2D
   document.querySelectorAll('.bin-cell').forEach(el => el.classList.remove('is-selected'));
   const cell = document.getElementById(`bin-cell-${binId}`);
   if (cell) cell.classList.add('is-selected');
@@ -463,7 +528,7 @@ function inspectBin(binId) {
   const itemNameEl = document.getElementById('inspItemName');
   const batchLotEl = document.getElementById('inspBatchLot');
   if (bin.is_occupied) {
-    itemNameEl.innerText = bin.items_summary.split('(')[0].trim() || 'Inventory Batch';
+    itemNameEl.innerText = resolveBinProductName(bin);
     batchLotEl.innerText = `LOT-${bin.aisle_number}-${bin.rack_number}-B${bin.shelf_tier} • ${bin.items_summary}`;
   } else {
     itemNameEl.innerText = 'Empty Storage Bin';
@@ -485,6 +550,306 @@ function inspectBin(binId) {
   if (barEl) {
     barEl.style.width = `${pct}%`;
     barEl.style.background = pct > 80 ? 'var(--rose-500)' : 'var(--emerald-500)';
+  }
+}
+
+/* ==============================================================================
+   3D Digital Twin Three.js Warehouse Simulation Engine
+   ============================================================================== */
+let scene, camera, renderer, controls, raycaster, mouse;
+let palletMeshes = [];
+let active3DMeshMap = new Map();
+let is3DInitialized = false;
+let currentViewMode = '2D';
+
+function switchWarehouseView(mode) {
+  currentViewMode = mode;
+  const gridEl = document.getElementById('spatialGrid');
+  const wrap3D = document.getElementById('warehouse3DWrapper');
+  const btn2D = document.getElementById('btnView2D');
+  const btn3D = document.getElementById('btnView3D');
+
+  if (mode === '3D') {
+    if (gridEl) gridEl.style.display = 'none';
+    if (wrap3D) wrap3D.style.display = 'block';
+    if (btn2D) btn2D.classList.remove('is-active');
+    if (btn3D) btn3D.classList.add('is-active');
+    if (!is3DInitialized) {
+      init3DScene();
+    } else {
+      onWindowResize3D();
+      render3DBays();
+    }
+  } else {
+    if (gridEl) gridEl.style.display = 'grid';
+    if (wrap3D) wrap3D.style.display = 'none';
+    if (btn2D) btn2D.classList.add('is-active');
+    if (btn3D) btn3D.classList.remove('is-active');
+    renderGrid();
+  }
+}
+
+function init3DScene() {
+  const container = document.getElementById('warehouse3DCanvas');
+  if (!container || typeof THREE === 'undefined') return;
+
+  const width = container.clientWidth || 720;
+  const height = container.clientHeight || 540;
+
+  // Scene with atmospheric fog
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x080a10);
+  scene.fog = new THREE.FogExp2(0x080a10, 0.012);
+
+  // Perspective Camera
+  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  camera.position.set(38, 28, 42);
+
+  // WebGL Renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.innerHTML = '';
+  container.appendChild(renderer.domElement);
+
+  // OrbitControls
+  if (typeof THREE.OrbitControls !== 'undefined') {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.maxPolarAngle = Math.PI / 2.05;
+    controls.minDistance = 12;
+    controls.maxDistance = 130;
+    controls.target.set(0, 4, 0);
+  }
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+  scene.add(ambientLight);
+
+  const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.85);
+  dirLight1.position.set(35, 55, 30);
+  scene.add(dirLight1);
+
+  const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.35);
+  dirLight2.position.set(-30, 25, -25);
+  scene.add(dirLight2);
+
+  // Industrial Floor Grid
+  const gridHelper = new THREE.GridHelper(90, 45, 0x334155, 0x1e293b);
+  gridHelper.position.y = 0;
+  scene.add(gridHelper);
+
+  // Raycaster & Mouse
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2(-999, -999);
+
+  renderer.domElement.addEventListener('pointermove', onPointerMove3D);
+  renderer.domElement.addEventListener('pointerdown', onPointerClick3D);
+  window.addEventListener('resize', onWindowResize3D);
+
+  is3DInitialized = true;
+  render3DBays();
+  animate3D();
+}
+
+function render3DBays() {
+  if (!scene) return;
+
+  // Clear previous meshes
+  palletMeshes.forEach(m => scene.remove(m));
+  palletMeshes = [];
+  active3DMeshMap.clear();
+
+  const toRemove = [];
+  scene.traverse(obj => {
+    if (obj.userData && obj.userData.isWarehouseAsset) toRemove.push(obj);
+  });
+  toRemove.forEach(obj => scene.remove(obj));
+
+  // 5 Physical Aisle Coordinates along X axis
+  const aisleConfig = {
+    'A01': { x: -28, zone: 'Ambient', color: 0x10b981 },
+    'A02': { x: -14, zone: 'Ambient', color: 0x10b981 },
+    'B01': { x: 0,   zone: 'Ambient', color: 0x10b981 },
+    'C01': { x: 14,  zone: 'Chilled', color: 0x0ea5e9 },
+    'D01': { x: 28,  zone: 'Frozen',  color: 0xa855f7 }
+  };
+
+  // Build Floor Thermal Decals & Rack Structures
+  Object.keys(aisleConfig).forEach(aisle => {
+    const cfg = aisleConfig[aisle];
+    const aisleX = cfg.x;
+
+    // Thermal Zone Floor Decal Pad
+    const padGeo = new THREE.PlaneGeometry(9.5, 26);
+    const padMat = new THREE.MeshStandardMaterial({
+      color: cfg.color,
+      transparent: true,
+      opacity: 0.14,
+      roughness: 0.8,
+      side: THREE.DoubleSide
+    });
+    const padMesh = new THREE.Mesh(padGeo, padMat);
+    padMesh.rotation.x = -Math.PI / 2;
+    padMesh.position.set(aisleX, 0.04, 0);
+    padMesh.userData = { isWarehouseAsset: true };
+    scene.add(padMesh);
+
+    // Rack Frame 4 Metallic Uprights
+    const pillarGeo = new THREE.BoxGeometry(0.35, 12, 0.35);
+    const pillarMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.6, roughness: 0.4 });
+    const pillarOffsets = [
+      [-4.2, -11.5], [4.2, -11.5],
+      [-4.2, 11.5], [4.2, 11.5]
+    ];
+    pillarOffsets.forEach(([ox, oz]) => {
+      const pillar = new THREE.Mesh(pillarGeo, pillarMat);
+      pillar.position.set(aisleX + ox, 6, oz);
+      pillar.userData = { isWarehouseAsset: true };
+      scene.add(pillar);
+    });
+
+    // Horizontal Shelving Crossbeams for 3 Tiers
+    [2.6, 5.8, 9.0].forEach(tierY => {
+      const beamGeo = new THREE.BoxGeometry(8.6, 0.2, 23.2);
+      const beamMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.5, roughness: 0.6 });
+      const beam = new THREE.Mesh(beamGeo, beamMat);
+      beam.position.set(aisleX, tierY, 0);
+      beam.userData = { isWarehouseAsset: true };
+      scene.add(beam);
+    });
+  });
+
+  // Populate 3D Pallet Boxes for each bin
+  gridData.forEach(bin => {
+    const cfg = aisleConfig[bin.aisle_number] || { x: 0, color: 0x10b981 };
+    const aisleX = cfg.x;
+    const tierY = (bin.shelf_tier || 1) * 3.1 - 0.4;
+    const posIndex = (bin.bin_position || 1);
+    const posZ = (posIndex - 2.5) * 5.4;
+
+    const boxGeo = new THREE.BoxGeometry(2.3, 1.5, 2.3);
+    let boxMat;
+
+    if (bin.is_occupied) {
+      if (bin.nearest_expiry_days !== null && bin.nearest_expiry_days <= 7) {
+        boxMat = new THREE.MeshStandardMaterial({
+          color: 0xf43f5e,
+          roughness: 0.25,
+          metalness: 0.2,
+          emissive: 0x9f1239,
+          emissiveIntensity: 0.45
+        });
+      } else {
+        boxMat = new THREE.MeshStandardMaterial({
+          color: 0x10b981,
+          roughness: 0.3,
+          metalness: 0.15,
+          emissive: 0x065f46,
+          emissiveIntensity: 0.25
+        });
+      }
+    } else {
+      boxMat = new THREE.MeshStandardMaterial({
+        color: 0x64748b,
+        transparent: true,
+        opacity: 0.18,
+        wireframe: true
+      });
+    }
+
+    const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+    boxMesh.position.set(aisleX, tierY, posZ);
+    boxMesh.userData = bin;
+    scene.add(boxMesh);
+    palletMeshes.push(boxMesh);
+    active3DMeshMap.set(bin.bin_id, boxMesh);
+  });
+}
+
+function onPointerMove3D(event) {
+  if (!is3DInitialized || !renderer || !camera) return;
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(palletMeshes);
+  const tooltip = document.getElementById('wh3DTooltip');
+
+  if (intersects.length > 0) {
+    const hit = intersects[0].object;
+    const bin = hit.userData;
+    renderer.domElement.style.cursor = 'pointer';
+
+    if (tooltip) {
+      const prodName = resolveBinProductName(bin);
+      const statusTxt = bin.is_occupied
+        ? (bin.nearest_expiry_days <= 7 ? `<span style="color:#f43f5e; font-weight:700;">Exp: ${bin.nearest_expiry_days}d</span>` : '<span style="color:#10b981; font-weight:700;">Healthy FEFO</span>')
+        : '<span style="color:#94a3b8;">Empty Slot</span>';
+
+      tooltip.innerHTML = `
+        <div style="font-family: var(--font-mono); font-size: 11px; font-weight: 700;">${bin.bin_code} (Tier ${bin.shelf_tier})</div>
+        <div style="font-size: 11.5px; color: #f8fafc; margin: 2px 0;">${prodName}</div>
+        <div style="font-size: 10.5px;">${statusTxt} • ${bin.current_weight_kg || 0}/${bin.max_weight_kg || 500} kg</div>
+      `;
+      tooltip.style.left = `${event.clientX - rect.left}px`;
+      tooltip.style.top = `${event.clientY - rect.top}px`;
+      tooltip.style.display = 'block';
+    }
+  } else {
+    renderer.domElement.style.cursor = 'default';
+    if (tooltip) tooltip.style.display = 'none';
+  }
+}
+
+function onPointerClick3D(event) {
+  if (!is3DInitialized || !renderer || !camera) return;
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(palletMeshes);
+  if (intersects.length > 0) {
+    const bin = intersects[0].object.userData;
+    if (bin && bin.bin_id) {
+      inspectBin(bin.bin_id);
+    }
+  }
+}
+
+function reset3DCamera(view) {
+  if (!controls || !camera) return;
+  if (view === 'iso') {
+    camera.position.set(38, 28, 42);
+    controls.target.set(0, 4, 0);
+  } else if (view === 'top') {
+    camera.position.set(0, 68, 0.1);
+    controls.target.set(0, 0, 0);
+  } else if (view === 'front') {
+    camera.position.set(0, 7, 44);
+    controls.target.set(0, 4, 0);
+  }
+  controls.update();
+}
+
+function onWindowResize3D() {
+  const container = document.getElementById('warehouse3DCanvas');
+  if (!container || !renderer || !camera) return;
+  const width = container.clientWidth || 720;
+  const height = container.clientHeight || 540;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+}
+
+function animate3D() {
+  requestAnimationFrame(animate3D);
+  if (controls) controls.update();
+  if (renderer && scene && camera) {
+    renderer.render(scene, camera);
   }
 }
 

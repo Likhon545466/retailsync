@@ -16,12 +16,12 @@ html[data-theme="light"],
   /* --font-heading: 'Manrope' */
   /* --font-body: 'Inter' */
   /* --font-mono: 'JetBrains Mono' */
-  --font-heading: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-body: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Global typography mappings */
-  --font-sans: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* [data-theme="light"] (Day Mode - Apple Calm Mist, ZERO eye glare) */
   --bg-canvas: #f5f6f8;
@@ -261,7 +261,7 @@ html {
 }
 
 body, .font-sans {
-  font-family: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: 15px;
   background-color: var(--bg-canvas);
   color: var(--text-primary);
@@ -275,7 +275,7 @@ body, .font-sans {
 }
 
 h1, .page-header__title {
-  font-family: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -283,7 +283,7 @@ h1, .page-header__title {
 }
 
 h2 {
-  font-family: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: 18.5px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -291,7 +291,7 @@ h2 {
 }
 
 h3 {
-  font-family: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -299,7 +299,7 @@ h3 {
 }
 
 h4, h5, h6, .font-heading, .brand-title {
-  font-family: 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', 'Google Sans', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   letter-spacing: -0.01em;
 }
 
@@ -3437,5 +3437,145 @@ html.dark .glass-card,
 .retailsync-table th,
 .retailsync-table td {
   vertical-align: middle !important;
+}
+
+/* Standardized Status Strip Metric Numerals */
+.status-strip__val {
+  font-size: 22px !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* 2D / 3D Warehouse View Mode Switcher */
+.view-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-btn.is-active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.view-toggle-btn:hover:not(.is-active) {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 3D Digital Twin Warehouse Canvas & Viewport */
+.warehouse-3d-wrapper {
+  position: relative;
+  width: 100%;
+  height: 540px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #080a10;
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8);
+}
+
+.warehouse-3d-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.warehouse-3d-overlay {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.warehouse-3d-btn {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f8fafc;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.warehouse-3d-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--primary);
+  color: #38bdf8;
+}
+
+.warehouse-3d-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.warehouse-3d-tooltip {
+  position: absolute;
+  display: none;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 11.5px;
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -120%);
+  white-space: nowrap;
+}
+
+/* Button Outline Pill */
+.btn-outline-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-pill:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
