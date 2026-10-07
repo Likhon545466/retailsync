@@ -158,6 +158,16 @@
       </div>
 
       <div style="display: flex; gap: 8px; flex-direction: column; margin-top: 4px;">
+        <!-- Quick Putaway Action for Empty Shelf -->
+        <button type="button" class="btn-sm btn-primary" id="btnQuickPutawayTrigger" onclick="openEmptyShelfPutawayModal()" style="display: none; background: #059669; border-color: #059669; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; font-size: 12.5px; font-weight: 700; border-radius: 6px; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          Put Away Stock Here (Allocate Slot)
+        </button>
+
         <button type="button" class="btn-sm btn-primary" onclick="openWarehouseStickerModal()" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; font-size: 12.5px; font-weight: 600; border-radius: 6px;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -266,6 +276,72 @@
       </button>
       <button type="button" class="btn-sm btn-secondary" onclick="closeWarehouseStickerModal()" style="padding: 10px 16px;">
         Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Empty Shelf Quick Putaway Modal -->
+<div id="emptyShelfPutawayModal" class="modal-overlay" style="display: none;" onclick="closeEmptyShelfPutawayModal(event)">
+  <div class="modal-content glass-panel" style="max-width: 520px; border-radius: 20px; padding: 24px; background: var(--bg-surface); border: 1px solid var(--border-subtle);" onclick="event.stopPropagation()">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+      <div>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">Allocate &amp; Put Away Stock</h3>
+        <p style="margin: 4px 0 0; font-size: 12px; color: var(--text-muted);">Assign staged inbound delivery pallet directly to this empty rack bin</p>
+      </div>
+      <button onclick="closeEmptyShelfPutawayModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Target Bin Summary -->
+    <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Target Shelf Bin</div>
+        <div style="font-size: 16px; font-weight: 800; font-family: var(--font-mono); color: var(--primary);" id="putawayTargetBinCode">A01-R01-S1-B2</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Zone / Max Load</div>
+        <div style="font-size: 13px; font-weight: 600; color: var(--text-primary);" id="putawayTargetZone">Ambient (500 kg)</div>
+      </div>
+    </div>
+
+    <!-- Select Delivery Batch to Slot -->
+    <div style="margin-bottom: 16px;">
+      <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">Select Staged Inbound Batch for Slotting:</label>
+      <div class="staged-batches-list" style="display: flex; flex-direction: column; gap: 8px;">
+        <label class="staged-batch-card" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-surface-elevated); cursor: pointer;">
+          <input type="radio" name="stagedBatchChoice" value="batch-1" checked>
+          <div style="flex: 1;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">Aarong Dairy Pure Ghee 400g (PO-8841)</div>
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">LOT-AG-261001 • Exp: 15-OCT-2026 • 40 Units (24 kg)</div>
+          </div>
+          <span class="badge badge-success" style="font-size: 10px;">Ambient</span>
+        </label>
+
+        <label class="staged-batch-card" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-surface-elevated); cursor: pointer;">
+          <input type="radio" name="stagedBatchChoice" value="batch-2">
+          <div style="flex: 1;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">Milk Vita Pasteurised Liquid Milk 1L (PO-8842)</div>
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">LOT-MV-261002 • Exp: 28-OCT-2026 • 50 Units (50 kg)</div>
+          </div>
+          <span class="badge badge-info" style="font-size: 10px;">Chilled</span>
+        </label>
+
+        <label class="staged-batch-card" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-surface-elevated); cursor: pointer;">
+          <input type="radio" name="stagedBatchChoice" value="batch-3">
+          <div style="flex: 1;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">Rupchanda Fortified Soyabean Oil 5L (PO-8843)</div>
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">LOT-RC-261003 • Exp: 20-DEC-2026 • 30 Units (135 kg)</div>
+          </div>
+          <span class="badge badge-success" style="font-size: 10px;">Ambient</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+      <button type="button" class="btn-sm btn-secondary" onclick="closeEmptyShelfPutawayModal()" style="padding: 8px 16px;">Cancel</button>
+      <button type="button" class="btn-sm btn-primary" onclick="confirmEmptyShelfPutaway()" style="background: #059669; border-color: #059669; padding: 8px 20px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+        <span>Confirm Putaway to Bin</span>
       </button>
     </div>
   </div>
@@ -551,6 +627,93 @@ function inspectBin(binId) {
     barEl.style.width = `${pct}%`;
     barEl.style.background = pct > 80 ? 'var(--rose-500)' : 'var(--emerald-500)';
   }
+
+  // Toggle quick putaway action for empty bins
+  const btnPutaway = document.getElementById('btnQuickPutawayTrigger');
+  if (btnPutaway) {
+    btnPutaway.style.display = bin.is_occupied ? 'none' : 'flex';
+  }
+}
+
+function openEmptyShelfPutawayModal() {
+  if (!activeInspectedBin) return;
+  const modal = document.getElementById('emptyShelfPutawayModal');
+  if (!modal) return;
+  const binCodeEl = document.getElementById('putawayTargetBinCode');
+  const zoneEl = document.getElementById('putawayTargetZone');
+  if (binCodeEl) binCodeEl.innerText = activeInspectedBin.bin_code;
+  if (zoneEl) zoneEl.innerText = `${activeInspectedBin.temp_category || 'Ambient'} (Max ${activeInspectedBin.max_weight_kg || 500} kg)`;
+  modal.style.display = 'flex';
+}
+
+function closeEmptyShelfPutawayModal(event) {
+  if (!event || event.target.id === 'emptyShelfPutawayModal' || event.type === 'click' || !event.target.closest('.modal-content')) {
+    const modal = document.getElementById('emptyShelfPutawayModal');
+    if (modal) modal.style.display = 'none';
+  }
+}
+
+function confirmEmptyShelfPutaway() {
+  if (!activeInspectedBin) return;
+  const selectedChoice = document.querySelector('input[name="stagedBatchChoice"]:checked')?.value || 'batch-1';
+  
+  let prodName = 'Aarong Dairy Pure Ghee 400g';
+  let summary = 'Aarong Dairy Pure Ghee (40 units)';
+  let weight = 24;
+  let expDays = 180;
+  
+  if (selectedChoice === 'batch-2') {
+    prodName = 'Milk Vita Pasteurised Liquid Milk 1L';
+    summary = 'Milk Vita Liquid Milk (50 units)';
+    weight = 50;
+    expDays = 14;
+  } else if (selectedChoice === 'batch-3') {
+    prodName = 'Rupchanda Fortified Soyabean Oil 5L';
+    summary = 'Rupchanda Soyabean Oil (30 units)';
+    weight = 135;
+    expDays = 120;
+  }
+
+  // Update bin state
+  activeInspectedBin.is_occupied = true;
+  activeInspectedBin.items_summary = summary;
+  activeInspectedBin.current_weight_kg = weight;
+  activeInspectedBin.nearest_expiry_days = expDays;
+
+  // Update 2D Rack cell
+  const cell = document.getElementById(`bin-cell-${activeInspectedBin.bin_id}`);
+  if (cell) {
+    cell.classList.remove('empty');
+    cell.classList.add('occupied');
+    const meta = cell.querySelector('.bin-meta');
+    if (meta) meta.innerText = prodName;
+  }
+
+  // Update 3D scene if initialized
+  if (is3DInitialized && scene && active3DMeshMap.has(activeInspectedBin.bin_id)) {
+    const oldMesh = active3DMeshMap.get(activeInspectedBin.bin_id);
+    if (oldMesh) {
+      oldMesh.material = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        roughness: 0.3,
+        metalness: 0.15,
+        emissive: 0x065f46,
+        emissiveIntensity: 0.25
+      });
+    }
+  }
+
+  // Audio feedback
+  if (typeof playBarcodeBeep === 'function') {
+    playBarcodeBeep();
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`Pallet allocated to ${activeInspectedBin.bin_code} successfully! FEFO slot active.`, 'success', 'Putaway Complete');
+  }
+
+  closeEmptyShelfPutawayModal();
+  inspectBin(activeInspectedBin.bin_id);
 }
 
 /* ==============================================================================

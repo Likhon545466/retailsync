@@ -285,46 +285,58 @@
     </article>
 
     <!-- 2. Floor Leadership On Duty Roster -->
-    <article class="roster-card glass-panel">
+    <article class="roster-card glass-panel" style="padding: 18px; border-radius: 20px;">
       <div style="font-size: 13.5px; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
         <span>Floor Leadership On Duty</span>
-        <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Shift 1</span>
+        <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Shift 1 • Tap to Switch</span>
       </div>
-      <div class="roster-list">
-        <!-- Raisul Islam Likhon -->
-        <div class="roster-item">
+      <div class="roster-list" style="display: flex; flex-direction: column; gap: 8px;">
+        <!-- Raisul Islam Likhon (General Manager) -->
+        <div class="roster-item roster-item--clickable {% if not current_user or current_user.username == 'admin' %}is-active{% endif %}" onclick="selectPersonaRole('admin')" role="button" tabindex="0" title="Switch persona to Raisul Islam Likhon" style="cursor: pointer; padding: 10px 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; background: {% if not current_user or current_user.username == 'admin' %}rgba(79, 70, 229, 0.12){% else %}var(--bg-surface-elevated){% endif %}; border: 1px solid {% if not current_user or current_user.username == 'admin' %}rgba(79, 70, 229, 0.4){% else %}var(--border-subtle){% endif %};">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div class="profile-avatar-initials" style="width: 28px; height: 28px; border-radius: 50%; background: #4f46e5; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">RL</div>
+            <div class="profile-avatar-initials" style="width: 32px; height: 32px; border-radius: 50%; background: #4f46e5; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);">RL</div>
             <div>
               <div style="font-size: 12.5px; font-weight: 700; color: var(--text-primary);">Raisul Islam Likhon</div>
               <div style="font-size: 11px; color: var(--text-muted);">General Manager</div>
             </div>
           </div>
-          <span class="status-pill status-pill--active">Active</span>
+          {% if not current_user or current_user.username == 'admin' %}
+          <span class="status-pill status-pill--active" style="background: rgba(79, 70, 229, 0.2); color: #818cf8; border: 1px solid rgba(79, 70, 229, 0.4); font-size: 10.5px; font-weight: 700;">Active (You)</span>
+          {% else %}
+          <span class="status-pill status-pill--floor" style="font-size: 10.5px; color: var(--text-muted);">Switch Persona →</span>
+          {% endif %}
         </div>
 
-        <!-- Shottobroto Dey -->
-        <div class="roster-item">
+        <!-- Shottobroto Dey (Floor Supervisor) -->
+        <div class="roster-item roster-item--clickable {% if current_user and current_user.username == 'supervisor' %}is-active{% endif %}" onclick="selectPersonaRole('supervisor')" role="button" tabindex="0" title="Switch persona to Shottobroto Dey" style="cursor: pointer; padding: 10px 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; background: {% if current_user and current_user.username == 'supervisor' %}rgba(5, 150, 105, 0.12){% else %}var(--bg-surface-elevated){% endif %}; border: 1px solid {% if current_user and current_user.username == 'supervisor' %}rgba(5, 150, 105, 0.4){% else %}var(--border-subtle){% endif %};">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div class="profile-avatar-initials" style="width: 28px; height: 28px; border-radius: 50%; background: #059669; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">SD</div>
+            <div class="profile-avatar-initials" style="width: 32px; height: 32px; border-radius: 50%; background: #059669; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.3);">SD</div>
             <div>
               <div style="font-size: 12.5px; font-weight: 700; color: var(--text-primary);">Shottobroto Dey</div>
-              <div style="font-size: 11px; color: var(--text-muted);">Floor Supervisor</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Floor Supervisor &amp; Auditor</div>
             </div>
           </div>
-          <span class="status-pill status-pill--floor">Bay Floor</span>
+          {% if current_user and current_user.username == 'supervisor' %}
+          <span class="status-pill status-pill--active" style="background: rgba(5, 150, 105, 0.2); color: #34d399; border: 1px solid rgba(5, 150, 105, 0.4); font-size: 10.5px; font-weight: 700;">Active (You)</span>
+          {% else %}
+          <span class="status-pill status-pill--floor" style="font-size: 10.5px; color: var(--text-muted);">Switch Persona →</span>
+          {% endif %}
         </div>
 
-        <!-- Golam Husnain Papon -->
-        <div class="roster-item">
+        <!-- Golam Husnain Papon (Supply Chain Manager) -->
+        <div class="roster-item roster-item--clickable {% if current_user and current_user.username == 'procurement' %}is-active{% endif %}" onclick="selectPersonaRole('procurement')" role="button" tabindex="0" title="Switch persona to Golam Husnain Papon" style="cursor: pointer; padding: 10px 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; background: {% if current_user and current_user.username == 'procurement' %}rgba(217, 119, 6, 0.12){% else %}var(--bg-surface-elevated){% endif %}; border: 1px solid {% if current_user and current_user.username == 'procurement' %}rgba(217, 119, 6, 0.4){% else %}var(--border-subtle){% endif %};">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div class="profile-avatar-initials" style="width: 28px; height: 28px; border-radius: 50%; background: #d97706; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">GP</div>
+            <div class="profile-avatar-initials" style="width: 32px; height: 32px; border-radius: 50%; background: #d97706; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3);">GP</div>
             <div>
               <div style="font-size: 12.5px; font-weight: 700; color: var(--text-primary);">Golam Husnain Papon</div>
               <div style="font-size: 11px; color: var(--text-muted);">Supply Chain Manager</div>
             </div>
           </div>
-          <span class="status-pill status-pill--inbound">Inbound Bay</span>
+          {% if current_user and current_user.username == 'procurement' %}
+          <span class="status-pill status-pill--active" style="background: rgba(217, 119, 6, 0.2); color: #fbbf24; border: 1px solid rgba(217, 119, 6, 0.4); font-size: 10.5px; font-weight: 700;">Active (You)</span>
+          {% else %}
+          <span class="status-pill status-pill--inbound" style="font-size: 10.5px; color: var(--text-muted);">Switch Persona →</span>
+          {% endif %}
         </div>
       </div>
     </article>

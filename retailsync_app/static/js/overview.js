@@ -149,7 +149,7 @@
     procurement: { label: 'SCM Officer', primary: 'procurement' }
   };
 
-  window.switchRole = function (role) {
+  window.reorderWorkspacesByRole = function (role) {
     const grid = document.getElementById('workspacesGrid');
     const indicator = document.getElementById('activeRoleIndicator');
     if (!grid) return;
@@ -204,6 +204,25 @@
           attRow.style.display = 'grid'; // Keep visible in ruled list but lower visual weight
         }
       });
+    }
+  };
+
+  window.switchRole = async function (role) {
+    window.reorderWorkspacesByRole(role);
+    try {
+      const res = await fetch('/api/v1/auth/switch-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: role })
+      });
+      if (res.ok) {
+        if (typeof showToast === 'function') {
+          showToast(`Active persona switched to ${role.toUpperCase()}`, 'success', 'Persona Changed');
+        }
+        setTimeout(() => window.location.reload(), 300);
+      }
+    } catch (err) {
+      console.warn('Role switch network request failed:', err);
     }
   };
 
@@ -321,7 +340,7 @@
     try {
       const savedRole = localStorage.getItem('retailsync-active-role');
       if (savedRole && ROLE_MAP[savedRole]) {
-        window.switchRole(savedRole);
+        window.reorderWorkspacesByRole(savedRole);
       }
     } catch (e) {}
 

@@ -103,15 +103,17 @@
     } catch (e) {}
 
     try {
-      const res = await fetch('/api/v1/auth/login', {
+      const res = await fetch('/api/v1/auth/switch-role', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username_or_email: role, password: 'Password123!' })
+        body: JSON.stringify({ role: role })
       });
       if (res.ok) {
         if (typeof showToast === 'function') {
-          showToast(`Switched operational persona to ${role}`, 'success', 'Role Updated');
+          showToast(`Active persona switched to ${role.toUpperCase()}`, 'success', 'Persona Changed');
         }
+        setTimeout(() => window.location.reload(), 300);
+        return;
       }
     } catch (err) {
       console.warn('Role switch endpoint unavailable:', err);

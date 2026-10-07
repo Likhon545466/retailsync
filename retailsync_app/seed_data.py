@@ -12,12 +12,12 @@ def seed_database(db: Session):
 
     # 1. Users
     users_data = [
-        {"username": "admin", "email": "admin@retailsync.com", "full_name": "Md. Rafiqul Islam", "role": models.UserRole.ADMIN},
+        {"username": "admin", "email": "admin@retailsync.com", "full_name": "Raisul Islam Likhon", "role": models.UserRole.ADMIN},
         {"username": "cashier", "email": "cashier.dhanmondi@retailsync.com", "full_name": "Nusrat Jahan", "role": models.UserRole.OPERATOR},
         {"username": "clerk", "email": "clerk.dock@retailsync.com", "full_name": "Kabir Hossain", "role": models.UserRole.CLERK},
         {"username": "operator", "email": "picker.tariq@retailsync.com", "full_name": "Tariqul Islam", "role": models.UserRole.OPERATOR},
-        {"username": "supervisor", "email": "supervisor.farhan@retailsync.com", "full_name": "Farhan Ahmed", "role": models.UserRole.SUPERVISOR},
-        {"username": "procurement", "email": "scm.tanvir@retailsync.com", "full_name": "Tanvir Hasan", "role": models.UserRole.PROCUREMENT},
+        {"username": "supervisor", "email": "supervisor.shottobroto@retailsync.com", "full_name": "Shottobroto Dey", "role": models.UserRole.SUPERVISOR},
+        {"username": "procurement", "email": "scm.papon@retailsync.com", "full_name": "Golam Husnain Papon", "role": models.UserRole.PROCUREMENT},
     ]
     common_hash = get_password_hash("Password123!")
     for u in users_data:

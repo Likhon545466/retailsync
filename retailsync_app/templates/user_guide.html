@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Master User Guide & Operational Manual - RetailSync WMS{% endblock %}
+
+{% block head_extra %}
+<style>
+  /* User Guide Layout */
+  .guide-container {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 980px) {
+    .guide-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Sticky Sidebar Table of Contents */
+  .guide-sidebar {
+    position: sticky;
+    top: 80px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  .guide-sidebar-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .guide-toc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .guide-toc-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+  }
+
+  .guide-toc-link:hover {
+    background: var(--bg-surface-elevated);
+    color: var(--primary-600);
+  }
+
+  .guide-toc-link.is-active {
+    background: rgba(79, 70, 229, 0.12);
+    color: #4f46e5;
+    font-weight: 700;
+  }
+
+  /* Markdown Content Viewer */
+  .guide-content-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 32px 36px;
+    box-shadow: var(--shadow-sm);
+    min-width: 0;
+  }
+
+  .markdown-body {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    line-height: 1.68;
+    font-size: 14.5px;
+  }
+
+  .markdown-body h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-primary);
+    border-bottom: 1.5px solid var(--border-subtle);
+    padding-bottom: 12px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: -0.4px;
+    font-family: var(--font-heading);
+  }
+
+  .markdown-body h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 8px;
+    margin-top: 36px;
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+    font-family: var(--font-heading);
+    scroll-margin-top: 85px;
+  }
+
+  .markdown-body h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-family: var(--font-heading);
+    scroll-margin-top: 85px;
+  }
+
+  .markdown-body p {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+  }
+
+  .markdown-body ul, .markdown-body ol {
+    margin-top: 0;
+    margin-bottom: 16px;
+    padding-left: 24px;
+    color: var(--text-secondary);
+  }
+
+  .markdown-body li {
+    margin-bottom: 6px;
+  }
+
+  .markdown-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    display: block;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .markdown-body th, .markdown-body td {
+    padding: 10px 14px;
+    border: 1px solid var(--border-subtle);
+    text-align: left;
+    font-size: 13px;
+  }
+
+  .markdown-body th {
+    background: var(--bg-surface-elevated);
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .markdown-body pre {
+    background: #090d16;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 20px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .markdown-body pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #f1f5f9;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Top Header Hero -->
+<div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px 28px; box-shadow: var(--shadow-sm); margin-bottom: 24px;">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+        <h1 style="font-family: var(--font-heading); font-size: 24px; font-weight: 800; color: var(--text-primary); margin: 0;">
+          Master User Guide &amp; Operational Manual
+        </h1>
+      </div>
+      <p style="font-size: 13.5px; color: var(--text-muted); margin: 0 0 12px; max-width: 840px; line-height: 1.5;">
+        Complete end-to-end user manual, hardware specifications, POS cashier workflows, FEFO warehouse slotting, and interactive 3D digital twin guide for RetailSync WMS.
+      </p>
+      
+      <!-- Key Metric Chips -->
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+        <span class="badge badge-info" style="font-size: 11px;">RETAILSYNC V2.0</span>
+        <span class="badge badge-success" style="font-size: 11px;">12 COMPLETE CHAPTERS</span>
+        <span class="badge badge-warning" style="font-size: 11px;">ESC/POS 80MM RECEIPT GUIDE</span>
+        <span class="badge badge-primary" style="font-size: 11px;">3D DIGITAL TWIN GUIDE</span>
+        <span class="badge badge-info" style="font-size: 11px;">NBR MUSHAK 6.3 COMPLIANT</span>
+      </div>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <a href="/guide/raw" class="btn-sm btn-secondary" style="font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" title="Download raw markdown user guide">
+        Raw Markdown (.md)
+      </a>
+      <a href="/technical-guide" class="btn-sm btn-secondary" style="font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" title="Open Viva Defense Guide">
+        Viva Defense Guide
+      </a>
+      <a href="/slides" target="_blank" rel="noopener" class="btn-sm btn-secondary" style="font-size: 12px; display: inline-flex; align-items: center; gap: 6px;" title="Open Defense Slides Engine">
+        Defense Slides
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="guide-container">
+  <!-- Sticky Table of Contents Sidebar -->
+  <aside class="guide-sidebar">
+    <div class="guide-sidebar-title">
+      <span>Chapters</span>
+      <span style="font-size: 11px; font-weight: 600; color: var(--primary-500); font-family: var(--font-mono);">12 Parts</span>
+    </div>
+    <nav class="guide-toc-nav" id="tocNavigation">
+      <a href="#chapter-1-system-overview--architecture" class="guide-toc-link is-active">1. System Overview</a>
+      <a href="#chapter-2-hardware-architecture--peripherals" class="guide-toc-link">2. Hardware Peripherals</a>
+      <a href="#chapter-3-teammate-personas--role-switcher" class="guide-toc-link">3. Teammate Personas</a>
+      <a href="#chapter-4-overview-dashboard--command-center" class="guide-toc-link">4. Overview Dashboard</a>
+      <a href="#chapter-5-frontline-touch-point-of-sale-pos" class="guide-toc-link">5. Frontline POS</a>
+      <a href="#chapter-6-inbound-receiving-dock--quality-gates" class="guide-toc-link">6. Inbound Dock</a>
+      <a href="#chapter-7-directed-spatial-putaway--fefo-slotting" class="guide-toc-link">7. Directed Putaway</a>
+      <a href="#chapter-8-2d--3d-interactive-warehouse-digital-twin" class="guide-toc-link">8. 3D Digital Twin</a>
+      <a href="#chapter-9-replenishment-dss-optimizer--forecasting" class="guide-toc-link">9. Replenishment DSS</a>
+      <a href="#chapter-10-immutable-stock-ledger--multi-gate-audits" class="guide-toc-link">10. Stock Ledger</a>
+      <a href="#chapter-11-keyboard-shortcuts--power-operator-cheatsheet" class="guide-toc-link">11. Keyboard Shortcuts</a>
+      <a href="#chapter-12-troubleshooting-offline-mode--resilience" class="guide-toc-link">12. Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- Main Markdown Content Area -->
+  <main class="guide-content-panel">
+    <article class="markdown-body" id="markdownOutput">
+      <!-- Client-side marked.js renders markdown here -->
+    </article>
+  </main>
+</div>
+
+<textarea id="rawMarkdownSource" style="display: none;">{{ markdown_content | safe }}</textarea>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const raw = document.getElementById('rawMarkdownSource');
+    const out = document.getElementById('markdownOutput');
+    if (raw && out && typeof marked !== 'undefined') {
+      out.innerHTML = marked.parse(raw.value);
+    }
+  });
+</script>
+{% endblock %}

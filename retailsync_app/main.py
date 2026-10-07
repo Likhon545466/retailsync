@@ -368,6 +368,38 @@ def technical_guide_raw_download():
         )
     return HTMLResponse("<h1>Technical Guide Not Found</h1>", status_code=404)
 
+# --- 6c. Master User Guide & Operational Manual (Interactive Web Page) ---
+@app.get("/guide", response_class=HTMLResponse)
+@app.get("/user-guide", response_class=HTMLResponse)
+@app.get("/manual", response_class=HTMLResponse)
+def user_guide_view(request: Request, user: models.User = Depends(auth.get_current_user_optional)):
+    guide_path = os.path.join(root_dir, "docs", "USER_GUIDE.md")
+    content = ""
+    if os.path.exists(guide_path):
+        with open(guide_path, "r", encoding="utf-8") as f:
+            content = f.read()
+    return templates.TemplateResponse(
+        request=request,
+        name="user_guide.html",
+        context={
+            "active_page": "guide",
+            "current_user": user,
+            "markdown_content": content
+        }
+    )
+
+@app.get("/guide/raw", response_class=FileResponse)
+@app.get("/USER_GUIDE.md", response_class=FileResponse)
+def user_guide_raw_download():
+    guide_path = os.path.join(root_dir, "docs", "USER_GUIDE.md")
+    if os.path.exists(guide_path):
+        return FileResponse(
+            guide_path,
+            filename="USER_GUIDE.md",
+            media_type="text/markdown; charset=utf-8"
+        )
+    return HTMLResponse("<h1>User Guide Not Found</h1>", status_code=404)
+
 # --- 7. Complete Team Sharing Dossier Archive (ZIP) ---
 @app.get("/team-pack", response_class=FileResponse)
 @app.get("/team-pack.zip", response_class=FileResponse)
