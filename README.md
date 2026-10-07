@@ -45,11 +45,6 @@ Project Proposal Maker/
 │   ├── generate_proposal_docx.py              # DIU Academic Word styling and table formatting engine
 │   ├── proposal_data.py                       # Proposal content matrices, formulas & citations
 │   └── proposal_appendices_data.py            # Budget breakdown, RACI matrix & test cases
-│
-└── archive/                                   # Historical Materials & Reference Assets
-    ├── legacy_drafts/                         # Previous 70-page draft, early markdown notes & builds
-    ├── reference_samples/                     # DIU sample PDF reference documents
-    └── rendered_previews/                     # High-resolution page inspection renders
 ```
 
 ---
